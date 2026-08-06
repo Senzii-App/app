@@ -1,0 +1,44 @@
+# Senzii App — Terraform variables
+# Copy to terraform.tfvars and fill in your values.
+
+linode_token = "your-linode-api-token"
+
+# ── App ────────────────────────────────────────────────────────────────────────
+domain     = "app.senzii.com"
+mcp_domain = "mcp.senzii.com"
+base_url   = "https://app.senzii.com"
+repo_url   = "https://github.com/Senzii-App/app.git"
+repo_branch = "main"
+
+# ── Database (Neon, Supabase, or any external PostgreSQL) ────────────────────────
+database_url = "postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/senzii?sslmode=require"
+
+# ── Secrets ────────────────────────────────────────────────────────────────────
+# Generate with: python3 -c 'import secrets; print(secrets.token_urlsafe(50))'
+session_secret = "generate-a-random-50-char-string-here"
+
+resend_api_key = ""
+notify_email   = "chris@senzii.com"
+
+# ── Stripe (optional — leave empty if not using billing) ────────────────────────
+stripe_secret_key      = ""
+stripe_webhook_secret  = ""
+stripe_price_id        = ""
+
+# ── MCP ─────────────────────────────────────────────────────────────────────────
+mcp_port   = 3001
+mcp_org_id = ""
+
+# ── TLS DNS-01 (Namecheap) ──────────────────────────────────────────────────────
+# Get these from Namecheap > Profile > Tools > API Access.
+# The API key must be whitelisted for your server IP.
+namecheap_api_user = "your-namecheap-username"
+namecheap_api_key  = "your-namecheap-api-key"
+
+# ── Infra ───────────────────────────────────────────────────────────────────────
+backend_count  = 2
+region         = "us-east"
+instance_type  = "g6-nanode-1"
+
+# Your SSH public key (for instance access)
+ssh_public_key = "ssh-ed25519 AAAA... your@email"
