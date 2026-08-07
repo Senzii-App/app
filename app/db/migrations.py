@@ -114,7 +114,7 @@ MIGRATION_SQL = [
                        WHERE c.relname = 'staff_email_org_uniq'
                        AND i.indpred IS NULL
                    )) THEN
-            DROP INDEX staff_email_org_uniq;
+            DROP INDEX IF EXISTS staff_email_org_uniq;
         END IF;
     END $$""",
     "CREATE UNIQUE INDEX IF NOT EXISTS staff_email_org_uniq ON staff (email, organization_id) WHERE deleted_at IS NULL",
