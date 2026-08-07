@@ -135,9 +135,10 @@ app.include_router(org_certs.router, prefix="/api/org-certs")
 app.include_router(staff_portal.router, prefix="/staff/api")
 app.include_router(client_portal.router, prefix="/client/api")
 
-# ── Static files (fallback) ──────────────────────────────────────────────
-app.mount("/css", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "..", "site", "css")), name="css")
-app.mount("/js", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "..", "site", "js")), name="js")
+# ── Static files (fallback) ──────────────────────────────────────────────────
+# check_dir=False: don't crash startup if css/js dirs are missing/empty
+app.mount("/css", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "..", "site", "css"), check_dir=False), name="css")
+app.mount("/js", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "..", "site", "js"), check_dir=False), name="js")
 # Fallback for any other static file
 @app.get("/{path:path}")
 async def static_fallback(path: str):
