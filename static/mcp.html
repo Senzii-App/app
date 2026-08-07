@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme.20fbb461.css">
+    <title>Senzii MCP Server — API Reference & Setup Guide</title>
+    <meta name="description" content="Connect Claude, ChatGPT, or any MCP client to Senzii's scheduling engine. 19 tools, OAuth 2.1, Streamable HTTP and stdio transports. Full setup guide and API reference.">
+    <link rel="canonical" href="https://senzii.com/ai-integration">
+    <meta property="og:title" content="Senzii MCP Server — API Reference & Setup Guide">
+    <meta property="og:description" content="Connect your AI assistant to Senzii's scheduling engine. 19 tools, OAuth 2.1, Streamable HTTP and stdio transports.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://senzii.com/ai-integration">
+    <style>
+        .mcp-code { font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; }
+        .mcp-pre { background: #1e293b; color: #e2e8f0; padding: 1rem 1.25rem; border-radius: 0.5rem; font-size: 0.82rem; overflow-x: auto; line-height: 1.7; }
+        .mcp-pre code { font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; background: none; padding: 0; }
+        .mcp-inline { background: var(--surface2); padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.85em; font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; }
+        .mcp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .mcp-table th { text-align: left; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0.6rem 0.75rem; border-bottom: 2px solid var(--border); }
+        .mcp-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .mcp-table tr:last-child td { border-bottom: none; }
+        .mcp-table td:first-child { white-space: nowrap; font-weight: 600; font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; font-size: 0.8rem; }
+        .mcp-section { margin-bottom: 2.5rem; }
+        .mcp-section h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .mcp-section h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+        .mcp-section p { color: var(--text-muted); line-height: 1.7; margin-bottom: 0.75rem; }
+        .mcp-badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; letter-spacing: 0.04em; }
+        .mcp-badge-green { background: var(--accent-dim); color: var(--accent); }
+        .mcp-badge-blue { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
+        .mcp-badge-orange { background: rgba(217, 119, 6, 0.1); color: #d97706; }
+    </style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a href="/" class="nav-logo">
+        <svg class="nav-logo-mark" width="28" height="28" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="700" height="700" rx="155" fill="#16a34a"/>
+          <g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none">
+            <path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/>
+            <path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40-79 -73 -163 -67-169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/>
+            <path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/>
+          </g>
+        </svg>
+        Senzii
+      </a>
+      <span class="nav-tagline">MCP Server</span>
+    </div>
+    <a href="/integrations" class="nav-sign-in">Overview</a>
+  </div>
+</nav>
+
+<main>
+    <section style="padding:3rem 1rem 2rem;">
+        <div class="section-inner" style="max-width:900px;">
+            <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;">
+                <span class="mcp-badge mcp-badge-green">Available Now</span>
+                <span class="mcp-badge mcp-badge-blue">MCP 2025-11-25</span>
+                <span class="mcp-badge mcp-badge-orange">Upgrade path to 2026-07-28</span>
+            </div>
+            <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;line-height:1.15;letter-spacing:-0.02em;margin-bottom:0.75rem;">Senzii MCP Server</h1>
+            <p style="font-size:1.05rem;color:var(--text-muted);line-height:1.7;max-width:680px;margin-bottom:1.5rem;">Connect Claude, ChatGPT, or any MCP-compatible client to Senzii's staff scheduling engine. 19 tools for managing staff, shifts, assignments, certifications, and staffing requests. OAuth 2.1 for remote, API keys for local.</p>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                <a href="#quickstart" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.9rem;font-weight:600;color:#fff;text-decoration:none;padding:0.625rem 1.5rem;border-radius:8px;background:var(--accent);border:1px solid var(--accent);">Quick start →</a>
+                <a href="#tools" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.9rem;font-weight:600;color:var(--accent);text-decoration:none;padding:0.625rem 1.5rem;border-radius:8px;background:var(--surface);border:1px solid var(--accent);">Tool reference</a>
+            </div>
+        </div>
+    </section>
+
+    <section style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);padding:2rem 1rem;">
+        <div class="section-inner" style="max-width:900px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1.5rem;">
+                <div>
+                    <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem;">Endpoint</div>
+                    <div class="mcp-code" style="font-size:0.85rem;font-weight:600;">senzii.com/mcp</div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem;">Protocol</div>
+                    <div style="font-size:0.85rem;font-weight:600;">MCP (Streamable HTTP + stdio)</div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem;">Auth</div>
+                    <div style="font-size:0.85rem;font-weight:600;">OAuth 2.1 + PKCE / API key</div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem;">SDK</div>
+                    <div style="font-size:0.85rem;font-weight:600;">rmcp v1.8 (Rust)</div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem;">Tools</div>
+                    <div style="font-size:0.85rem;font-weight:600;">19</div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem;">Tests</div>
+                    <div style="font-size:0.85rem;font-weight:600;">51 (mock data)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="quickstart" style="padding:3rem 1rem;">
+        <div class="section-inner" style="max-width:900px;">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:1.5rem;">Quick start</h2>
+
+            <div class="mcp-section">
+                <h3 style="display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#D97757;"><path d="M12 2 L2 7 L12 12 L22 7 L12 2 Z"/><path d="M2 17 L12 22 L22 17"/><path d="M2 12 L12 17 L22 12"/></svg>
+                    Claude (claude.ai)
+                </h3>
+                <p>Connect directly in claude.ai — no local installation needed. Claude discovers the OAuth flow automatically.</p>
+                <ol style="color:var(--text-muted);font-size:0.9rem;line-height:2;padding-left:1.5rem;margin-bottom:1rem;">
+                    <li>Go to <strong style="color:var(--text);">Settings → Connectors → Add custom connector</strong></li>
+                    <li>Enter the connector URL: <span class="mcp-inline">https://senzii.com/mcp</span></li>
+                    <li>Claude discovers OAuth endpoints and prompts you to log in through Senzii</li>
+                    <li>Senzii's 19 tools appear in Claude's tool list</li>
+                </ol>
+                <p style="font-size:0.8rem;color:var(--text-dim);"><a href="https://modelcontextprotocol.io/docs/learn/developer/connector-management" style="color:var(--accent);text-decoration:none;">Claude connector docs ↗</a></p>
+            </div>
+
+            <div class="mcp-section">
+                <h3 style="display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#10a37f;"><circle cx="12" cy="12" r="10"/><path d="M2 12 h20 M12 2 a15.3 15.3 0 0 1 4 10 a15.3 15.3 0 0 1 -4 10 a15.3 15.3 0 0 1 -4 -10 a15.3 15.3 0 0 1 4 -10"/></svg>
+                    ChatGPT (OpenAI)
+                </h3>
+                <p>Connect through Developer Mode (Plus, Pro, Business, Enterprise, and Education plans).</p>
+                <ol style="color:var(--text-muted);font-size:0.9rem;line-height:2;padding-left:1.5rem;margin-bottom:1rem;">
+                    <li>Enable Developer Mode: <strong style="color:var(--text);">Settings → Apps → Advanced settings</strong> → toggle <strong style="color:var(--text);">Developer mode</strong></li>
+                    <li>Create a connector: <strong style="color:var(--text);">Settings → Apps → Create app</strong></li>
+                    <li>Fill in:
+                        <ul style="margin-top:0.4rem;padding-left:1.25rem;">
+                            <li><strong style="color:var(--text);">Connector name:</strong> Senzii</li>
+                            <li><strong style="color:var(--text);">Description:</strong> Manage staff scheduling, shifts, and staffing requests</li>
+                            <li><strong style="color:var(--text);">Connector URL:</strong> <span class="mcp-inline">https://senzii.com/mcp</span></li>
+                        </ul>
+                    </li>
+                    <li>Click <strong style="color:var(--text);">Create</strong> — ChatGPT connects and prompts you to authenticate</li>
+                    <li>Use it: new chat → <strong style="color:var(--text);">+</strong> button → <strong style="color:var(--text);">More</strong> → select Senzii</li>
+                </ol>
+                <p style="font-size:0.8rem;color:var(--text-dim);"><a href="https://developers.openai.com/apps-sdk/deploy/connect-chatgpt" style="color:var(--accent);text-decoration:none;">ChatGPT connector docs ↗</a></p>
+            </div>
+
+            <div class="mcp-section">
+                <h3 style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1.1rem;">💻</span>
+                    Local (stdio) — any MCP client
+                </h3>
+                <p>Run the <span class="mcp-inline">senzii-mcp</span> binary locally. Generate an API key in <strong style="color:var(--text);">Settings → API Keys</strong> in the Senzii dashboard.</p>
+                <pre class="mcp-pre mcp-code"><code>mcp_servers:
+  senzii:
+    command: /opt/senzii/senzii-mcp
+    env:
+      SENZII_API_KEY: "your-api-key-here"</code></pre>
+                <p style="font-size:0.85rem;color:var(--text-muted);">The server reads <span class="mcp-inline">DATABASE_URL</span> from <span class="mcp-inline">/opt/senzii/.env</span> automatically — no database credentials in the client config. The API key resolves your org automatically. Legacy <span class="mcp-inline">ORG_ID</span> env var still supported but deprecated.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="oauth" style="padding:3rem 1rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+        <div class="section-inner" style="max-width:900px;">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">OAuth 2.1 endpoints</h2>
+            <p style="color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;">The remote server uses OAuth 2.1 with PKCE. Clients discover endpoints automatically via RFC 9728 protected resource metadata.</p>
+
+            <table class="mcp-table">
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MCP endpoint</td>
+                        <td><span class="mcp-inline">https://senzii.com/mcp</span></td>
+                    </tr>
+                    <tr>
+                        <td>Resource metadata</td>
+                        <td><span class="mcp-inline">https://senzii.com/.well-known/oauth-protected-resource</span></td>
+                    </tr>
+                    <tr>
+                        <td>Authorization server</td>
+                        <td><span class="mcp-inline">https://senzii.com/.well-known/oauth-authorization-server</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dynamic client registration</td>
+                        <td><span class="mcp-inline">https://senzii.com/oauth/register</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:1.5rem;line-height:1.7;">The <span class="mcp-inline">WWW-Authenticate</span> header on 401 responses points clients to the protected resource metadata URL, so MCP clients that support RFC 9728 discovery can connect without manual configuration.</p>
+        </div>
+    </section>
+
+    <section id="tools" style="padding:3rem 1rem;">
+        <div class="section-inner" style="max-width:900px;">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">Tool reference</h2>
+            <p style="color:var(--text-muted);line-height:1.7;margin-bottom:2rem;">All 19 tools are available in both remote and local mode. Tools are scoped to the authenticated organization — the AI never sees or controls the org ID. Write operations are audit-logged.</p>
+
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;">Staff</h3>
+            <table class="mcp-table">
+                <thead><tr><th>Tool</th><th>Description</th><th>Admin</th><th>Staff</th><th>Client</th></tr></thead>
+                <tbody>
+                    <tr><td>list_staff</td><td>List all staff members in the org</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>get_staff</td><td>Get one staff member by ID, including certifications and availability</td><td>✓</td><td>✓ (self)</td><td></td></tr>
+                    <tr><td>create_staff</td><td>Create a new staff member with optional certifications</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>delete_staff</td><td>Archive a staff member (soft delete). Blocks if confirmed assignments exist</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>set_staff_availability</td><td>Replace a staff member's weekly availability schedule</td><td>✓</td><td>✓ (self)</td><td></td></tr>
+                    <tr><td>add_staff_certification</td><td>Add a certification to an existing staff member</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>send_staff_magic_link</td><td>Generate a one-time login link for a staff member</td><td>✓</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">Clients</h3>
+            <table class="mcp-table">
+                <thead><tr><th>Tool</th><th>Description</th><th>Admin</th><th>Staff</th><th>Client</th></tr></thead>
+                <tbody>
+                    <tr><td>list_clients</td><td>List all clients</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>create_client</td><td>Create a new client company</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>send_client_magic_link</td><td>Generate a one-time login link for a client</td><td>✓</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">Shifts & Assignments</h3>
+            <table class="mcp-table">
+                <thead><tr><th>Tool</th><th>Description</th><th>Admin</th><th>Staff</th><th>Client</th></tr></thead>
+                <tbody>
+                    <tr><td>list_shifts</td><td>List all shifts, optionally filtered by work site</td><td>✓</td><td>✓</td><td></td></tr>
+                    <tr><td>delete_shift</td><td>Delete a shift (blocks if confirmed assignments exist)</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>list_assignments</td><td>List assignments, optionally filtered by shift</td><td>✓</td><td>✓</td><td></td></tr>
+                    <tr><td>create_assignment</td><td>Assign a staff member to a shift (checks for conflicts)</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>unassign_assignment</td><td>Remove a staff member from a shift</td><td>✓</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">Staffing Requests</h3>
+            <table class="mcp-table">
+                <thead><tr><th>Tool</th><th>Description</th><th>Admin</th><th>Staff</th><th>Client</th></tr></thead>
+                <tbody>
+                    <tr><td>list_staffing_requests</td><td>List staffing requests, filterable by status</td><td>✓</td><td></td><td>✓ (own)</td></tr>
+                    <tr><td>create_staffing_request</td><td>Submit a new staffing request for a client</td><td>✓</td><td></td><td>✓ (own)</td></tr>
+                    <tr><td>convert_staffing_request</td><td>Convert an accepted request into a scheduled shift</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>cancel_staffing_request</td><td>Cancel a request (also deletes any linked shift)</td><td>✓</td><td></td><td>✓ (own)</td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">Work Sites</h3>
+            <table class="mcp-table">
+                <thead><tr><th>Tool</th><th>Description</th><th>Admin</th><th>Staff</th><th>Client</th></tr></thead>
+                <tbody>
+                    <tr><td>list_work_sites</td><td>List all work sites</td><td>✓</td><td>✓</td><td>✓</td></tr>
+                    <tr><td>create_work_site</td><td>Create a new work site</td><td>✓</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">Certifications</h3>
+            <table class="mcp-table">
+                <thead><tr><th>Tool</th><th>Description</th><th>Admin</th><th>Staff</th><th>Client</th></tr></thead>
+                <tbody>
+                    <tr><td>list_certifications</td><td>List all org-level certifications</td><td>✓</td><td>✓</td><td>✓</td></tr>
+                    <tr><td>create_certification</td><td>Add a certification type to the org (idempotent)</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>update_certification</td><td>Rename a certification type</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>delete_certification</td><td>Remove a certification (also removes from all staff)</td><td>✓</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">Dashboard & Advanced</h3>
+            <table class="mcp-table">
+                <thead><tr><th>Tool</th><th>Description</th><th>Admin</th><th>Staff</th><th>Client</th></tr></thead>
+                <tbody>
+                    <tr><td>get_org_metrics</td><td>Dashboard metrics — open shifts, pending requests, unassigned staff</td><td>✓</td><td></td><td></td></tr>
+                    <tr><td>run_sql</td><td>Execute read-only SELECT queries (admin only). INSERT, UPDATE, DELETE, DROP, ALTER, CREATE rejected</td><td>✓</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="security" style="padding:3rem 1rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+        <div class="section-inner" style="max-width:900px;">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:1.5rem;">Security model</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
+                <div style="padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;">
+                    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Org-scoped by design</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0;">The org ID is resolved server-side from the API key or JWT and injected into every database query. The AI never sees or controls it. Cross-org data access is impossible.</p>
+                </div>
+                <div style="padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;">
+                    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Role-based tool visibility</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0;">Admin, staff, and client roles see different tools. Staff can only access their own profile and assignments. Clients can only manage their own requests.</p>
+                </div>
+                <div style="padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;">
+                    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Audit-logged writes</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0;">Every create, update, delete, assign, and unassign operation logs the org, authenticated user ID, entity type, entity ID, and the resulting state.</p>
+                </div>
+                <div style="padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;">
+                    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">OAuth 2.1 + PKCE</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0;">Remote mode uses OAuth 2.1 with PKCE. JWT access tokens are signed with HMAC-SHA256 and carry org_id, role, entity_id, and expiration. No tokens shared across orgs.</p>
+                </div>
+                <div style="padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;">
+                    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">API keys (local mode)</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0;">Local stdio mode uses API keys generated in the dashboard. Keys are shown once at creation, stored hashed in the database, and can be revoked anytime.</p>
+                </div>
+                <div style="padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;">
+                    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Read-only SQL</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0;">The <span class="mcp-inline">run_sql</span> tool only accepts SELECT. All mutation keywords (INSERT, UPDATE, DELETE, DROP, ALTER, CREATE) are rejected before execution. Admin-only access.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="spec" style="padding:3rem 1rem;">
+        <div class="section-inner" style="max-width:900px;">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">MCP spec compatibility</h2>
+            <p style="color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;">Senzii's MCP server currently implements the <strong style="color:var(--text);">2025-11-25</strong> spec via rmcp v1.8. The <strong style="color:var(--text);">2026-07-28</strong> spec was published on July 28, 2026 with a stateless protocol core, header-based routing, and cacheable list results.</p>
+
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:0.75rem;padding:1.5rem;margin-bottom:1.5rem;">
+                <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Do the 2026-07-28 changes affect Senzii?</h3>
+                <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.7;margin-bottom:0.75rem;">The stateless core is a natural fit — Senzii's tools are already stateless database queries. Each call resolves the org from the auth token and runs independently. No session state is carried between calls.</p>
+                <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.7;margin-bottom:0.75rem;">The changes that would require an upgrade:</p>
+                <ul style="font-size:0.88rem;color:var(--text-muted);line-height:1.8;padding-left:1.5rem;margin-bottom:0.75rem;">
+                    <li><strong style="color:var(--text);">No handshake/sessions</strong> — rmcp handles this at the transport layer; tool definitions don't change</li>
+                    <li><strong style="color:var(--text);">Header-based routing</strong> — <span class="mcp-inline">Mcp-Method</span> and <span class="mcp-inline">Mcp-Name</span> headers on HTTP requests (transport layer)</li>
+                    <li><strong style="color:var(--text);">DCR deprecated</strong> — Senzii uses dynamic client registration at <span class="mcp-inline">/oauth/register</span>; will migrate to CIMD when rmcp supports it</li>
+                    <li><strong style="color:var(--text);">Cacheable list results</strong> — <span class="mcp-inline">ttlMs</span> and <span class="mcp-inline">cacheScope</span> on <span class="mcp-inline">tools/list</span> responses (optimization, not breaking)</li>
+                </ul>
+                <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.7;">The 12-month deprecation window means the current server works until at least July 2027. The upgrade path is: wait for rmcp to ship stable 2026-07-28 support, then update the transport layer. Tool definitions, auth, and business logic stay the same.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="example" style="padding:3rem 1rem;background:var(--surface);border-top:1px solid var(--border);">
+        <div class="section-inner" style="max-width:900px;">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">Example conversation</h2>
+            <p style="color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;">Once connected, your AI assistant can manage scheduling through natural conversation. Here's what a typical exchange looks like in Claude:</p>
+
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;padding:1.5rem;margin-bottom:1rem;">
+                <p style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;">You</p>
+                <p style="font-size:0.92rem;color:var(--text);line-height:1.6;">What does my schedule look like this week? Any gaps?</p>
+            </div>
+
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;padding:1.5rem;margin-bottom:1rem;">
+                <p style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;">Claude <span style="font-weight:400;color:var(--text-dim);">→ calls get_org_metrics, list_shifts, list_assignments</span></p>
+                <p style="font-size:0.92rem;color:var(--text);line-height:1.6;">You have 12 shifts this week across 3 work sites. 3 shifts are unassigned — all on Thursday at the Broad St site. You have 5 available caregivers with the right certifications who haven't been scheduled that day. Want me to assign them?</p>
+            </div>
+
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;padding:1.5rem;margin-bottom:1rem;">
+                <p style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;">You</p>
+                <p style="font-size:0.92rem;color:var(--text);line-height:1.6;">Yes, assign the closest ones.</p>
+            </div>
+
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:0.75rem;padding:1.5rem;">
+                <p style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;">Claude <span style="font-weight:400;color:var(--text-dim);">→ calls list_staff, create_assignment ×3</span></p>
+                <p style="font-size:0.92rem;color:var(--text);line-height:1.6;">Done. I assigned Maria (0.8 mi away), James (1.2 mi), and Patricia (1.5 mi) to the three Thursday shifts at Broad St. All three are pending your confirmation on the dashboard. Want me to confirm them?</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="text-align:center;padding:3rem 1rem 4rem;border-top:1px solid var(--border);">
+        <h2 style="font-size:1.5rem;margin-bottom:0.5rem;">Connect your assistant</h2>
+        <p style="color:var(--text-muted);max-width:480px;margin:0 auto 1.5rem;">Point your MCP client at <span class="mcp-inline">https://senzii.com/mcp</span> and authenticate. That's it.</p>
+        <a href="/auth/login" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.9rem;font-weight:600;color:#fff;text-decoration:none;padding:0.625rem 1.5rem;border-radius:8px;background:var(--accent);border:1px solid var(--accent);">Sign in to Senzii →</a>
+    </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">
+        <svg class="footer-logo-mark" width="20" height="20" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="700" height="700" rx="155" fill="#16a34a"/>
+          <g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none">
+            <path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/>
+            <path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40-79 -73 -163 -67-169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/>
+            <path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/>
+          </g>
+        </svg>
+        Senzii
+      </span>
+      <span class="footer-tagline">Intelligent workforce scheduling</span>
+    </div>
+    <div class="footer-links">
+      <a href="/#pricing">Pricing</a>
+      <a href="/integrations">MCP Overview</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/refunds">Refund Policy</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 REPL Made LLC. Built with &hearts;.</div>
+  </div>
+</footer>
+
+</body>
+</html>

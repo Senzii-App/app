@@ -127,11 +127,13 @@ terraform apply -var="ssl_cert=$(sudo cat /etc/letsencrypt/live/app.senzii.com/f
 ```
 
 The deploy script:
-1. rsyncs app code from local → all backends (excluding .venv, .env, .git)
-2. rsyncs static site files from `../site/` → all backends
-3. Installs any new pip dependencies
-4. Restarts senzii-app and senzii-mcp services
-5. Verifies health check
+1. rsyncs app code from local → all backends (excluding .venv, .env, .git, infra/)
+2. Installs any new pip dependencies
+3. Restarts senzii-app and senzii-mcp services
+4. Verifies health check
+
+Static HTML/CSS/JS ships inside the app repo (`static/`) — the marketing site
+(`Senzii-App/site`, served from Vercel at senzii.com) is NOT deployed to backends.
 
 ## Scaling
 

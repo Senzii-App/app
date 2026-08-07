@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Login — Senzii</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #16a34a;
+      --accent-hover: #15803d;
+      --surface: #ffffff;
+      --surface2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --coral: #dc2626;
+      --coral-dim: rgba(220, 38, 38, 0.08);
+      --radius: 8px;
+      --font-head: 'Inter', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    html, body { height: 100%; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: #f8fafc;
+      color: var(--text);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    .auth-wrap { width: 100%; max-width: 400px; padding: 1.5rem; }
+    .auth-logo { text-align: center; margin-bottom: 2rem; }
+    .auth-logo span { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+    .auth-badge { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: var(--surface2); border: 1px solid var(--border); padding: 0.25rem 0.75rem; border-radius: 99px; margin-bottom: 0.75rem; }
+    .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; }
+    .auth-title { font-family: var(--font-head); font-size: 1.35rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text); }
+    .auth-error { background: var(--coral-dim); border: 1px solid rgba(220,38,38,0.25); border-radius: 6px; color: var(--coral); font-size: 0.82rem; padding: 0.65rem 0.9rem; margin-bottom: 1.1rem; display: none; }
+    .auth-success { background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.25); border-radius: 6px; color: var(--accent); font-size: 0.82rem; padding: 0.65rem 0.9rem; margin-bottom: 1.1rem; display: none; }
+    .auth-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .form-row { margin-bottom: 1rem; }
+    .form-row label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .form-row input { width: 100%; padding: 0.65rem 0.85rem; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--font-body); font-size: 0.9rem; }
+    .form-row input:focus { outline: none; border-color: var(--accent); }
+    .btn-auth { width: 100%; padding: 0.7rem; background: var(--accent); color: #ffffff; border: none; border-radius: 7px; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.15s; margin-top: 0.3rem; }
+    .btn-auth:hover { background: var(--accent-hover); }
+    .btn-auth:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+    .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.82rem; color: var(--text-muted); }
+    .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 0.4rem; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <svg width="40" height="40" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 0.6rem"><rect width="700" height="700" rx="155" fill="#16a34a"/><g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none"><path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/><path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40 -79 -73 -163 -67 -169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/><path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/></g></svg>
+      <div class="auth-badge">Client Portal</div>
+      <div><span>Senzii</span></div>
+    </div>
+    <div class="auth-card">
+      <h1 class="auth-title">Sign In</h1>
+      <div id="form-error" class="auth-error"></div>
+      <div id="form-success" class="auth-success"></div>
+
+      <!-- Magic link processing state -->
+      <div id="magic-link-processing" style="display:none;text-align:center;padding:2rem 0">
+        <div class="spinner" style="width:28px;height:28px;border-width:3px;margin:0 auto 1rem"></div>
+        <p style="color:var(--text-muted);font-size:0.9rem">Verifying your magic link…</p>
+      </div>
+
+      <!-- Email + Password login form -->
+      <form id="login-form" autocomplete="on" style="display:none">
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@company.com" required autofocus>
+        </div>
+        <div class="form-row">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-auth" id="submit-btn">Sign In</button>
+      </form>
+
+      <div id="login-hint" class="auth-hint" style="display:none">
+        Don't have a password yet? Check your email for a magic link from your service provider.
+      </div>
+    </div>
+  </div>
+
+<script>
+(function() {
+  var errorDiv = document.getElementById('form-error');
+  var successDiv = document.getElementById('form-success');
+  var loginForm = document.getElementById('login-form');
+  var submitBtn = document.getElementById('submit-btn');
+  var magicProcessing = document.getElementById('magic-link-processing');
+  var loginHint = document.getElementById('login-hint');
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get('token');
+  var error = params.get('error');
+
+  // Show error from URL param
+  if (error) {
+    if (error === 'auth') {
+      showError('This magic link is invalid or has expired. Please request a new one.');
+    } else if (error === 'expired') {
+      showError('This magic link has expired. Please request a new one.');
+    }
+  }
+
+  // If there's a token in the URL, verify it via the magic link API
+  if (token) {
+    magicProcessing.style.display = 'block';
+    loginForm.style.display = 'none';
+    loginHint.style.display = 'none';
+
+    fetch('/client/api/login?token=' + encodeURIComponent(token), { method: 'GET' })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        magicProcessing.style.display = 'none';
+        if (result.ok && result.data.ok) {
+          if (result.data.hasPassword) {
+            window.location.href = '/client';
+          } else {
+            window.location.href = '/client/set-password';
+          }
+        } else {
+          showError(result.data.error || 'This magic link is invalid or has expired. Please request a new one.');
+          showLoginForm();
+        }
+      })
+      .catch(function() {
+        magicProcessing.style.display = 'none';
+        showError('Failed to verify magic link. Please try again.');
+        showLoginForm();
+      });
+  } else {
+    showLoginForm();
+  }
+
+  function showLoginForm() {
+    loginForm.style.display = 'block';
+    loginHint.style.display = 'block';
+  }
+
+  function showError(msg) {
+    errorDiv.textContent = msg;
+    errorDiv.style.display = 'block';
+    successDiv.style.display = 'none';
+  }
+
+  loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>Signing in…';
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    try {
+      var res = await fetch('/client/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+      });
+      var data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Invalid email or password.');
+      }
+      window.location.href = '/client';
+    } catch(err) {
+      errorDiv.textContent = err.message;
+      errorDiv.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+    }
+  });
+})();
+</script>
+
+
+</body>
+</html>

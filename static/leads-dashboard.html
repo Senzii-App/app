@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads & Pipeline — Senzii</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #16a34a;
+      --accent-hover: #15803d;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header h1 span { color: var(--accent); }
+    .back-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all .15s;
+    }
+    .back-btn:hover { border-color: var(--text); color: var(--text); }
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all .15s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    main {
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+    /* Pipeline board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      min-height: 300px;
+    }
+    .board-col {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .board-col h3 {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .board-col h3 .count {
+      background: var(--border);
+      border-radius: 999px;
+      padding: 1px 8px;
+      font-size: 11px;
+    }
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all .15s;
+      font-size: 13px;
+    }
+    .card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+    .card .card-name { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .card .card-company { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .card .card-meta { font-size: 10px; color: var(--text-muted); display: flex; gap: 8px; }
+    .card .card-stage-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-top: 4px;
+    }
+    .stage-new { background: #dbeafe; color: #1d4ed8; }
+    .stage-contacted { background: #fce7f3; color: #be185d; }
+    .stage-qualified { background: #fef3c7; color: #b45309; }
+    .stage-demo, .stage-negotiation { background: #d1fae5; color: #047857; }
+    .stage-closed_won { background: #dcfce7; color: #166534; }
+    .stage-closed_lost { background: #fef2f2; color: #991b1b; }
+
+    /* Detail modal */
+    .modal-wrap { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-wrap.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      margin: 1rem;
+    }
+    .modal-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+    }
+    .modal-head h2 { font-size: 16px; font-weight: 600; }
+    .modal-head select { font-size: 12px; padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); }
+    .modal-body { padding: 20px; }
+    .modal-body table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px; }
+    .modal-body table td { padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .modal-body table td:first-child { font-weight: 600; color: var(--text-muted); width: 120px; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+    .modal-foot {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      position: sticky;
+      bottom: 0;
+      background: var(--surface);
+    }
+    .btn {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .btn-sm { font-size: 11px; padding: 4px 10px; }
+
+    /* Activity log */
+    .activity-item {
+      padding: 8px 12px;
+      background: var(--bg);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+    .activity-item .act-type {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .activity-item .act-summary { color: var(--text); }
+    .activity-item .act-date { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .activity-form { display: flex; gap: 8px; margin-top: 12px; align-items: flex-end; }
+    .activity-form select, .activity-form textarea {
+      font-family: inherit;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .activity-form textarea { flex: 1; resize: vertical; min-height: 60px; }
+
+    /* Legacy leads table (tab 2) */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      font-size: 13px;
+    }
+    thead { background: #f1f5f9; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; color: var(--text-muted); }
+    tbody tr:hover { background: #f8fafc; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .badge.calculator { background: #dbeafe; color: #1d4ed8; }
+    .badge.quiz { background: #fce7f3; color: #be185d; }
+    .badge.template { background: #d1fae5; color: #047857; }
+    .badge.coverage { background: #fef3c7; color: #b45309; }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .filters select, .filters button {
+      font-family: inherit;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .filters button {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 500;
+    }
+    .filters button:hover { background: var(--accent-hover); }
+    .filters button.secondary {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .filters button.secondary:hover { border-color: var(--text-muted); }
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--danger);
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 2000;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+    .toast-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .toast-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>●</span> Leads & Pipeline</h1>
+    <a href="/admin" class="back-btn">← Back to Admin</a>
+  </header>
+
+  <main>
+    <div class="tabs">
+      <button class="tab active" id="tab-pipeline" onclick="switchTab('pipeline')">Pipeline</button>
+      <button class="tab" id="tab-tools" onclick="switchTab('tools')">Tool Leads</button>
+    </div>
+
+    <div id="error-box" class="error" style="display:none"></div>
+
+    <!-- Pipeline tab -->
+    <div id="view-pipeline">
+      <div class="board" id="board">
+        <div class="board-col"><h3>New</h3></div>
+        <div class="board-col"><h3>Contacted</h3></div>
+        <div class="board-col"><h3>Qualified</h3></div>
+        <div class="board-col"><h3>Demo / Negotiation</h3></div>
+        <div class="board-col"><h3>Closed</h3></div>
+      </div>
+    </div>
+
+    <!-- Tool Leads tab -->
+    <div id="view-tools" style="display:none">
+      <div class="filters">
+        <select id="filter-tool" onchange="currentPage=1; applyFilterAndRender();">
+          <option value="">All Tools</option>
+          <option value="cost-calculator">Cost Calculator</option>
+          <option value="pain-point-quiz">Pain Point Quiz</option>
+          <option value="template-generator">Template Generator</option>
+          <option value="coverage-analyzer">Coverage Analyzer</option>
+          <option value="shift-bidding-optimizer">Shift Bidding Optimizer</option>
+          <option value="scheduling-roi-estimator">ROI Estimator</option>
+        </select>
+        <button onclick="loadLeads()">Refresh</button>
+        <button class="secondary" onclick="exportCSV()">Export CSV</button>
+      </div>
+      <div id="leads-table-wrap">
+        <div class="empty-state">Loading leads…</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:13px;color:var(--text-muted);" id="leads-pagination" class="pagination">
+        <div id="leads-page-info"></div>
+        <div style="display:flex;gap:8px;">
+          <button id="leads-prev-btn" onclick="changePage(-1)">← Previous</button>
+          <button id="leads-next-btn" onclick="changePage(1)">Next →</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Inquiry detail modal -->
+  <div class="modal-wrap" id="modal-inquiry">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modal-title"></h2>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="modal-stage" onchange="updateStage()">
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="qualified">Qualified</option>
+            <option value="demo">Demo</option>
+            <option value="negotiation">Negotiation</option>
+            <option value="closed_won">Closed Won</option>
+            <option value="closed_lost">Closed Lost</option>
+          </select>
+          <button class="btn btn-sm" onclick="closeInquiryModal()">✕</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <table id="modal-details"></table>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:8px;">Activity Log</div>
+        <div id="modal-activities"><div class="empty-state">Loading…</div></div>
+        <div class="activity-form">
+          <select id="act-type" style="width:auto;">
+            <option value="note">Note</option>
+            <option value="call">Call</option>
+            <option value="email">Email</option>
+            <option value="meeting">Meeting</option>
+          </select>
+          <textarea id="act-summary" placeholder="Add a note about this lead…"></textarea>
+          <button class="btn btn-primary btn-sm" onclick="addActivity()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── State ───────────────────────────────────────────────────────
+    let inquiries = [];
+    let currentInquiryId = null;
+    let activeTab = 'pipeline';
+
+    // Tools leads tab state
+    const PAGE_SIZE = 50;
+    let currentPage = 1;
+    let allLeads = [];
+
+    // ── Tab switching ───────────────────────────────────────────────
+    function switchTab(tab) {
+      activeTab = tab;
+      document.getElementById('tab-pipeline').classList.toggle('active', tab === 'pipeline');
+      document.getElementById('tab-tools').classList.toggle('active', tab === 'tools');
+      document.getElementById('view-pipeline').style.display = tab === 'pipeline' ? '' : 'none';
+      document.getElementById('view-tools').style.display = tab === 'tools' ? '' : 'none';
+      if (tab === 'pipeline') loadPipeline();
+      if (tab === 'tools') loadLeads();
+    }
+
+    // ── Pipeline ────────────────────────────────────────────────────
+    async function loadPipeline() {
+      const errBox = document.getElementById('error-box');
+      errBox.style.display = 'none';
+      try {
+        const r = await fetch('/api/admin/sales-inquiries?limit=500&offset=0', { credentials: 'same-origin' });
+        if (!r.ok) {
+          if (r.status === 401) throw new Error('Unauthorized — log in as super user.');
+          if (r.status === 403) throw new Error('Super user access required.');
+          throw new Error(`HTTP ${r.status}`);
+        }
+        const data = await r.json();
+        inquiries = data.inquiries || [];
+        renderBoard(inquiries);
+      } catch (e) {
+        errBox.textContent = e.message;
+        errBox.style.display = 'block';
+      }
+    }
+
+    function renderBoard(list) {
+      const stages = {
+        'new': { title: 'New', ids: [] },
+        'contacted': { title: 'Contacted', ids: [] },
+        'qualified': { title: 'Qualified', ids: [] },
+        'demo': { title: 'Demo / Negotiation', ids: [] },
+        'negotiation': { title: 'Demo / Negotiation', ids: [] },
+        'closed_won': { title: 'Closed', ids: [] },
+        'closed_lost': { title: 'Closed', ids: [] },
+      };
+
+      list.forEach(inq => {
+        const stage = inq.pipeline_stage || 'new';
+        if (stages[stage]) stages[stage].ids.push(inq.id);
+      });
+
+      const cols = ['new', 'contacted', 'qualified', 'demo+negotiation', 'closed'];
+      const html = cols.map(col => {
+        let cards;
+        let count;
+        if (col === 'demo+negotiation') {
+          const combined = [...(stages.demo?.ids||[]), ...(stages.negotiation?.ids||[])];
+          count = combined.length;
+          cards = combined.map(id => renderCard(list.find(i => i.id === id))).join('');
+        } else if (col === 'closed') {
+          const combined = [...(stages.closed_won?.ids||[]), ...(stages.closed_lost?.ids||[])];
+          count = combined.length;
+          cards = combined.map(id => renderCard(list.find(i => i.id === id))).join('');
+        } else {
+          const s = stages[col];
+          count = s.ids.length;
+          cards = s.ids.map(id => renderCard(list.find(i => i.id === id))).join('');
+        }
+        return `<div class="board-col"><h3>${stages[col]?.title || col}<span class="count">${count}</span></h3>${cards || '<div class="empty-state" style="font-size:11px;">—</div>'}</div>`;
+      }).join('');
+
+      document.getElementById('board').innerHTML = html;
+    }
+
+    function renderCard(inq) {
+      if (!inq) return '';
+      const stageClass = `stage-${(inq.pipeline_stage || 'new').replace(/_/g, '')}`;
+      return `<div class="card" onclick="openInquiry(${inq.id})">
+        <div class="card-name">${esc(inq.name)}</div>
+        <div class="card-company">${esc(inq.company_name || inq.email)}</div>
+        <div class="card-meta">
+          <span>${inq.staff_count ? inq.staff_count + ' staff' : ''}</span>
+          <span>${esc(inq.industry || '')}</span>
+        </div>
+        <div class="card-stage-badge ${stageClass}">${(inq.pipeline_stage || 'new').replace(/_/g, ' ')}</div>
+      </div>`;
+    }
+
+    // ── Inquiry detail modal ────────────────────────────────────────
+    async function openInquiry(id) {
+      currentInquiryId = id;
+      const inq = inquiries.find(i => i.id === id);
+      if (!inq) return;
+
+      document.getElementById('modal-title').textContent = inq.name;
+      document.getElementById('modal-stage').value = inq.pipeline_stage || 'new';
+
+      document.getElementById('modal-details').innerHTML = `
+        <tr><td>Email</td><td>${esc(inq.email)}</td></tr>
+        <tr><td>Phone</td><td>${esc(inq.phone || '—')}</td></tr>
+        <tr><td>Company</td><td>${esc(inq.company_name || '—')}</td></tr>
+        <tr><td>Staff</td><td>${inq.staff_count || '—'}</td></tr>
+        <tr><td>Industry</td><td>${esc(inq.industry || '—')}</td></tr>
+        <tr><td>Message</td><td>${esc(inq.message || '—')}</td></tr>
+        <tr><td>Source</td><td>${esc(inq.source || '—')}</td></tr>
+        <tr><td>Created</td><td>${formatDate(inq.created_at)}</td></tr>
+      `;
+
+      document.getElementById('modal-inquiry').classList.add('open');
+      await loadActivities(id);
+    }
+
+    function closeInquiryModal() {
+      document.getElementById('modal-inquiry').classList.remove('open');
+      currentInquiryId = null;
+    }
+
+    async function updateStage() {
+      if (!currentInquiryId) return;
+      const stage = document.getElementById('modal-stage').value;
+      try {
+        const r = await fetch(`/api/admin/sales-inquiries/${currentInquiryId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ pipeline_stage: stage })
+        });
+        if (!r.ok) throw new Error('Failed to update stage');
+        showToast('Stage updated', 'success');
+        await loadPipeline();
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    // ── Activities ──────────────────────────────────────────────────
+    async function loadActivities(inquiryId) {
+      const el = document.getElementById('modal-activities');
+      try {
+        const r = await fetch(`/api/admin/sales-activities?inquiry_id=${inquiryId}`, { credentials: 'same-origin' });
+        if (!r.ok) throw new Error('Failed to load');
+        const data = await r.json();
+        const acts = data.activities || [];
+        if (!acts.length) {
+          el.innerHTML = '<div class="empty-state" style="font-size:12px;">No activity yet.</div>';
+          return;
+        }
+        el.innerHTML = acts.map(a => `<div class="activity-item">
+          <div class="act-type">${a.activity_type}</div>
+          <div class="act-summary">${esc(a.summary)}</div>
+          <div class="act-date">${formatDate(a.created_at)}</div>
+        </div>`).join('');
+      } catch (e) {
+        el.innerHTML = '<div class="empty-state">Failed to load activities.</div>';
+      }
+    }
+
+    async function addActivity() {
+      if (!currentInquiryId) return;
+      const type = document.getElementById('act-type').value;
+      const summary = document.getElementById('act-summary').value.trim();
+      if (!summary) return;
+
+      try {
+        const r = await fetch('/api/admin/sales-activities', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ inquiry_id: currentInquiryId, activity_type: type, summary })
+        });
+        if (!r.ok) throw new Error('Failed to add activity');
+        document.getElementById('act-summary').value = '';
+        await loadActivities(currentInquiryId);
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    // ── Tool leads tab ──────────────────────────────────────────────
+    async function loadLeads() {
+      const errBox = document.getElementById('error-box');
+      errBox.style.display = 'none';
+      document.getElementById('leads-pagination').style.display = 'none';
+
+      try {
+        const r = await fetch('/api/admin/leads?limit=1000&offset=0', { credentials: 'same-origin' });
+        if (r.status === 401) throw new Error('Unauthorized — log in as super user.');
+        if (r.status === 403) throw new Error('Super user access required.');
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const data = await r.json();
+        allLeads = data.leads || [];
+        applyFilterAndRender();
+      } catch (e) {
+        errBox.textContent = e.message;
+        errBox.style.display = 'block';
+        document.getElementById('leads-table-wrap').innerHTML = '<div class="empty-state">Failed to load leads.</div>';
+      }
+    }
+
+    function applyFilterAndRender() {
+      const filter = document.getElementById('filter-tool').value;
+      let filtered = filter ? allLeads.filter(l => l.tool === filter) : allLeads.slice();
+      const total = filtered.length;
+      const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      if (currentPage > pages) currentPage = pages;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageLeads = filtered.slice(start, start + PAGE_SIZE);
+
+      const wrap = document.getElementById('leads-table-wrap');
+      if (!pageLeads.length) {
+        wrap.innerHTML = '<div class="empty-state">No leads captured yet.</div>';
+        document.getElementById('leads-pagination').style.display = 'none';
+        return;
+      }
+
+      const rows = pageLeads.map(l => {
+        const toolClass = l.tool?.replace(/-/g,'') || 'unknown';
+        const toolLabel = {
+          'cost-calculator': 'Cost Calculator', 'pain-point-quiz': 'Pain Point Quiz',
+          'template-generator': 'Template Gen', 'coverage-analyzer': 'Coverage Analyzer',
+          'shift-bidding-optimizer': 'Bidding Optimizer', 'scheduling-roi-estimator': 'ROI',
+        }[l.tool] || l.tool;
+        return `<tr>
+          <td>${esc(l.email)}</td>
+          <td><span class="badge ${toolClass}">${esc(toolLabel)}</span></td>
+          <td>${esc(l.industry || '—')}</td>
+          <td>${l.staff_size ?? '—'}</td>
+          <td>${l.calculated_cost ? '$'+l.calculated_cost.toLocaleString() : '—'}</td>
+          <td>${formatDate(l.created_at)}</td>
+        </tr>`;
+      }).join('');
+
+      wrap.innerHTML = `<table><thead><tr><th>Email</th><th>Tool</th><th>Industry</th><th>Staff</th><th>Calc Cost</th><th>Captured</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+      document.getElementById('leads-page-info').textContent = `Page ${currentPage} of ${pages} · ${total} total`;
+      document.getElementById('leads-prev-btn').disabled = currentPage <= 1;
+      document.getElementById('leads-next-btn').disabled = currentPage >= pages;
+      document.getElementById('leads-pagination').style.display = 'flex';
+    }
+
+    function changePage(delta) {
+      currentPage += delta;
+      if (currentPage < 1) currentPage = 1;
+      applyFilterAndRender();
+    }
+
+    function exportCSV() {
+      if (!allLeads.length) return;
+      const headers = ['email','tool','industry','staff_size','calculated_cost','created_at'];
+      const rows = allLeads.map(l => headers.map(h => {
+        const v = l[h];
+        if (v === null || v === undefined) return '';
+        const s = typeof v === 'object' ? JSON.stringify(v) : String(v);
+        return '"' + s.replace(/"/g,'""') + '"';
+      }).join(','));
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `senzii-leads-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ── Helpers ─────────────────────────────────────────────────────
+    function esc(s) {
+      if (!s) return '';
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit'});
+      } catch { return iso; }
+    }
+
+    function showToast(msg, type) {
+      const t = document.createElement('div');
+      t.className = `toast toast-${type}`;
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('modal-inquiry').addEventListener('click', function(e) {
+      if (e.target === this) closeInquiryModal();
+    });
+
+    // Initial load
+    loadPipeline();
+  </script>
+</body>
+</html>

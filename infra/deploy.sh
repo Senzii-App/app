@@ -46,17 +46,6 @@ if [ "$RESTART_ONLY" = true ]; then
     exit 0
 fi
 
-# ── Sync site static files from Senzii/site ───────────────────────────────────
-SITE_DIR="$PROJECT_DIR/../site"
-if [ -d "$SITE_DIR" ]; then
-    echo "Syncing static site files..."
-    for IP in $BACKEND_IPS; do
-        rsync -az --delete --exclude='.git' --exclude='vercel.json' "$SITE_DIR/" root@"$IP":/tmp/senzii-site/
-    done
-else
-    echo "WARNING: Site directory not found at $SITE_DIR — skipping static sync"
-fi
-
 # ── Sync app code ─────────────────────────────────────────────────────────────
 echo "Syncing app code..."
 for IP in $BACKEND_IPS; do
@@ -82,14 +71,11 @@ for IP in $BACKEND_IPS; do
     ssh -o StrictHostKeyChecking=no root@"$IP" bash << 'REMOTEOF'
         cd /opt/senzii
         .venv/bin/pip install -r requirements.txt --quiet
-        if [ -d /tmp/senzii-site ]; then
-            rsync -a --delete --exclude='.git' --exclude='vercel.json' /tmp/senzii-site/ /opt/senzii/site/
-        fi
         chown -R www-data:www-data /opt/senzii
         systemctl restart senzii-app
         systemctl restart senzii-mcp
         sleep 2
-        curl -sf http://127.0.0.1:3000/health && echo " → health OK" || echo " → health FAIL"
+        curl -sf http://127.0.0.1:80/health && echo " → health OK" || echo " → health FAIL"
 REMOTEOF
 done
 

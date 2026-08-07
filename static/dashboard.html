@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Senzii</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.20fbb461.css">
+  <link rel="stylesheet" href="/css/dashboard.92a71c02.css">
+</head>
+<body class="dash-body">
+
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar">
+    <div class="dash-sidebar-logo">
+      <svg class="dash-sidebar-logo-mark" width="24" height="24" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="700" rx="155" fill="#16a34a"/>
+        <g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none">
+          <path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/>
+          <path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40 -79 -73 -163 -67 -169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/>
+          <path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/>
+        </g>
+      </svg>
+      <span>Senzii</span>
+    </div>
+    <nav class="dash-nav">
+      <div class="dash-nav-section">Schedule</div>
+      <button class="dash-nav-item active" data-panel="board" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Schedule Board
+        <span class="dash-nav-badge" id="badge-pending">0</span>
+      </button>
+      <button class="dash-nav-item" data-panel="assignments" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Assignments
+      </button>
+      <div class="dash-nav-section">Manage</div>
+      <button class="dash-nav-item" data-panel="staff" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Staff
+      </button>
+      <button class="dash-nav-item" data-panel="sites" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Work Sites
+      </button>
+      <button class="dash-nav-item" data-panel="clients" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Clients
+      </button>
+      <button class="dash-nav-item" data-panel="certs" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+        Skills / Certs
+      </button>
+      <button class="dash-nav-item" data-panel="requests" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+        Requests
+        <span class="dash-nav-badge" id="badge-open-requests"></span>
+      </button>
+      <div class="dash-nav-section">Settings</div>
+      <button class="dash-nav-item" data-panel="team" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Admin Team
+      </button>
+      <button class="dash-nav-item" data-panel="billing" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Billing
+      </button>
+      <button class="dash-nav-item" data-panel="settings" onclick="switchPanel(this)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Use AI
+      </button>
+      <div class="dash-nav-section">Help</div>
+      <button class="dash-nav-item" onclick="openDocs()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Docs
+      </button>
+      <button class="dash-nav-item" onclick="openSupport()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        Support
+      </button>
+    </nav>
+    <div class="dash-sidebar-user">
+      <div class="dash-sidebar-user-info">
+        <div class="dash-sidebar-user-name">Admin</div>
+        <div class="dash-sidebar-user-email">Admin</div>
+      </div>
+      <a href="/auth/logout" class="dash-sidebar-logout" title="Log out">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <!-- METRICS BAR -->
+    <div class="metrics-bar" id="metrics-bar">
+      <div class="metric-card" id="metric-open-shifts">
+        <div class="metric-label">Open Shifts</div>
+        <div class="metric-value" id="val-open-shifts">—</div>
+      </div>
+      <div class="metric-card" id="metric-pending-requests">
+        <div class="metric-label">Pending Requests</div>
+        <div class="metric-value" id="val-pending-requests">—</div>
+      </div>
+      <div class="metric-card" id="metric-unassigned-staff">
+        <div class="metric-label">Unassigned Staff</div>
+        <div class="metric-value" id="val-unassigned-staff">—</div>
+      </div>
+      <div class="metric-card" id="metric-recent-confirmed">
+        <div class="metric-label">Confirmed (7d)</div>
+        <div class="metric-value" id="val-recent-confirmed">—</div>
+      </div>
+    </div>
+
+    <!-- ===== SCHEDULE BOARD ===== -->
+    <section id="panel-board" class="panel active">
+      <div class="dash-topbar">
+        <h1>Schedule Board</h1>
+        <div class="dash-topbar-actions">
+          <input type="date" id="board-date-from" class="form-control-inline">
+          <span class="board-date-sep">→</span>
+          <input type="date" id="board-date-to" class="form-control-inline">
+          <select id="board-site-filter" class="form-control-inline">
+            <option value="">All Sites</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="loadBoard()">Refresh</button>
+          <button class="btn btn-primary btn-sm" onclick="openCreateShiftModal()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Shift
+          </button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="board-empty" class="empty-state" style="display:none">
+          <div class="empty-state-icon"><svg width="48" height="48" fill="none" stroke="#f0f6fc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div class="empty-state-title">No shifts found</div>
+          <div class="empty-state-sub">Convert a request from the Requests tab or click New Shift to get started</div>
+        </div>
+        <div id="board-loading" class="loading-row"><div class="spinner"></div> Loading shifts...</div>
+        <div id="shift-grid" class="shift-board-table"></div>
+      </div>
+    </section>
+
+    <!-- ===== ASSIGNMENTS ===== -->
+    <section id="panel-assignments" class="panel">
+      <div class="dash-topbar">
+        <h1>Assignments</h1>
+        <div class="dash-topbar-actions">
+          <input type="date" id="assign-date-from" class="form-control-inline" onchange="loadAssignments()">
+          <span class="board-date-sep">→</span>
+          <input type="date" id="assign-date-to" class="form-control-inline" onchange="loadAssignments()">
+          <select id="assign-staff-filter" class="form-control-inline" onchange="loadAssignments()">
+            <option value="">All Staff</option>
+          </select>
+          <select id="assign-status-filter" class="form-control-inline" onchange="loadAssignments()">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="loadAssignments()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="assignments-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <div id="assignments-empty" class="empty-state" style="display:none">
+          <div class="empty-state-title">No assignments</div>
+          <div class="empty-state-sub">Assignments appear here once shifts are filled</div>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table" id="assignments-table">
+            <thead>
+              <tr>
+                <th>Shift</th>
+                <th>Staff</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Confirmed By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="assignments-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STAFF ===== -->
+    <section id="panel-staff" class="panel">
+      <div class="dash-topbar">
+        <h1>Staff</h1>
+        <div class="dash-topbar-actions">
+          <input type="text" id="staff-name-filter" class="form-control-inline" placeholder="Search name..." oninput="renderStaffTable()">
+          <button class="btn btn-primary btn-sm" onclick="openAddStaffModal()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Staff
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="loadStaff()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="staff-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <div id="staff-empty" class="empty-state" style="display:none">
+          <div class="empty-state-title">No staff members yet</div>
+          <div class="empty-state-sub">Add staff to enable shift matching</div>
+        </div>
+        <div id="staff-table-wrap" class="data-table-wrap" style="display:none">
+          <table class="data-table" id="staff-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Skills &amp; Certifications</th>
+                <th>Availability</th>
+                <th>TZ</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="staff-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WORK SITES ===== -->
+    <section id="panel-sites" class="panel">
+      <div class="dash-topbar">
+        <h1>Work Sites</h1>
+        <div class="dash-topbar-actions">
+          <input type="text" id="sites-search-filter" class="form-control-inline" placeholder="Search name or address..." oninput="renderWorkSites()">
+          <button class="btn btn-primary btn-sm" onclick="openAddSiteModal()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Site
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="loadWorkSites()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="sites-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <div id="sites-empty" class="empty-state" style="display:none">
+          <div class="empty-state-title">No work sites yet</div>
+          <div class="empty-state-sub">Add a work site to start creating shifts</div>
+        </div>
+        <div id="sites-table-wrap" class="data-table-wrap" style="display:none">
+          <table class="data-table" id="sites-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Required Skills</th>
+                <th>TZ</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sites-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CLIENTS ===== -->
+    <section id="panel-clients" class="panel">
+      <div class="dash-topbar">
+        <h1>Clients</h1>
+        <div class="dash-topbar-actions">
+          <input type="text" id="clients-name-filter" class="form-control-inline" placeholder="Name..." oninput="renderClients()">
+          <input type="text" id="clients-company-filter" class="form-control-inline" placeholder="Company..." oninput="renderClients()">
+          <button class="btn btn-primary btn-sm" onclick="openAddClientModal()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Client
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="loadClients()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="clients-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <div id="clients-empty" class="empty-state" style="display:none">
+          <div class="empty-state-title">No clients yet</div>
+          <div class="empty-state-sub">Add a client to get them set up with the portal</div>
+        </div>
+        <div id="clients-table-wrap" class="data-table-wrap" style="display:none">
+          <table class="data-table" id="clients-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Company</th>
+                <th>Requests</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="clients-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CERTS ===== -->
+    <section id="panel-certs" class="panel">
+      <div class="dash-topbar">
+        <h1>Skills / Certifications</h1>
+        <div class="dash-topbar-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadCerts()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="certs-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <div id="certs-content" style="display:none">
+          <div class="cert-add-row">
+            <div class="form-row" style="flex:1;margin-bottom:0">
+              <input type="text" id="cert-new-name" placeholder="e.g. BLS, RN License, Forklift" class="form-row-input">
+            </div>
+            <button class="btn btn-primary" onclick="addCert()">Add</button>
+          </div>
+          <div id="certs-empty" class="empty-state" style="display:none;padding:2rem 1rem">
+            <div class="empty-state-title">No certifications yet</div>
+            <div class="empty-state-sub">Type a name above and click Add</div>
+          </div>
+          <div id="certs-table-wrap" class="data-table-wrap" style="display:none">
+            <table class="data-table" id="certs-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Added</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="certs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== REQUESTS ===== -->
+    <section id="panel-requests" class="panel">
+      <div class="dash-topbar">
+        <h1>Staffing Requests</h1>
+        <div class="dash-topbar-actions">
+          <input type="text" id="requests-requester-filter" class="form-control-inline" placeholder="Requester..." oninput="renderRequests()">
+          <input type="text" id="requests-site-filter" class="form-control-inline" placeholder="Work site..." oninput="renderRequests()">
+          <select id="requests-status-filter" class="form-control-inline" onchange="loadRequests()">
+            <option value="">All Statuses</option>
+            <option value="open">Open</option>
+            <option value="accepted">Accepted</option>
+            <option value="filled">Filled</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="loadRequests()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="requests-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <div id="requests-empty" class="empty-state" style="display:none">
+          <div class="empty-state-title">No staffing requests</div>
+          <div class="empty-state-sub">Requests submitted via the client portal appear here</div>
+        </div>
+        <div id="requests-list"></div>
+      </div>
+    </section>
+
+    <!-- ===== ADMIN TEAM ===== -->
+    <section id="panel-team" class="panel">
+      <div class="dash-topbar">
+        <h1>Admin Team</h1>
+        <div class="dash-topbar-actions">
+          <input type="text" id="team-name-filter" class="form-control-inline" placeholder="Search name..." oninput="renderTeamTable()">
+          <button class="btn btn-primary btn-sm" onclick="openAddTeamModal()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Invite Admin
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="loadTeam()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div id="team-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <div id="team-empty" class="empty-state" style="display:none">
+          <div class="empty-state-title">No admins yet</div>
+          <div class="empty-state-sub">Invite an admin to give them dashboard access</div>
+        </div>
+        <div id="team-table-wrap" class="data-table-wrap" style="display:none">
+          <table class="data-table" id="team-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="team-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SETTINGS / USE AI ===== -->
+    <section id="panel-settings" class="panel">
+      <div class="dash-topbar">
+        <h1>Use AI</h1>
+        <div class="dash-topbar-actions">
+          <button class="btn btn-secondary btn-sm" onclick="openDocs()">Docs</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div style="padding:0 1.5rem;max-width:640px">
+          <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1.5rem;font-weight:600">
+            Connect Senzii to your AI assistant to manage schedules by conversation. No API keys — just sign in and approve.
+          </p>
+
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.35rem;font-weight:600">Server URL</div>
+            <div style="display:flex;align-items:center;gap:0.5rem">
+              <code style="font-size:0.85rem;color:var(--accent);flex:1">https://senzii.com/mcp</code>
+              <button class="btn btn-secondary btn-sm" onclick="copyServerUrl()">Copy</button>
+            </div>
+          </div>
+
+          <h3 style="font-size:0.95rem;margin-bottom:0.75rem">Claude</h3>
+          <ol style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;padding-left:1.2rem">
+            <li>Go to <a href="https://claude.ai" target="_blank" style="color:var(--accent)">claude.ai</a> → Settings → Connectors</li>
+            <li>Click <strong>Add custom connector</strong></li>
+            <li>Paste the server URL above and click <strong>Add</strong></li>
+            <li>Sign in to Senzii and click <strong>Allow</strong></li>
+          </ol>
+
+          <h3 style="font-size:0.95rem;margin-bottom:0.75rem">ChatGPT</h3>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.5rem">Requires a Plus, Pro, Business, Enterprise, or Education plan.</p>
+          <ol style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;padding-left:1.2rem">
+            <li>Go to Settings → Apps → Advanced settings → toggle <strong>Developer mode</strong></li>
+            <li>Go to Settings → Apps → <strong>Create app</strong></li>
+            <li>Fill in the name, description, and paste the server URL above</li>
+            <li>Click <strong>Create</strong>, then sign in to Senzii and click <strong>Allow</strong></li>
+          </ol>
+
+          <h3 style="font-size:0.95rem;margin-bottom:0.75rem">Other Clients</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;margin-bottom:0.5rem">
+            Any AI assistant that supports MCP Streamable HTTP with OAuth can connect. Use the server URL above — the client will discover the OAuth endpoints automatically.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BILLING / STAFF MEMBERS ===== -->
+    <section id="panel-billing" class="panel">
+      <div class="dash-topbar">
+        <h1>Billing</h1>
+        <div class="dash-topbar-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadSeats()">Refresh</button>
+        </div>
+      </div>
+      <div class="dash-scroll">
+        <div style="padding:0 1.5rem;max-width:640px">
+          <!-- Summary cards -->
+          <div id="billing-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+          <div id="billing-not-configured" style="display:none;padding:2rem 0;text-align:center;">
+            <div style="font-size:0.95rem;color:var(--text-muted);max-width:400px;margin:0 auto;">
+              Billing is not yet configured for your organization. Staff member reservations will appear here once you start a subscription.
+            </div>
+          </div>
+          <div id="billing-summary" style="display:none;">
+            <!-- Section: Seat overview -->
+            <div style="margin-bottom:1.75rem;">
+              <div style="font-size:0.82rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.75rem;">Seat Overview</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0; padding:0.75rem 1rem; background:var(--surface); border:1px solid var(--border); border-radius:0.5rem;">
+                <div style="text-align:center; padding:0.25rem 0.5rem;">
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.4rem;">Reserved</div>
+                  <div style="font-size:1.75rem;font-weight:700;color:var(--text);line-height:1;" id="billing-seats">—</div>
+                </div>
+                <div style="text-align:center; padding:0.25rem 0.5rem; border-left:1px solid var(--border); border-right:1px solid var(--border);">
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.4rem;">In Use</div>
+                  <div style="font-size:1.75rem;font-weight:700;color:var(--text);line-height:1;" id="billing-staff-count">—</div>
+                </div>
+                <div style="text-align:center; padding:0.25rem 0.5rem;">
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.4rem;">Available</div>
+                  <div style="font-size:1.75rem;font-weight:700;color:var(--accent);line-height:1;" id="billing-available">—</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section: Billing -->
+            <div style="margin-bottom:1.75rem;">
+              <div style="font-size:0.82rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.75rem;">Billing</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem; margin-bottom:0.75rem;">
+                <div style="background:var(--surface1);border-radius:0.5rem;padding:1rem 1.25rem;">
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.4rem;">Monthly Total</div>
+                  <div style="font-size:1.4rem;font-weight:700;color:var(--text);line-height:1;" id="billing-monthly">—</div>
+                </div>
+                <div style="background:var(--surface1);border-radius:0.5rem;padding:1rem 1.25rem;">
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.4rem;">Next Billing Date</div>
+                  <div style="font-size:1.4rem;font-weight:700;color:var(--text);line-height:1;" id="billing-next-date">—</div>
+                </div>
+              </div>
+              <div style="background:var(--surface1);border-radius:0.5rem;padding:1rem 1.25rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <div style="font-size:0.78rem;color:var(--text-muted);">Price per staff member</div>
+                  <div style="font-size:1.1rem;font-weight:600;color:var(--text);">$5.00 / mo</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trial banner (shown only during trial) -->
+            <div id="billing-trial-badge" style="display:none;background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.2);border-radius:0.5rem;padding:1rem 1.25rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:0.75rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <div style="font-size:0.85rem;color:var(--accent);font-weight:500;">Free trial until <span id="billing-trial-end">—</span></div>
+            </div>
+
+            <!-- Section: Subscription -->
+            <div style="margin-bottom:1.75rem;">
+              <div style="font-size:0.82rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.75rem;">Subscription</div>
+              <div style="background:var(--surface1);border-radius:0.5rem;padding:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div>
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;">Status</div>
+                  <div style="font-size:1.4rem;font-weight:700;color:var(--text);line-height:1;" id="billing-sub-status">—</div>
+                </div>
+                <div id="billing-sales-agent" style="display:none;font-size:0.85rem;color:var(--text-muted);text-align:right;">
+                  <div style="font-weight:500;color:var(--text);">Managed by</div>
+                  <div id="billing-agent-name" style="font-weight:600;"></div>
+                  <div id="billing-agent-email" style="font-size:0.8rem;"></div>
+                  <div style="margin-top:0.25rem;font-size:0.78rem;">Contact your sales agent for changes to your subscription.</div>
+                </div>
+                <div id="billing-no-agent" style="display:none;font-size:0.85rem;color:var(--text-muted);text-align:right;">
+                  <div>To make changes to your subscription,</div>
+                  <div>contact <a href="mailto:support@senzii.com" style="color:var(--accent);">support@senzii.com</a></div>
+                </div>
+                <!-- Self-serve cancel/reactivate disabled — customers contact sales agent -->
+                <!--<button class="btn btn-danger btn-sm" id="billing-cancel-btn" onclick="cancelSubscription()">Cancel Subscription</button>-->
+                <!--<button class="btn btn-primary btn-sm" id="billing-reactivate-btn" style="display:none" onclick="reactivateSubscription()">Reactivate</button>-->
+              </div>
+            </div>
+
+            <!-- Section: Manage seats -->
+            <div style="padding-top:1.5rem;border-top:1px solid var(--border);">
+              <div style="font-size:0.82rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.75rem;">Manage Seats</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                <div style="background:var(--surface1);border-radius:0.5rem;padding:1.25rem;">
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.75rem;">Add Seats</div>
+                  <div style="display:flex;align-items:end;gap:0.75rem;flex-wrap:wrap;">
+                    <div>
+                      <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Staff members</label>
+                      <input type="number" id="billing-add-qty" min="1" value="1" style="width:80px;padding:0.5rem;border-radius:0.375rem;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.9rem;">
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="addSeats()">Add</button>
+                  </div>
+                </div>
+                <div style="background:var(--surface1);border-radius:0.5rem;padding:1.25rem;">
+                  <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.75rem;">Remove Seats</div>
+                  <div style="display:flex;align-items:end;gap:0.75rem;flex-wrap:wrap;">
+                    <div>
+                      <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Staff members</label>
+                      <input type="number" id="billing-remove-qty" min="1" value="1" style="width:80px;padding:0.5rem;border-radius:0.375rem;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.9rem;">
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="removeSeats()">Remove</button>
+                  </div>
+                </div>
+              </div>
+              <p style="font-size:0.74rem;color:var(--text-muted);margin-top:0.75rem;max-width:400px;">
+                Adding or removing staff members updates your subscription immediately. You'll be billed a prorated amount for the difference.
+              </p>
+            </div>
+          </div>
+          <div id="billing-error" class="auth-error" style="display:none;margin-top:1rem;"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SLIDE-OVER: Candidate ranking -->
+  <div class="slide-over-backdrop" id="so-backdrop" onclick="closeSlideOver()"></div>
+  <div class="slide-over" id="slide-over">
+    <div class="slide-over-head">
+      <div>
+        <div class="slide-over-title" id="so-title">Shift Candidates</div>
+        <div class="slide-over-sub" id="so-sub"></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeSlideOver()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slide-over-body" id="so-body">
+      <div class="loading-row"><div class="spinner"></div> Finding candidates...</div>
+    </div>
+    <div class="slide-over-foot" id="so-foot" style="display:none">
+      <div style="flex:1;display:flex;align-items:center;gap:0.5rem;min-width:0">
+        <div id="so-selected-info" style="min-width:0">
+          <div style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">Selected</div>
+          <div style="font-size:0.85rem;color:var(--text);font-weight:600;" id="so-selected-name"></div>
+        </div>
+        <div style="font-size:0.8rem;font-weight:700;color:var(--accent);margin-left:auto" id="so-selected-score"></div>
+      </div>
+      <button class="btn btn-primary btn-sm" id="so-confirm-btn" onclick="confirmFromSlideOver()" disabled>
+        Assign & Confirm
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✓</span>
+    <span class="toast-msg" id="toast-msg"></span>
+    <button class="toast-close" onclick="hideToast()">×</button>
+  </div>
+
+  <!-- MODAL: Add/Edit Shift -->
+  <div id="modal-shift" class="modal-wrap" data-require-confirm>
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modal-shift-title">New Shift</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-shift')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-shift" onsubmit="submitShift(event)">
+          <input type="hidden" id="shift-id">
+          <div class="form-row">
+            <label for="shift-site-id">Work Site *</label>
+            <select id="shift-site-id" required><option value="">Select site...</option></select>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="shift-start">Start Time *</label>
+              <input type="datetime-local" id="shift-start" required>
+            </div>
+            <div class="form-row">
+              <label for="shift-end">End Time *</label>
+              <input type="datetime-local" id="shift-end" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Required Certifications</label>
+            <div id="shift-cert-picker" class="cert-picker">
+              <div class="cert-picker-empty" style="display:none">Add certifications in the Certs panel first</div>
+              <div class="cert-picker-options"></div>
+            </div>
+            <input type="hidden" id="shift-skills" value="">
+          </div>
+          <div class="form-row">
+            <label for="shift-min-staff">Min Staff Needed</label>
+            <input type="number" id="shift-min-staff" value="1" min="1" max="20">
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-shift')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('form-shift').requestSubmit()">Save Shift</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add/Edit Staff -->
+  <div id="modal-staff" class="modal-wrap" data-require-confirm>
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modal-staff-title">Add Staff</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-staff')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-staff" onsubmit="submitStaff(event)">
+          <input type="hidden" id="staff-edit-id">
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="staff-name">Full Name *</label>
+              <input type="text" id="staff-name" required placeholder="Jane Doe">
+            </div>
+            <div class="form-row">
+              <label for="staff-email">Email *</label>
+              <input type="email" id="staff-email" required placeholder="jane@email.com">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="staff-phone">Phone</label>
+              <input type="tel" id="staff-phone">
+            </div>
+            <div class="form-row">
+              <label>Skills &amp; Certifications</label>
+              <div id="staff-cert-picker" class="cert-picker">
+                <div class="cert-picker-empty" style="display:none">Add certifications in the Certs panel first</div>
+                <div class="cert-picker-options"></div>
+              </div>
+            </div>
+            <input type="hidden" id="staff-skills" value="">
+          </div>
+          <div class="form-row">
+            <label for="staff-address">Address</label>
+            <input type="text" id="staff-address" placeholder="123 Main St, Philadelphia, PA 19103">
+          </div>
+          <div class="form-row">
+            <label for="staff-tz">Timezone</label>
+            <select id="staff-tz" style="background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:0.5rem 0.65rem;font-family:var(--font-body);font-size:0.85rem;width:100%;outline:none">
+              <option value="UTC">UTC</option>
+              <option value="America/New_York">America/New_York (Eastern)</option>
+              <option value="America/Chicago">America/Chicago (Central)</option>
+              <option value="America/Denver">America/Denver (Mountain)</option>
+              <option value="America/Los_Angeles">America/Los_Angeles (Pacific)</option>
+              <option value="America/Anchorage">America/Anchorage (Alaska)</option>
+              <option value="Pacific/Honolulu">Pacific/Honolulu (Hawaii)</option>
+              <option value="America/Toronto">America/Toronto</option>
+              <option value="America/Vancouver">America/Vancouver</option>
+              <option value="America/Mexico_City">America/Mexico_City</option>
+              <option value="Europe/London">Europe/London</option>
+              <option value="Europe/Paris">Europe/Paris</option>
+              <option value="Europe/Berlin">Europe/Berlin</option>
+              <option value="Europe/Madrid">Europe/Madrid</option>
+              <option value="Europe/Rome">Europe/Rome</option>
+              <option value="Europe/Amsterdam">Europe/Amsterdam</option>
+              <option value="Europe/Stockholm">Europe/Stockholm</option>
+              <option value="Asia/Tokyo">Asia/Tokyo</option>
+              <option value="Asia/Seoul">Asia/Seoul</option>
+              <option value="Asia/Shanghai">Asia/Shanghai</option>
+              <option value="Asia/Hong_Kong">Asia/Hong_Kong</option>
+              <option value="Asia/Singapore">Asia/Singapore</option>
+              <option value="Asia/Kolkata">Asia/Kolkata</option>
+              <option value="Asia/Dubai">Asia/Dubai</option>
+              <option value="Asia/Jerusalem">Asia/Jerusalem</option>
+              <option value="Australia/Sydney">Australia/Sydney</option>
+              <option value="Australia/Melbourne">Australia/Melbourne</option>
+              <option value="Australia/Perth">Australia/Perth</option>
+              <option value="Pacific/Auckland">Pacific/Auckland</option>
+              <option value="Pacific/Fiji">Pacific/Fiji</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-staff')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('form-staff').requestSubmit()">Save Staff</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add/Edit Work Site -->
+  <div id="modal-site" class="modal-wrap" data-require-confirm>
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modal-site-title">Add Work Site</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-site')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-site" onsubmit="submitSite(event)">
+          <input type="hidden" id="site-edit-id" value="">
+          <div class="form-row">
+            <label for="site-name">Site Name *</label>
+            <input type="text" id="site-name" required placeholder="Memorial Hospital - Floor 3">
+          </div>
+          <div class="form-row">
+            <label for="site-address">Address</label>
+            <input type="text" id="site-address" placeholder="123 Main St, New York, NY">
+          </div>
+          <div class="form-row">
+            <label>Required Certifications</label>
+            <div id="site-cert-picker" class="cert-picker">
+              <div class="cert-picker-empty" style="display:none">Add certifications in the Certs panel first</div>
+              <div class="cert-picker-options"></div>
+            </div>
+            <input type="hidden" id="site-skills" value="">
+          </div>
+          <div class="form-row">
+            <label for="site-tz">Timezone</label>
+            <select id="site-tz" style="background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:0.5rem 0.65rem;font-family:var(--font-body);font-size:0.85rem;width:100%;outline:none">
+              <option value="UTC">UTC</option>
+              <option value="America/New_York" selected>America/New_York (Eastern)</option>
+              <option value="America/Chicago">America/Chicago (Central)</option>
+              <option value="America/Denver">America/Denver (Mountain)</option>
+              <option value="America/Los_Angeles">America/Los_Angeles (Pacific)</option>
+              <option value="America/Anchorage">America/Anchorage (Alaska)</option>
+              <option value="Pacific/Honolulu">Pacific/Honolulu (Hawaii)</option>
+              <option value="America/Toronto">America/Toronto</option>
+              <option value="America/Vancouver">America/Vancouver</option>
+              <option value="America/Mexico_City">America/Mexico_City</option>
+              <option value="Europe/London">Europe/London</option>
+              <option value="Europe/Paris">Europe/Paris</option>
+              <option value="Europe/Berlin">Europe/Berlin</option>
+              <option value="Europe/Madrid">Europe/Madrid</option>
+              <option value="Europe/Rome">Europe/Rome</option>
+              <option value="Europe/Amsterdam">Europe/Amsterdam</option>
+              <option value="Europe/Stockholm">Europe/Stockholm</option>
+              <option value="Asia/Tokyo">Asia/Tokyo</option>
+              <option value="Asia/Seoul">Asia/Seoul</option>
+              <option value="Asia/Shanghai">Asia/Shanghai</option>
+              <option value="Asia/Hong_Kong">Asia/Hong_Kong</option>
+              <option value="Asia/Singapore">Asia/Singapore</option>
+              <option value="Asia/Kolkata">Asia/Kolkata</option>
+              <option value="Asia/Dubai">Asia/Dubai</option>
+              <option value="Asia/Jerusalem">Asia/Jerusalem</option>
+              <option value="Australia/Sydney">Australia/Sydney</option>
+              <option value="Australia/Melbourne">Australia/Melbourne</option>
+              <option value="Australia/Perth">Australia/Perth</option>
+              <option value="Pacific/Auckland">Pacific/Auckland</option>
+              <option value="Pacific/Fiji">Pacific/Fiji</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-site')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('form-site').requestSubmit()">Save Site</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Certification to Staff -->
+  <div id="modal-add-cert" class="modal-wrap">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Add Certification</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-add-cert')">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="add-cert-staff-id">
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.75rem">Select a certification from your organization's list:</p>
+        <div id="add-cert-list" class="cert-picker">
+          <div class="cert-picker-options"></div>
+          <div class="cert-picker-empty" style="display:none;color:var(--text-muted);font-size:0.85rem">No certifications available.</div>
+        </div>
+        <div class="form-row" style="margin-top:1rem">
+          <label for="add-cert-expires">Expiry Date (optional)</label>
+          <input type="date" id="add-cert-expires" class="form-control">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-add-cert')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="submitAddCert()">Add Certification</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Availability -->
+  <div id="modal-avail" class="modal-wrap">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Set Availability</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-avail')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-avail" onsubmit="submitAvailability(event)">
+          <input type="hidden" id="avail-staff-id">
+          <div class="form-row">
+            <label for="avail-day">Day of Week *</label>
+            <select id="avail-day" required>
+              <option value="0">Sunday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="avail-start">Window Start *</label>
+              <input type="time" id="avail-start" required value="09:00">
+            </div>
+            <div class="form-row">
+              <label for="avail-end">Window End *</label>
+              <input type="time" id="avail-end" required value="17:00">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-avail')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('form-avail').requestSubmit()">Set Availability</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Confirm Assignment -->
+  <div id="modal-confirm" class="modal-wrap">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Confirm Assignment</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-confirm')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">You are about to confirm this assignment. The staff member will be notified and the shift will be marked as filled.</p>
+        <div id="confirm-details"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-confirm')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="doConfirmAssignment()" id="do-confirm-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Reassign Assignment -->
+  <div id="modal-reassign" class="modal-wrap">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Reassign Staff</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-reassign')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">Change which staff member is assigned to this shift.</p>
+        <div id="reassign-details"></div>
+        <div class="form-row" style="margin-top:1rem">
+          <label>New Staff Member</label>
+          <select id="reassign-staff-select" class="form-control"></select>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-reassign')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="doReassign()">Reassign</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Unassign -->
+  <div id="modal-unassign" class="modal-wrap">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Unassign Staff</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-unassign')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">Remove this staff member from the shift. The shift will need a replacement.</p>
+        <div id="unassign-details"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-unassign')">Cancel</button>
+        <button class="btn btn-danger btn-sm" onclick="doUnassign()">Unassign</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Client -->
+  <div id="modal-client" class="modal-wrap" data-require-confirm>
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Add Client</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-client')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-client" onsubmit="submitClient(event)">
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="client-name">Contact Name *</label>
+              <input type="text" id="client-name" required placeholder="Jane Smith">
+            </div>
+            <div class="form-row">
+              <label for="client-email">Email *</label>
+              <input type="email" id="client-email" required placeholder="jane@company.com">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="client-phone">Phone</label>
+              <input type="tel" id="client-phone">
+            </div>
+            <div class="form-row">
+              <label for="client-company">Company Name</label>
+              <input type="text" id="client-company" placeholder="Acme Corp">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-client')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('form-client').requestSubmit()">Save Client</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Invite Admin -->
+  <div id="modal-team" class="modal-wrap" data-require-confirm>
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Invite Admin</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-team')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-team" onsubmit="submitTeamInvite(event)">
+          <div class="form-row">
+            <label for="team-name">Full Name *</label>
+            <input type="text" id="team-name" required placeholder="Jane Doe">
+          </div>
+          <div class="form-row">
+            <label for="team-email">Email *</label>
+            <input type="email" id="team-email" required placeholder="jane@company.com">
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-top:1rem">
+            An invitation email with a magic link will be sent to this address. They'll set their password on first login.
+          </p>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-team')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('form-team').requestSubmit()">Send Invite</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Self-serve cancel/reactivate disabled — modal removed -->
+
+  <style>
+  .form-control-inline {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: var(--font-body); font-size: 0.78rem;
+    padding: 0.3rem 0.6rem; outline: none; cursor: pointer;
+  }
+  .form-control-inline:focus { border-color: var(--accent); }
+  .form-control-inline option { background: var(--surface); }
+
+  .dash-sidebar-user {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .dash-sidebar-user-info { flex: 1; min-width: 0; }
+  .dash-sidebar-user-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dash-sidebar-user-email {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dash-sidebar-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+  .dash-sidebar-logout:hover { background: var(--surface2); color: var(--text); }
+
+  .metrics-bar {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  .metric-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1.25rem;
+    flex: 1;
+    min-width: 130px;
+  }
+  .metric-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+  }
+  .metric-value {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  </style>
+
+  <!-- DOCS SIDEBAR -->
+  <div class="docs-sidebar-backdrop" id="docs-backdrop" onclick="closeDocs()"></div>
+  <aside class="docs-sidebar" id="docs-sidebar">
+    <div class="docs-sidebar-head">
+      <span class="docs-sidebar-title">Documentation</span>
+      <button class="docs-sidebar-close" onclick="closeDocs()" aria-label="Close docs">&times;</button>
+    </div>
+    <nav class="docs-nav">
+      <div class="docs-nav-group" id="docs-nav-board" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="board-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-assignments" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="assignments-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-staff" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="staff-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-sites" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="sites-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-clients" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="clients-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-certs" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="certs-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-requests" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="requests-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-billing" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="billing-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-team" style="display:none">
+        <button class="docs-nav-btn active" data-docs-page="team-overview" onclick="switchDocsPage(this)">Overview</button>
+      </div>
+      <div class="docs-nav-group" id="docs-nav-mcp">
+        <button class="docs-nav-btn active" data-docs-page="mcp-overview" onclick="switchDocsPage(this)">Overview</button>
+        <button class="docs-nav-btn" data-docs-page="mcp-claude" onclick="switchDocsPage(this)">Claude</button>
+        <button class="docs-nav-btn" data-docs-page="mcp-chatgpt" onclick="switchDocsPage(this)">ChatGPT</button>
+        <button class="docs-nav-btn" data-docs-page="mcp-other" onclick="switchDocsPage(this)">Other</button>
+      </div>
+    </nav>
+    <div class="docs-body">
+
+      <!-- PAGE: Board Overview -->
+      <div class="docs-page active" id="docs-board-overview">
+        <h2>Schedule Board</h2>
+        <p>The Schedule Board is the central view for managing shifts. Every shift appears as a row in a table showing the work site, status, time window, required certifications, staffing progress, and action buttons.</p>
+
+        <div class="docs-callout">
+          <strong>Status badges:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Open</strong> — nobody assigned yet. Shows how many staff are needed.</li>
+            <li><strong>1/2 Staffed</strong> — some staff confirmed, more needed. Shows progress toward the minimum.</li>
+            <li><strong>Filled</strong> — confirmed count has reached the minimum staff required.</li>
+          </ul>
+        </div>
+
+        <h3>Filtering and navigation</h3>
+        <ul>
+          <li><strong>Date range</strong> — a <strong>From</strong> and <strong>To</strong> date picker filter shifts to a range. The default range is the next two weeks.</li>
+          <li><strong>Site filter</strong> — narrow the board to a single work site, or show all sites.</li>
+          <li><strong>Refresh</strong> — re-fetches shifts and updates the board.</li>
+        </ul>
+
+        <h3>Creating a shift</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click New Shift</h3>
+            <p>Opens a modal where you select a work site, set start and end times, choose required certifications, and enter the minimum staff count.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Set required certifications</h3>
+            <p>Toggle on any certifications the shift requires. Only staff who hold those certs will appear as candidates. You must add certifications in the Certs panel before they show up here.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Set minimum staff</h3>
+            <p>The minimum staff number determines when the shift is considered "Filled." For a single-person shift, leave it at 1. For multi-staff shifts, set the number of people you need.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">4</div>
+          <div class="docs-step-body">
+            <h3>Save</h3>
+            <p>The new shift row appears on the board with an "Open" status badge.</p>
+          </div>
+        </div>
+
+        <h3>Assigning staff</h3>
+        <p>Click a shift row (or the <strong>Candidates</strong> button) to open the candidate slide-over panel. Senzii ranks every available staff member using three scores:</p>
+        <ul>
+          <li><strong>Proximity</strong> — distance between the staff member's location and the work site (Haversine).</li>
+          <li><strong>Skills</strong> — overlap between the staff member's certifications and the shift's required certifications.</li>
+          <li><strong>Availability</strong> — whether the staff member's availability window covers the shift time.</li>
+        </ul>
+        <p>The overall match score is a weighted combination of all three. Candidates are listed from highest to lowest score.</p>
+
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Select a candidate</h3>
+            <p>Click a candidate card to select it. The selected name and score appear in the footer.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Click Assign &amp; Confirm</h3>
+            <p>The staff member is immediately assigned and confirmed. A success toast appears and the shift's confirmed count goes up.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Repeat for multi-staff shifts</h3>
+            <p>If the shift needs more than one person, the slide-over stays open after each confirmation. The subtitle updates to show how many more are needed. The panel auto-closes once the shift is fully staffed.</p>
+          </div>
+        </div>
+
+        <h3>Why no matches?</h3>
+        <p>If no candidates are returned, the slide-over shows a diagnostic panel explaining why. Each reason is counted:</p>
+        <ul>
+          <li>Not available during the shift time</li>
+          <li>Available but assigned to an overlapping shift</li>
+          <li>Available but too far from the work site</li>
+          <li>Missing one or more required certifications</li>
+          <li>No location on file</li>
+        </ul>
+        <p>Click <strong>Why no matches?</strong> to reveal the breakdown.</p>
+
+        <h3>Conflict badges</h3>
+        <p>A candidate card may show a <strong>Conflict</strong> badge. This means the staff member is available but already assigned to an overlapping shift. You can still assign them, but the conflict is surfaced so you can decide.</p>
+
+        <h3>Editing and deleting shifts</h3>
+        <ul>
+          <li><strong>Edit</strong> — opens the shift modal pre-filled with the current values. (Currently saves as a new shift.)</li>
+          <li><strong>Del</strong> — deletes the shift. Assigned staff are freed and the shift is removed from the board. This cannot be undone.</li>
+        </ul>
+
+        <h3>Where shifts come from</h3>
+        <p>Shifts can be created two ways:</p>
+        <ul>
+          <li>Manually, via the <strong>New Shift</strong> button on the board.</li>
+          <li>Automatically, by converting a staffing request from the Requests panel. When a client submits a request, an admin converts it into a shift with one click.</li>
+        </ul>
+      </div>
+
+      <!-- PAGE: Assignments Overview -->
+      <div class="docs-page" id="docs-assignments-overview">
+        <h2>Assignments</h2>
+        <p>The Assignments view lists every staff assignment across all shifts in your organization. Each row shows which staff member was assigned to which shift, the match score, the current status, who confirmed it, and the available actions.</p>
+
+        <div class="docs-callout">
+          <strong>Columns:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Shift</strong> — the work site name and shift start time.</li>
+            <li><strong>Staff</strong> — the assigned staff member's name (or email if no name).</li>
+            <li><strong>Score</strong> — the match score from 0.00 to 1.00, computed when the assignment was created.</li>
+            <li><strong>Status</strong> — Pending, Confirmed, or Rejected.</li>
+            <li><strong>Confirmed By</strong> — who confirmed the assignment (typically "admin").</li>
+            <li><strong>Actions</strong> — Confirm, Reassign, or Unassign, depending on status.</li>
+          </ul>
+        </div>
+
+        <h3>Filtering</h3>
+        <p>Three filters at the top narrow the list:</p>
+        <ul>
+          <li><strong>Date range</strong> — a <strong>From</strong> and <strong>To</strong> date picker filter assignments by shift start time. The default range is the next two weeks.</li>
+          <li><strong>Staff</strong> — show only assignments for a specific staff member.</li>
+          <li><strong>Status</strong> — show only Pending or only Confirmed assignments, or both.</li>
+        </ul>
+        <p>Filters apply automatically when changed. Click <strong>Refresh</strong> to re-fetch the latest data.</p>
+
+        <h3>Statuses</h3>
+        <ul>
+          <li><strong>Pending</strong> — the staff member has been assigned to a shift but the assignment has not been confirmed yet. Pending assignments show a <strong>Confirm</strong> button.</li>
+          <li><strong>Confirmed</strong> — the assignment is locked in. The staff member is committed to the shift. Confirmed assignments show a <strong>Confirmed ✓</strong> badge and cannot be re-confirmed.</li>
+          <li><strong>Rejected</strong> — the assignment was declined or removed. Rejected assignments remain visible for audit but cannot be acted on.</li>
+        </ul>
+
+        <h3>Confirming an assignment</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click Confirm</h3>
+            <p>Opens a confirmation modal showing the staff member's name and the work site.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Click Confirm in the modal</h3>
+            <p>The assignment status changes to Confirmed. The shift's confirmed count goes up on the Schedule Board.</p>
+          </div>
+        </div>
+        <div class="docs-callout">
+          <strong>Overlap protection:</strong> Senzii checks for conflicting confirmed assignments before confirming. If the staff member already has a confirmed assignment for an overlapping shift, the confirmation is blocked with a message describing the conflict.
+        </div>
+
+        <h3>Reassigning an assignment</h3>
+        <p>Click <strong>Reassign</strong> to change which staff member is assigned to a shift — available on any assignment regardless of status.</p>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click Reassign</h3>
+            <p>Opens a modal showing the current staff member and a dropdown of all other staff in your organization.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Select a new staff member</h3>
+            <p>Choose from the dropdown. Only staff in your organization appear. The current staff member is excluded from the list.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Click Reassign in the modal</h3>
+            <p>The assignment's staff member is updated. A new match score is computed for the replacement staff member. If the assignment was confirmed, the shift's assigned staff is updated as well.</p>
+          </div>
+        </div>
+        <div class="docs-callout">
+          <strong>Overlap check:</strong> The system checks the new staff member's existing assignments for time conflicts before completing the reassignment. If a conflict is found, the reassignment is blocked.
+        </div>
+
+        <h3>Unassigning an assignment</h3>
+        <p>Click <strong>Unassign</strong> to remove a staff member from a shift entirely — available on any assignment regardless of status.</p>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click Unassign</h3>
+            <p>Opens a confirmation modal showing the staff member's name and the work site.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Click Unassign in the modal</h3>
+            <p>The assignment is deleted. If it was a confirmed assignment, the shift's assigned staff is cleared (or promoted to another confirmed assignment if one exists). The shift will need a replacement.</p>
+          </div>
+        </div>
+
+        <h3>Where assignments come from</h3>
+        <p>Assignments are created when you assign a staff member to a shift from the <strong>Schedule Board</strong>. Clicking a shift row opens the candidate slide-over, and clicking <strong>Assign &amp; Confirm</strong> creates and immediately confirms the assignment in one step. The assignment then appears in this view.</p>
+
+        <h3>Match score</h3>
+        <p>The score is a weighted combination of three factors, computed at the time of assignment:</p>
+        <ul>
+          <li><strong>Proximity</strong> (30%) — Haversine distance between the staff member's location and the work site.</li>
+          <li><strong>Skills</strong> (40%) — overlap between the staff member's certifications and the shift's required certifications.</li>
+          <li><strong>Availability</strong> (30%) — whether the staff member's availability window covers the shift time.</li>
+        </ul>
+        <p>Scores range from 0.00 to 1.00. When you reassign, a new score is computed for the replacement staff member using the same weights.</p>
+      </div>
+
+      <!-- PAGE: Staff Overview -->
+      <div class="docs-page" id="docs-staff-overview">
+        <h2>Staff</h2>
+        <p>The Staff view lists every staff member in your organization. Each row shows contact details, certifications, availability windows, and the actions you can take on that person.</p>
+
+        <div class="docs-callout">
+          <strong>Columns:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Name</strong> — the staff member's display name.</li>
+            <li><strong>Email</strong> — used for magic-link login and notifications.</li>
+            <li><strong>Phone</strong> — optional contact number.</li>
+            <li><strong>Address</strong> — used for proximity matching. Senzii geocodes the address to coordinates on save; you never enter lat/long directly.</li>
+            <li><strong>Skills &amp; Certifications</strong> — tags for every certification assigned to this staff member.</li>
+            <li><strong>Availability</strong> — day and time-window tags showing when this person can work.</li>
+            <li><strong>TZ</strong> — the staff member's IANA timezone (e.g. <code>America/New_York</code>).</li>
+            <li><strong>Actions</strong> — per-row action buttons (see below).</li>
+          </ul>
+        </div>
+
+        <h3>Adding a staff member</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click Add Staff</h3>
+            <p>Opens a modal where you enter the name, email, phone (optional), address, and timezone.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Set certifications</h3>
+            <p>Toggle on any certifications this staff member holds. Only certifications you've already added in the Certs panel appear here. Certifications determine which shifts this person is a candidate for — a shift's required certs must overlap with the staff member's certs for them to show up in the candidate list.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Save</h3>
+            <p>The staff member is created and appears in the table. A magic link can be sent immediately so they can set a password and access the staff portal.</p>
+          </div>
+        </div>
+
+        <h3>Per-row actions</h3>
+        <ul>
+          <li><strong>Send Link</strong> — generates a magic login link for this staff member. The link lets them set a password and access the staff portal without you creating a password for them.</li>
+          <li><strong>Avail</strong> — opens the availability modal. Set one or more weekly availability windows (day of week + start/end time). Availability is used by the matching engine: a staff member only appears as a candidate for a shift that falls within one of their windows.</li>
+          <li><strong>Add Cred</strong> — opens a modal to assign an additional certification to this staff member. You can set an optional expiration date. Only certifications that already exist at the org level are listed — if the list is empty, add certifications in the Certs panel first.</li>
+          <li><strong>Del</strong> — archives the staff member. This is blocked if the staff member has any upcoming or in-progress confirmed assignments; remove or reassign those first.</li>
+        </ul>
+
+        <h3>How staff feed into matching</h3>
+        <p>When you open the candidate slide-over on a shift, Senzii scores every staff member using three inputs from this view:</p>
+        <ul>
+          <li><strong>Address</strong> — distance to the work site (Haversine on geocoded coordinates).</li>
+          <li><strong>Certifications</strong> — overlap with the shift's required certifications.</li>
+          <li><strong>Availability</strong> — whether any weekly window covers the shift's time.</li>
+        </ul>
+        <p>Staff with no address, no certifications, or no availability windows can still be created, but they will rank low or be excluded entirely from candidate lists. Fill in all three to get useful match scores.</p>
+
+        <h3>Filtering</h3>
+        <p>Use the <strong>Search name</strong> input in the top bar to filter the table by staff name. The list updates as you type.</p>
+      </div>
+
+      <!-- PAGE: Work Sites Overview -->
+      <div class="docs-page" id="docs-sites-overview">
+        <h2>Work Sites</h2>
+        <p>The Work Sites view lists every location your organization staffs. Each row shows the site name, address, required skills, timezone, and the actions you can take on that site.</p>
+
+        <div class="docs-callout">
+          <strong>Columns:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Name</strong> — the site's display name.</li>
+            <li><strong>Address</strong> — the street address. Senzii geocodes this to coordinates on save; you never enter lat/long directly. The coordinates are used for proximity matching against staff addresses.</li>
+            <li><strong>Required Skills</strong> — tags for every certification a shift at this site requires. Staff without these certifications will not appear as candidates.</li>
+            <li><strong>TZ</strong> — the site's IANA timezone (e.g. <code>America/New_York</code>). Shift times on the board are shown in this timezone.</li>
+            <li><strong>Actions</strong> — per-row action buttons (see below).</li>
+          </ul>
+        </div>
+
+        <h3>Adding a work site</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click Add Site</h3>
+            <p>Opens a modal where you enter the site name, address, and timezone.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Set required skills</h3>
+            <p>Toggle on any certifications shifts at this site require. Only certifications you've already added in the Certs panel appear here. These become the default required certifications for every shift created at this site — you can still adjust them per shift when creating a shift on the board.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Save</h3>
+            <p>The work site is created, geocoded, and appears in the table. It is now available in the site filter on the Schedule Board and in the New Shift modal.</p>
+          </div>
+        </div>
+
+        <h3>Per-row actions</h3>
+        <ul>
+          <li><strong>Edit</strong> — opens the site modal pre-filled with the current values. Change the name, address, timezone, or required skills and save. The update takes effect immediately on all new shifts created at this site.</li>
+          <li><strong>Del</strong> — deletes the work site. This button is disabled when the site has shifts or staffing requests attached to it. The tooltip shows how many shifts and requests are blocking deletion — remove or reassign those first.</li>
+        </ul>
+
+        <h3>How work sites feed into matching</h3>
+        <p>When you open the candidate slide-over on a shift, Senzii uses the work site in two ways:</p>
+        <ul>
+          <li><strong>Address</strong> — distance from each staff member's geocoded address to the site (Haversine). Closer staff rank higher on proximity.</li>
+          <li><strong>Required skills</strong> — the site's required certifications flow into every shift created at that site. Staff must hold all required certifications to appear as candidates.</li>
+        </ul>
+        <p>A work site with no address cannot compute proximity scores — staff will rank as if they are infinitely far away. Enter a real address to get useful match scores.</p>
+
+        <h3>Filtering</h3>
+        <p>Use the <strong>Search name or address</strong> input in the top bar to filter the table. The list matches against both the site name and address, and updates as you type.</p>
+      </div>
+
+      <!-- PAGE: Clients Overview -->
+      <div class="docs-page" id="docs-clients-overview">
+        <h2>Clients</h2>
+        <p>The Clients view lists every client in your organization. Each row shows contact details, the company name, how many staffing requests they have submitted, and the actions you can take on that client.</p>
+
+        <div class="docs-callout">
+          <strong>Columns:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Name</strong> — the client's display name.</li>
+            <li><strong>Email</strong> — used for magic-link login to the client portal.</li>
+            <li><strong>Phone</strong> — optional contact number.</li>
+            <li><strong>Company</strong> — the client's company name, if provided.</li>
+            <li><strong>Requests</strong> — a badge showing how many staffing requests this client has submitted. <span class="badge badge-green">No requests</span> means the client has not submitted any requests yet; <span class="badge badge-yellow">N requests</span> shows the count.</li>
+            <li><strong>Actions</strong> — per-row action buttons (see below).</li>
+          </ul>
+        </div>
+
+        <h3>Adding a client</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click Add Client</h3>
+            <p>Opens a modal where you enter the name, email, phone (optional), and company name (optional).</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Save</h3>
+            <p>The client is created and appears in the table. A magic link can be sent immediately so they can set a password and access the client portal to submit staffing requests.</p>
+          </div>
+        </div>
+
+        <h3>Per-row actions</h3>
+        <ul>
+          <li><strong>Send Link</strong> — generates a magic login link for this client. The link lets them set a password and access the client portal without you creating a password for them. From the portal, clients can submit and track their own staffing requests.</li>
+          <li><strong>Del</strong> — deletes the client. This button is disabled when the client has submitted staffing requests. The tooltip shows how many requests are blocking deletion — cancel or convert those requests first. A client with no requests can be deleted freely.</li>
+        </ul>
+
+        <h3>Clients and staffing requests</h3>
+        <p>Clients are the source of staffing requests. When a client submits a request from their portal, it appears in the <strong>Staffing Requests</strong> view with a status of <em>open</em>. The Requests column on this table gives you a quick count of how many requests each client has submitted.</p>
+        <p>To act on a client's request, go to the Staffing Requests view, where you can convert open requests into shifts on the Schedule Board with one click.</p>
+
+        <h3>Filtering</h3>
+        <p>Use the <strong>Name</strong> and <strong>Company</strong> inputs in the top bar to filter the table. Both filters apply simultaneously — the list shows clients matching both. The list updates as you type.</p>
+      </div>
+
+      <!-- PAGE: Skills / Certs Overview -->
+      <div class="docs-page" id="docs-certs-overview">
+        <h2>Skills / Certifications</h2>
+        <p>The Skills / Certifications view is your organization's master list of certifications. This is where you define the vocabulary that the rest of Senzii uses — every certification assigned to staff, required on shifts, or attached to work sites must first exist in this list.</p>
+
+        <div class="docs-callout">
+          <strong>Columns:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Name</strong> — the certification name (e.g. <code>BLS</code>, <code>RN License</code>, <code>Forklift</code>).</li>
+            <li><strong>Added</strong> — the date the certification was created in your organization.</li>
+            <li><strong>Actions</strong> — per-row edit and delete buttons.</li>
+          </ul>
+        </div>
+
+        <h3>Adding a certification</h3>
+        <p>Type the certification name in the input at the top of the panel and click <strong>Add</strong>. The certification is created at the organization level and immediately available for assignment to staff, shifts, and work sites. Duplicate names are rejected with a toast.</p>
+
+        <h3>Per-row actions</h3>
+        <ul>
+          <li><strong>Edit</strong> — converts the name cell into an inline text input. Change the name and press Enter to save, or Esc to cancel. Renaming a certification updates it everywhere it is used — staff records, shift requirements, and work site defaults all reflect the new name.</li>
+          <li><strong>Delete</strong> — removes the certification from your organization. This also removes it from any staff who have it assigned. You will be asked to confirm before deletion. There is no undo.</li>
+        </ul>
+
+        <h3>How certifications are used</h3>
+        <p>Certifications defined here flow into three places:</p>
+        <ul>
+          <li><strong>Staff</strong> — when you add or edit a staff member, the cert picker shows every certification from this list. Staff must hold a shift's required certifications to appear as candidates.</li>
+          <li><strong>Shifts</strong> — the New Shift modal cert picker is populated from this list. Required certifications on a shift filter the candidate list to only staff who hold them.</li>
+          <li><strong>Work Sites</strong> — a work site's required skills become the default required certifications for every shift created at that site.</li>
+        </ul>
+        <p>If the cert pickers in Staff, Shift, or Work Site modals are empty, it means no certifications have been added here yet. Add some in this panel first, then they will appear everywhere.</p>
+
+        <div class="docs-callout">
+          <strong>Tip:</strong> Use consistent, standardized names (e.g. <code>Forklift</code> not <code>Fork Lift</code>) to avoid confusion in candidate matching. Staff and shifts are matched by exact certification name.
+        </div>
+      </div>
+
+      <!-- PAGE: Requests Overview -->
+      <div class="docs-page" id="docs-requests-overview">
+        <h2>Staffing Requests</h2>
+        <p>The Staffing Requests view shows every request submitted by clients through the client portal. Each request appears as a card with the client's name and email, the requested work site, date, time window, minimum staff count, required skills, optional notes, and the current status.</p>
+
+        <div class="docs-callout">
+          <strong>Status badges:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Open</strong> — the request has not been acted on yet. Shows <em>Convert to Shift</em> and <em>Cancel</em> buttons.</li>
+            <li><strong>Accepted</strong> — the request has been converted to a shift. The shift is now on the Schedule Board. Shows <em>Cancel</em> only.</li>
+            <li><strong>Filled</strong> — the shift created from this request has reached its minimum staff count.</li>
+            <li><strong>Cancelled</strong> — the request was cancelled. No further actions are available.</li>
+          </ul>
+        </div>
+
+        <h3>Acting on a request</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Convert to Shift</h3>
+            <p>Click <strong>Convert to Shift</strong> on an open request. Senzii creates a shift on the Schedule Board using the request's work site, date, time window, minimum staff count, and required skills. The request status changes to <em>Accepted</em>. The board and request list refresh automatically.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Assign staff</h3>
+            <p>Switch to the Schedule Board, find the new shift row, and open the candidate slide-over to assign staff as you would for any manually created shift.</p>
+          </div>
+        </div>
+
+        <h3>Cancelling a request</h3>
+        <p>Click <strong>Cancel</strong> on an open or accepted request to cancel it. If the request was already converted to a shift, the linked shift is deleted and any assigned staff are freed. This cannot be undone.</p>
+
+        <h3>Where requests come from</h3>
+        <p>Requests are submitted by clients from the client portal. When a client signs in via magic link, they can fill out a request form specifying the work site, date, time window, minimum staff count, required skills, and notes. Each submitted request appears here with an <em>Open</em> status. A badge on the Requests nav item shows the count of open requests.</p>
+
+        <h3>Filtering</h3>
+        <ul>
+          <li><strong>Requester</strong> — filter by client name. The list updates as you type.</li>
+          <li><strong>Work site</strong> — filter by work site name. The list updates as you type.</li>
+          <li><strong>Status</strong> — filter by status (Open, Accepted, Filled, Cancelled, or All). Changing this filter re-fetches the request list from the API.</li>
+        </ul>
+      </div>
+
+      <!-- PAGE: Billing Overview -->
+      <div class="docs-page" id="docs-billing-overview">
+        <h2>Billing</h2>
+        <p>The Billing view shows your seat reservation and billing summary. Seats are the staff member slots you pay for on your subscription. This is where you add or remove seats and see how much you are being billed.</p>
+
+        <div class="docs-callout">
+          <strong>Seat Overview:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Reserved</strong> — the number of seats on your subscription.</li>
+            <li><strong>In Use</strong> — the number of staff members currently in your organization.</li>
+            <li><strong>Available</strong> — Reserved minus In Use. This is how many more staff you can add without purchasing more seats.</li>
+          </ul>
+        </div>
+
+        <div class="docs-callout">
+          <strong>Billing:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Price / Staff / Mo</strong> — the per-seat price ($5.00).</li>
+            <li><strong>Monthly Total</strong> — Reserved seats multiplied by the per-seat price.</li>
+            <li><strong>Next Billing Date</strong> — when your subscription renews. If you are on a free trial, a badge shows the trial end date instead.</li>
+          </ul>
+        </div>
+
+        <div class="docs-callout">
+          <strong>Subscription:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Status</strong> — your subscription's current state (Trial, Active, Past Due, Canceled).</li>
+            <li><strong>Cancel Subscription</strong> — cancels your entire subscription and releases all seats. You will no longer be billed.</li>
+          </ul>
+        </div>
+
+        <h3>Adding staff members</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Enter a quantity</h3>
+            <p>Set the number of staff members you want to add in the <strong>Add staff members</strong> input.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Click Add Seats</h3>
+            <p>Your subscription is updated immediately. You are billed a prorated amount for the added seats. The seat overview and Staff table both refresh.</p>
+          </div>
+        </div>
+
+        <h3>Removing staff members</h3>
+        <p>Set the number of seats to remove in the <strong>Remove staff members</strong> input and click <strong>Remove Seats</strong>. Your subscription is updated immediately with a prorated credit. You cannot remove more seats than you have available (Reserved minus In Use) — the input's maximum is capped automatically.</p>
+
+        <h3>Canceling your subscription</h3>
+        <p>Click <strong>Cancel Subscription</strong> in the Subscription section to cancel your entire subscription. All seats are released and you will no longer be billed. You can resubscribe at any time.</p>
+
+        <h3>Reactivating your subscription</h3>
+        <p>After canceling, a <strong>Reactivate</strong> button appears in the Subscription section. Click it to start a new subscription using your existing Stripe customer. If your original trial or billing period hasn't ended yet, you won't be billed until that date. If both have passed, billing starts immediately.</p>
+
+        <h3>How seats relate to the Staff view</h3>
+        <p>Every staff member you add in the <strong>Staff</strong> view takes one seat. When <strong>In Use</strong> equals <strong>Reserved</strong>, you have no available seats — you must add more seats here before you can add more staff in the Staff view.</p>
+
+        <h3>If billing is not configured</h3>
+        <p>If no Stripe subscription exists, the view shows a message explaining that staff member reservations will appear once a subscription is started. Contact your account manager to set up billing.</p>
+      </div>
+
+      <!-- PAGE: Admin Team Overview -->
+      <div class="docs-page" id="docs-team-overview">
+        <h2>Admin Team</h2>
+        <p>The Admin Team view lists every admin in your organization. Admins are the people who can sign in to this dashboard. Each row shows the admin's name, email, role, and a button to send them a magic login link.</p>
+
+        <div class="docs-callout">
+          <strong>Columns:</strong>
+          <ul style="margin:0.5rem 0 0 1rem;padding:0">
+            <li><strong>Name</strong> — the admin's display name.</li>
+            <li><strong>Email</strong> — used for magic-link login to the admin dashboard.</li>
+            <li><strong>Role</strong> — the admin's role tag (e.g. <code>admin</code>, <code>super</code>).</li>
+            <li><strong>Actions</strong> — per-row action buttons (see below).</li>
+          </ul>
+        </div>
+
+        <h3>Inviting an admin</h3>
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Click Invite Admin</h3>
+            <p>Opens a modal where you enter the new admin's name and email.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Submit</h3>
+            <p>Senzii creates the admin account and generates a magic link. A modal appears showing the link and whether an email was sent. Copy the link and share it with the new admin, or let the email deliver it automatically. The new admin uses the link to set a password and access the dashboard.</p>
+          </div>
+        </div>
+
+        <h3>Per-row actions</h3>
+        <ul>
+          <li><strong>Send Link</strong> — generates a fresh magic login link for this admin. A modal appears with the link and email delivery status. Use this when an admin has lost their original invite link or needs a new login session.</li>
+        </ul>
+
+        <h3>Roles</h3>
+        <p>Admins are assigned a role when their account is created. The <code>super</code> role grants access to server-level metrics and the admin panel. The <code>admin</code> role grants access to the dashboard but not to server metrics.</p>
+
+        <h3>Filtering</h3>
+        <p>Use the <strong>Search name</strong> input in the top bar to filter the table by admin name or email. The list matches against both fields and updates as you type.</p>
+      </div>
+
+      <!-- PAGE: MCP Overview -->
+      <div class="docs-page" id="docs-mcp-overview">
+        <h2>MCP Server</h2>
+        <p>Senzii exposes a <strong>Model Context Protocol (MCP)</strong> server so AI assistants can read and manage your scheduling data directly — staff, shifts, assignments, work sites, clients, and more.</p>
+
+        <div class="docs-callout">
+          <strong>Endpoint:</strong> <code>https://senzii.com/mcp</code><br>
+          <strong>Transport:</strong> Streamable HTTP<br>
+          <strong>Auth:</strong> OAuth 2.1 (automatic sign-in through Senzii)
+        </div>
+
+        <h3>How it works</h3>
+        <p>When you connect an AI assistant to Senzii, it redirects you to the Senzii login page. After signing in, you approve the connection — and the assistant gets access to your scheduling tools. No API keys to copy or paste.</p>
+
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Connect your AI assistant</h3>
+            <p>Open your AI assistant's connector settings and add the Senzii URL: <code>https://senzii.com/mcp</code>. See the Claude or ChatGPT tabs for step-by-step instructions.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Sign in and approve</h3>
+            <p>You'll be redirected to Senzii to log in. After logging in, you'll see a consent screen listing what the assistant can access. Click <strong>Allow</strong> to approve.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Start chatting</h3>
+            <p>Your AI assistant can now list staff, create shifts, manage assignments, and more. Ask it anything about your schedule!</p>
+          </div>
+        </div>
+
+        <h3>Available Tools (18)</h3>
+        <ul>
+          <li><code>list_staff</code> / <code>get_staff</code> / <code>create_staff</code> / <code>delete_staff</code></li>
+          <li><code>list_clients</code> / <code>create_client</code></li>
+          <li><code>list_shifts</code> / <code>list_assignments</code> / <code>delete_shift</code></li>
+          <li><code>list_staffing_requests</code> / <code>convert_staffing_request</code> / <code>cancel_staffing_request</code></li>
+          <li><code>list_work_sites</code> / <code>create_work_site</code></li>
+          <li><code>create_staffing_request</code></li>
+          <li><code>list_certifications</code> / <code>create_certification</code> / <code>update_certification</code> / <code>delete_certification</code></li>
+          <li><code>add_staff_certification</code></li>
+          <li><code>send_staff_magic_link</code> / <code>send_client_magic_link</code></li>
+          <li><code>get_org_metrics</code></li>
+          <li><code>run_sql</code> (admin only, read-only SELECT)</li>
+        </ul>
+
+        <h3>Permissions by role</h3>
+        <p>The tools available depend on how you sign in:</p>
+        <ul>
+          <li><strong>Admin</strong> — full access to all tools (staff, shifts, clients, certifications, metrics, SQL)</li>
+          <li><strong>Staff</strong> — manage your own profile, availability, certifications, and view/accept assignments</li>
+          <li><strong>Client</strong> — manage your profile, submit and track staffing requests</li>
+        </ul>
+      </div>
+
+      <!-- PAGE: Claude -->
+      <div class="docs-page" id="docs-mcp-claude">
+        <h2>Claude</h2>
+        <p>Connect Senzii to Claude (claude.ai) so Claude can manage your schedules directly.</p>
+
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Open connector settings</h3>
+            <p>Go to <a href="https://claude.ai" target="_blank">claude.ai</a>, click your profile icon → <strong>Settings</strong> → <strong>Connectors</strong>.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Add a custom connector</h3>
+            <p>Scroll to the bottom and click <strong>Add custom connector</strong>. Enter this URL:</p>
+            <pre><code>https://senzii.com/mcp</code></pre>
+            <p>Click <strong>Add</strong> to proceed.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Sign in and approve</h3>
+            <p>Claude will redirect you to the Senzii login page. Sign in with your Senzii account, review the permissions, and click <strong>Allow</strong>.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">4</div>
+          <div class="docs-step-body">
+            <h3>Use it</h3>
+            <p>In a new conversation, click the paperclip icon to see available tools. Select Senzii tools, then ask Claude to list your staff, check tomorrow's shifts, or create a staffing request.</p>
+          </div>
+        </div>
+        <div class="docs-callout">
+          <strong>No API key needed.</strong> Authentication is handled through your Senzii login — no keys to copy or paste.
+        </div>
+      </div>
+
+      <!-- PAGE: ChatGPT -->
+      <div class="docs-page" id="docs-mcp-chatgpt">
+        <h2>ChatGPT</h2>
+        <p>Connect Senzii to ChatGPT so it can manage your schedules directly.</p>
+
+        <h3>Test It</h3>
+        <p>Developer mode is available on ChatGPT <strong>Pro, Plus, Business, Enterprise, and Education</strong> plans. If you're on a Free plan, you'll need to upgrade first.</p>
+
+        <div class="docs-step">
+          <div class="docs-step-num">1</div>
+          <div class="docs-step-body">
+            <h3>Enable developer mode</h3>
+            <p>Go to <strong>Settings → Apps → Advanced settings</strong> (bottom of the page) and toggle <strong>Developer mode</strong>.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">2</div>
+          <div class="docs-step-body">
+            <h3>Create a connector</h3>
+            <p>Go to <strong>Settings → Apps → Create app</strong> (next to Advanced settings). Fill in:</p>
+            <ul>
+              <li><strong>Connector name:</strong> Senzii</li>
+              <li><strong>Description:</strong> Manage staff scheduling, shifts, and staffing requests</li>
+              <li><strong>Connector URL:</strong> <code>https://senzii.com/mcp</code></li>
+            </ul>
+            <p>Click <strong>Create</strong>.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">3</div>
+          <div class="docs-step-body">
+            <h3>Sign in and approve</h3>
+            <p>ChatGPT will redirect you to the Senzii login page. Sign in with your Senzii account, review the permissions, and click <strong>Allow</strong>.</p>
+          </div>
+        </div>
+        <div class="docs-step">
+          <div class="docs-step-num">4</div>
+          <div class="docs-step-body">
+            <h3>Use it</h3>
+            <p>Open a new chat, click the <strong>+</strong> button → <strong>More</strong> → select the Senzii connector. Ask ChatGPT to list your staff, check shifts, or create a staffing request.</p>
+          </div>
+        </div>
+        <div class="docs-callout">
+          <strong>No API key needed.</strong> Authentication is handled through your Senzii login — no keys to copy or paste.
+        </div>
+      </div>
+
+      <!-- PAGE: Other Clients -->
+      <div class="docs-page" id="docs-mcp-other">
+        <h2>Other Clients</h2>
+        <p>Any AI assistant that supports the <strong>MCP Streamable HTTP</strong> transport with OAuth can connect to Senzii.</p>
+
+        <h3>Connection Details</h3>
+        <ul>
+          <li><strong>URL:</strong> <code>https://senzii.com/mcp</code></li>
+          <li><strong>Transport:</strong> Streamable HTTP</li>
+          <li><strong>Auth:</strong> OAuth 2.1 with PKCE</li>
+        </ul>
+
+        <h3>OAuth Flow</h3>
+        <p>The connection uses OAuth 2.1 — the same standard used by "Sign in with Google" buttons. The client discovers the auth endpoints automatically:</p>
+        <ul>
+          <li>Discovery: <code>https://senzii.com/.well-known/oauth-authorization-server</code></li>
+          <li>Registration: <code>https://senzii.com/oauth/register</code></li>
+          <li>Authorize: <code>https://senzii.com/oauth/authorize</code></li>
+          <li>Token: <code>https://senzii.com/oauth/token</code></li>
+        </ul>
+        <p>Most MCP-compatible clients handle this automatically — you just paste the URL and sign in.</p>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- SUPPORT SIDEBAR -->
+  <div class="docs-sidebar-backdrop" id="support-backdrop" onclick="closeSupport()"></div>
+  <aside class="docs-sidebar" id="support-sidebar">
+    <div class="docs-sidebar-head">
+      <span class="docs-sidebar-title">Support</span>
+      <button class="docs-sidebar-close" onclick="closeSupport()" aria-label="Close support">&times;</button>
+    </div>
+    <div class="docs-body">
+      <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.25rem">
+        Questions? Issues? Feedback? Connect with us by email or phone. We'll get back to you within 1 business day and usually sooner Monday - Friday.
+      </p>
+      <div style="display:grid;gap:0.75rem">
+        <a href="mailto:support@senzii.com" style="display:flex;align-items:center;gap:0.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:var(--text);transition:border-color 0.15s">
+          <svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <div>
+            <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.2rem">Email</div>
+            <div style="font-size:0.9rem;font-weight:500;color:var(--text)">support@senzii.com</div>
+          </div>
+        </a>
+        <a href="tel:+12677392092" style="display:flex;align-items:center;gap:0.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:var(--text);transition:border-color 0.15s">
+          <svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"/></svg>
+          <div>
+            <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.2rem">Phone</div>
+            <div style="font-size:0.9rem;font-weight:500;color:var(--text)">+1 (267) 739-2092</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <script src="/js/dashboard.dd52ba80.js"></script>
+
+
+
+</body>
+</html>

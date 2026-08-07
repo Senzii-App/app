@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senzii — Client Portal</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand: #f8fafc;
+      --brand-mid: #f1f5f9;
+      --accent: #16a34a;
+      --accent-dim: rgba(22, 163, 74, 0.08);
+      --accent-border: rgba(22, 163, 74, 0.25);
+      --surface: #ffffff;
+      --surface2: #f1f5f9;
+      --surface3: #e2e8f0;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      --danger: #dc2626;
+      --danger-dim: rgba(220, 38, 38, 0.08);
+      --success: #059669;
+      --success-dim: rgba(5, 150, 105, 0.08);
+      --warn: #d97706;
+      --warn-dim: rgba(217, 119, 6, 0.08);
+      --radius: 14px;
+      --radius-sm: 8px;
+      --font-head: 'Inter', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--brand);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Login Screen ── */
+    body.auth-loading, body.not-authed { display: flex; align-items: center; justify-content: center; }
+    .login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+      max-width: 360px;
+    }
+    .login-logo {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+    }
+    .login-sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .login-logo-badge {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: var(--surface2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      margin-bottom: 0.25rem;
+    }
+    .login-error {
+      background: var(--danger-dim);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--danger);
+      display: none;
+    }
+
+    /* ── App Shell ── */
+    .app-shell { display: none; flex-direction: column; height: 100dvh; }
+
+    /* ── Header ── */
+    .sp-header {
+      flex-shrink: 0;
+      background: var(--brand);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .sp-header-logo {
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .sp-header-logo-mark { flex-shrink: 0; position: relative; top: 0.0625rem; }
+    .sp-greeting {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+    .sp-logout-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 0.35rem;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+    .sp-logout-btn:hover { color: var(--text); }
+
+    /* ── Content ── */
+    .sp-content {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 1rem 1rem 100px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sp-content::-webkit-scrollbar { width: 4px; }
+    .sp-content::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
+
+    /* ── Tab Panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Bottom Nav ── */
+    .sp-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--brand-mid);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      z-index: 100;
+    }
+    .sp-nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      padding: 0.6rem 0.25rem;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: color 0.15s;
+      min-height: 52px;
+    }
+    .sp-nav-btn.active { color: var(--accent); }
+    .sp-nav-btn svg { width: 22px; height: 22px; stroke-width: 1.75; flex-shrink: 0; }
+
+    /* ── Section ── */
+    .sp-section { margin-bottom: 1.75rem; }
+    .sp-section-title {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+      padding: 0 0.05rem;
+    }
+
+    /* ── Request Card ── */
+    .req-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.65rem;
+    }
+    .req-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .req-site {
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .req-time {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .req-address {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── Status Badge ── */
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      border-radius: 99px;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+    .badge-open { background: rgba(249,196,85,0.15); color: #d4a017; border: 1px solid rgba(249,196,85,0.35); }
+    .badge-accepted { background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.3); }
+    .badge-filled { background: var(--success-dim); color: var(--success); border: 1px solid rgba(63,185,80,0.3); }
+    .badge-cancelled { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(248,81,73,0.3); }
+    .badge-past { background: var(--surface3); color: var(--text-dim); border: 1px solid var(--border); }
+
+    /* ── Assigned Staff List ── */
+    .staff-list {
+      border-top: 1px solid var(--border);
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+    }
+    .staff-list-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+    }
+    .staff-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: var(--surface3);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+    }
+    .staff-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .staff-info { flex: 1; min-width: 0; }
+    .staff-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .staff-score { font-size: 0.72rem; color: var(--text-dim); }
+    .staff-score-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+    }
+    .score-bar {
+      height: 4px;
+      background: var(--surface);
+      border-radius: 2px;
+      overflow: hidden;
+      flex: 1;
+      max-width: 80px;
+    }
+    .score-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ── Empty State ── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+    .empty-icon { color: var(--text-dim); margin-bottom: 0.5rem; }
+    .empty-title { font-family: var(--font-head); font-size: 0.95rem; font-weight: 700; color: var(--text-muted); }
+    .empty-sub { font-size: 0.78rem; color: var(--text-dim); }
+
+    /* ── Form Elements ── */
+    .form-group { margin-bottom: 1rem; }
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 0.7rem 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent);
+    }
+    .form-select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
+
+    .skills-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+    .skill-tag {
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .skill-tag.selected {
+      background: var(--accent-dim);
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+    .skill-tag:hover:not(.selected) { border-color: var(--accent-border); color: var(--text-muted); }
+
+    /* ── Submit Button ── */
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: var(--brand);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Cancel Button ── */
+    .btn-danger {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--danger);
+      background: var(--danger-dim);
+      color: var(--danger);
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn-danger:active { transform: scale(0.97); }
+    .btn-danger:hover { opacity: 0.85; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error { border-color: var(--danger); color: var(--danger); }
+    .toast.success { border-color: var(--success); color: var(--success); }
+
+    /* ── Skeleton ── */
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease infinite;
+      border-radius: 6px;
+    }
+    .skel-block { height: 100px; margin-bottom: 0.65rem; }
+
+    /* ── Divider ── */
+    .sp-divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+    /* ── Responsive ── */
+    @media (min-width: 640px) {
+      .sp-content { max-width: 560px; margin: 0 auto; }
+      .sp-nav { max-width: 560px; left: 50%; transform: translateX(-50%); }
+    }
+  </style>
+</head>
+<body class="auth-loading">
+
+  <!-- ── Password Login Form ── -->
+  <div class="login-screen" id="login-form-screen" style="display:none">
+    <div class="login-logo-badge">Client Portal</div>
+    <div class="login-logo">Senzii</div>
+    <p class="login-sub">Sign in with your email and password</p>
+    <div class="login-error" id="login-form-error" style="display:none"></div>
+    <form id="client-login-form" onsubmit="submitClientLogin(event)" style="width:100%;max-width:320px">
+      <div class="form-group">
+        <input type="email" class="form-input" id="client-login-email" placeholder="Email address" required style="text-align:left">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-input" id="client-login-password" placeholder="Password" required style="text-align:left">
+      </div>
+      <button type="submit" class="btn-primary" id="client-login-btn">Sign In</button>
+    </form>
+    <p class="login-sub" style="margin-top:0.5rem;font-size:0.78rem">
+      No password? <a href="#" onclick="resetToToken()" style="color:var(--accent)">Use a magic link</a>
+    </p>
+  </div>
+
+  <!-- ── Login (pending token verification) ── -->
+  <div class="login-screen" id="login-screen" style="display:none">
+    <div class="login-logo-badge">Client Portal</div>
+    <div class="login-logo">Senzii</div>
+    <p class="login-sub">Verifying your link…</p>
+  </div>
+
+  <!-- ── Login Error ── -->
+  <div class="login-screen" id="login-error-screen" style="display:none">
+    <div class="login-logo">Senzii</div>
+    <p class="login-error" id="login-error-msg">Invalid or expired link.</p>
+    <p class="login-sub">Ask your administrator to send a new magic link.</p>
+  </div>
+
+  <!-- ── Client Portal SPA ── -->
+  <div class="app-shell" id="app-shell">
+
+    <!-- Header -->
+    <header class="sp-header">
+      <div>
+        <div class="sp-header-logo">
+          <svg class="sp-header-logo-mark" width="24" height="24" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="700" height="700" rx="155" fill="#16a34a"/>
+            <g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none">
+              <path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/>
+              <path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40 -79 -73 -163 -67 -169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/>
+              <path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/>
+            </g>
+          </svg>
+          <span>Senzii</span>
+        </div>
+        <div class="sp-greeting" id="greeting"></div>
+      </div>
+      <button class="sp-logout-btn" onclick="doLogout()" title="Sign out">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Content -->
+    <main class="sp-content">
+
+      <!-- ══ NEW REQUEST ══ -->
+      <section id="tab-request" class="tab-panel active">
+        <div class="sp-section">
+          <div class="sp-section-title">New Staffing Request</div>
+          <form id="request-form" onsubmit="submitRequest(event)">
+            <div class="form-group">
+              <label class="form-label">Work Site</label>
+              <select class="form-select" id="req-site">
+                <option value="">— Any site —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Shift Date</label>
+              <input type="date" class="form-input" id="req-date" required>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+              <div class="form-group">
+                <label class="form-label">Start Time</label>
+                <input type="time" class="form-input" id="req-start" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">End Time</label>
+                <input type="time" class="form-input" id="req-end" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Required Skills</label>
+              <div class="skills-tags" id="skills-tags"></div>
+              <input type="hidden" id="req-skills-json" value="[]">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Minimum Staff</label>
+              <input type="number" class="form-input" id="req-min-staff" value="1" min="1" max="20">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Notes (optional)</label>
+              <textarea class="form-textarea" id="req-notes" placeholder="Any additional details…"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" id="submit-btn">Submit Request</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ══ MY REQUESTS ══ -->
+      <section id="tab-requests" class="tab-panel">
+        <div class="sp-section">
+          <div class="sp-section-title">My Requests</div>
+          <div id="requests-loading">
+            <div class="skeleton skel-block"></div>
+            <div class="skeleton skel-block"></div>
+          </div>
+          <div id="requests-list"></div>
+        </div>
+      </section>
+
+    
+
+</main>
+
+    <!-- Bottom Tab Navigation -->
+    <nav class="sp-nav">
+      <button class="sp-nav-btn active" data-tab="request" onclick="switchTab(this)">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        New Request
+      </button>
+      <button class="sp-nav-btn" data-tab="requests" onclick="switchTab(this)">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        My Requests
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  const state = { client: null, requests: [], sites: [], orgCerts: [] };
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', init);
+
+  async function init() {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+
+    if (token) {
+      try {
+        const res = await fetch('/client/api/login' + location.search);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Invalid link');
+        state.client = data.client;
+        history.replaceState({}, '', '/client');
+      } catch (err) {
+        hideAllScreens();
+        document.getElementById('login-error-screen').style.display = 'flex';
+        document.getElementById('login-error-msg').textContent = err.message;
+        return;
+      }
+    } else {
+      // Check session
+      const meRes = await fetch('/client/api/me');
+      if (!meRes.ok) {
+        hideAllScreens();
+        document.getElementById('login-form-screen').style.display = 'flex';
+        return;
+      }
+      state.client = await meRes.json();
+    }
+
+    showApp();
+  }
+
+  function hideAllScreens() {
+    ['login-screen','login-form-screen','login-error-screen'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    document.body.classList.remove('auth-loading');
+  }
+
+  function showApp() {
+    hideAllScreens();
+    document.getElementById('app-shell').style.display = 'flex';
+    const greeting = state.client.company_name
+      ? `${state.client.name} · ${state.client.company_name}`
+      : state.client.name;
+    document.getElementById('greeting').textContent = greeting;
+    loadOrgCerts();
+    loadSites();
+    loadRequests();
+  }
+
+  // ── Org Certifications (Skills) ─────────────────────────────────────────
+  async function loadOrgCerts() {
+    try {
+      const res = await fetch('/client/api/certifications');
+      if (!res.ok) return;
+      const data = await res.json();
+      state.orgCerts = data.certifications || [];
+    } catch {
+      // Fallback: leave empty
+    }
+    initSkills();
+  }
+
+  // ── Password Login ───────────────────────────────────────────────────────
+  async function submitClientLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('client-login-btn');
+    const errEl = document.getElementById('login-form-error');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+
+    try {
+      const res = await fetch('/client/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('client-login-email').value,
+          password: document.getElementById('client-login-password').value
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Sign in failed');
+
+      // Use profile from login response if available, otherwise fetch /me
+      if (data.profile) {
+        state.client = data.profile;
+        showApp();
+      } else {
+        const meRes = await fetch('/client/api/me');
+        if (!meRes.ok) throw new Error('Failed to load profile');
+        state.client = await meRes.json();
+        showApp();
+      }
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+    }
+  }
+
+  function resetToToken() {
+    const token = prompt('Enter your magic link token:');
+    if (token) location.href = '/client?token=' + encodeURIComponent(token);
+  }
+
+  // ── Tab Switching ──────────────────────────────────────────────────────────
+  function switchTab(btn) {
+    document.querySelectorAll('.sp-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (tab === 'requests') loadRequests();
+  }
+
+  // ── Skills Tags ────────────────────────────────────────────────────────────
+  function initSkills() {
+    const container = document.getElementById('skills-tags');
+    const skills = state.orgCerts.map(c => c.name);
+    if (!skills.length) {
+      container.innerHTML = '<span style="color:var(--text-dim);font-size:0.82rem">No certifications configured yet. Ask your admin to add some.</span>';
+      return;
+    }
+    container.innerHTML = skills.map(skill => `
+      <button type="button" class="skill-tag" data-skill="${esc(skill)}" onclick="toggleSkill(this)">
+        + ${esc(skill)}
+      </button>
+    `).join('');
+  }
+
+  function toggleSkill(btn) {
+    btn.classList.toggle('selected');
+    const selected = Array.from(document.querySelectorAll('.skill-tag.selected')).map(b => b.dataset.skill);
+    document.getElementById('req-skills-json').value = JSON.stringify(selected);
+  }
+
+  // ── Load Work Sites ────────────────────────────────────────────────────────
+  async function loadSites() {
+    try {
+      const res = await fetch('/client/api/work-sites');
+      if (!res.ok) throw new Error();
+      state.sites = await res.json();
+      const select = document.getElementById('req-site');
+      select.innerHTML = '<option value="">— Any site —</option>';
+      state.sites.forEach(site => {
+        select.innerHTML += `<option value="${site.id}">${esc(site.name)}</option>`;
+      });
+    } catch {
+      // silently fail — site is optional
+    }
+  }
+
+  // ── Submit Request ─────────────────────────────────────────────────────────
+  async function submitRequest(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    const siteId = document.getElementById('req-site').value;
+    const skillsJson = document.getElementById('req-skills-json').value;
+    const required_skills = skillsJson ? JSON.parse(skillsJson) : [];
+
+    try {
+      const res = await fetch('/client/api/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          site_id: siteId ? parseInt(siteId) : null,
+          shift_date: document.getElementById('req-date').value,
+          start_time: document.getElementById('req-start').value,
+          end_time: document.getElementById('req-end').value,
+          required_skills,
+          min_staff: parseInt(document.getElementById('req-min-staff').value) || 1,
+          notes: document.getElementById('req-notes').value || null
+        })
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error || 'Failed to submit');
+      }
+      toast('success', 'Request submitted!');
+      e.target.reset();
+      document.getElementById('req-skills-json').value = '[]';
+      document.querySelectorAll('.skill-tag.selected').forEach(b => b.classList.remove('selected'));
+    } catch (err) {
+      toast('error', err.message || 'Failed to submit request');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Request';
+    }
+  }
+
+  // ── Load Requests ──────────────────────────────────────────────────────────
+  async function loadRequests() {
+    try {
+      const res = await fetch('/client/api/requests');
+      if (!res.ok) throw new Error();
+      state.requests = await res.json();
+      renderRequests();
+    } catch {
+      renderRequestsEmpty('Failed to load requests');
+    }
+  }
+
+  function renderRequests() {
+    document.getElementById('requests-loading').style.display = 'none';
+    const list = document.getElementById('requests-list');
+    if (!state.requests.length) return renderRequestsEmpty('No requests yet');
+
+    list.innerHTML = state.requests.map(r => renderRequestCard(r)).join('');
+
+    // Load assigned staff per request
+    state.requests.forEach(r => {
+      if (r.assigned_staff && r.assigned_staff.length) {
+        renderAssignedStaff(r.id, r.assigned_staff);
+      }
+    });
+  }
+
+  function renderRequestCard(req) {
+    const date = new Date(req.shift_date + 'T00:00:00');
+    const dateStr = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    const startStr = req.start_time ? req.start_time.slice(0, 5) : '';
+    const endStr = req.end_time ? req.end_time.slice(0, 5) : '';
+
+    const badgeClass = req.status === 'filled' ? 'badge-filled' : req.status === 'accepted' ? 'badge-accepted' : req.status === 'cancelled' ? 'badge-cancelled' : 'badge-open';
+    const hasStaff = req.assigned_staff && req.assigned_staff.length;
+    const canCancel = req.status === 'open' || req.status === 'accepted' || req.status === 'filled';
+
+    return `
+      <div class="req-card" id="req-card-${req.id}">
+        <div class="req-card-header">
+          <div class="req-site">${esc(req.site_name || 'General Staffing')}</div>
+          <span class="badge ${badgeClass}">${esc(req.status)}</span>
+        </div>
+        <div class="req-time">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${esc(dateStr)} &middot; ${esc(startStr)} – ${esc(endStr)}
+        </div>
+        ${req.site_address ? `<div class="req-address">${esc(req.site_address)}</div>` : ''}
+        ${req.required_skills && req.required_skills.filter(Boolean).length ? `<div style="margin-bottom:0.75rem"><div class="skills-tags" style="margin-top:0">${req.required_skills.filter(Boolean).map(s => `<span class="skill-tag selected" style="cursor:default">${esc(s)}</span>`).join('')}</div></div>` : ''}
+        ${req.min_staff > 1 ? `<div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem">Minimum ${req.min_staff} staff needed</div>` : ''}
+        ${req.notes ? `<div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem;line-height:1.4">${esc(req.notes)}</div>` : ''}
+        <div id="staff-list-${req.id}" class="staff-list" style="${hasStaff ? '' : 'display:none'}">
+          <div class="staff-list-title">Assigned Staff</div>
+          <div id="staff-items-${req.id}"></div>
+        </div>
+        ${canCancel ? `<button class="btn btn-danger" style="margin-top:0.75rem;width:100%" onclick="cancelRequest(${req.id})">Cancel Request</button>` : ''}
+      </div>`;
+  }
+
+  function renderAssignedStaff(reqId, staffList) {
+    const container = document.getElementById('staff-items-' + reqId);
+    const listEl = document.getElementById('staff-list-' + reqId);
+    if (!container || !listEl) return;
+
+    listEl.style.display = '';
+    container.innerHTML = staffList.map(s => {
+      const score = s.score ? Math.round(s.score * 100) : 0;
+      const initial = s.staff_name ? s.staff_name.charAt(0).toUpperCase() : '?';
+      const statusBadge = s.status === 'confirmed'
+        ? '<span class="badge badge-filled" style="font-size:0.6rem">Confirmed</span>'
+        : s.status === 'pending'
+        ? '<span class="badge badge-open" style="font-size:0.6rem">Pending</span>'
+        : '';
+      return `
+        <div class="staff-item">
+          <div class="staff-avatar">${esc(initial)}</div>
+          <div class="staff-info">
+            <div style="display:flex;align-items:center;gap:0.4rem">
+              <div class="staff-name">${esc(s.staff_name || 'Staff Member')}</div>
+              ${statusBadge}
+            </div>
+            <div class="staff-score-bar">
+              <span class="staff-score" style="font-size:0.68rem;color:var(--text-dim)">Match score</span>
+              <div class="score-bar"><div class="score-bar-fill" style="width:${score}%"></div></div>
+              <span class="staff-score" style="font-size:0.68rem">${score}%</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderRequestsEmpty(msg) {
+    document.getElementById('requests-loading').style.display = 'none';
+    document.getElementById('requests-list').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <div class="empty-title">${msg}</div>
+        <div class="empty-sub">Submit a staffing request to get started</div>
+      </div>`;
+  }
+
+  // ── Cancel Request ─────────────────────────────────────────────────────────
+  async function cancelRequest(id) {
+    if (!confirm('Cancel this request? If staff have already been assigned, they will be freed. This cannot be undone.')) return;
+    try {
+      const res = await fetch(`/client/api/requests/${id}`, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+      });
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        toast('error', d.error || 'Failed to cancel request');
+        return;
+      }
+      toast('success', 'Request cancelled');
+      loadRequests();
+    } catch (err) {
+      toast('error', 'Network error — could not cancel request');
+    }
+  }
+
+  // ── Logout ─────────────────────────────────────────────────────────────────
+  async function doLogout() {
+    await fetch('/client/api/logout', { method: 'POST' });
+    location.href = '/client';
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+  function esc(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  let toastTimer;
+  function toast(type, msg) {
+    const el = document.getElementById('toast');
+    clearTimeout(toastTimer);
+    el.textContent = msg;
+    el.className = 'toast ' + type + ' show';
+    toastTimer = setTimeout(() => { el.classList.remove('show'); }, 3000);
+  }
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — Senzii</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.20fbb461.css">
+  <link rel="stylesheet" href="/css/dashboard.92a71c02.css">
+  <style>
+    html, body { height: 100%; }
+    .auth-wrap { width: 100%; max-width: 400px; padding: 1.5rem; }
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; }
+    .auth-logo { text-align: center; margin-bottom: 2rem; }
+    .auth-logo span { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+    .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; }
+    .auth-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text); }
+    .auth-error { background: var(--coral-dim); border: 1px solid rgba(220,38,38,0.25); border-radius: 6px; color: var(--coral); font-size: 0.82rem; padding: 0.65rem 0.9rem; margin-bottom: 1.1rem; }
+    .btn-auth { width: 100%; padding: 0.7rem; background: var(--accent); color: #ffffff; border: none; border-radius: 7px; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.15s; margin-top: 0.3rem; }
+    .btn-auth:hover { background: #15803d; }
+    .btn-auth:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+    .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.82rem; color: var(--text-muted); }
+    .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .auth-footer a:hover { color: #15803d; }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <svg width="40" height="40" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:0.6rem"><rect width="700" height="700" rx="155" fill="#16a34a"/><g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none"><path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/><path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40 -79 -73 -163 -67 -169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/><path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/></g></svg>
+      <div><span>Senzii</span></div>
+    </div>
+    <div class="auth-card">
+      <h1 class="auth-title">Welcome Back</h1>
+      <div id="form-error" class="auth-error" style="display:none"></div>
+      <form id="login-form" autocomplete="on">
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="admin@yourcompany.com" required autofocus>
+        </div>
+        <div class="form-row">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-auth" id="submit-btn">Log In</button>
+      </form>
+      <div class="auth-footer">
+        <a href="/auth/forgot-password" style="display:block;margin-bottom:0.5rem;">Forgot password?</a>
+      </div>
+    </div>
+  </div>
+<script>
+(function() {
+  var form = document.getElementById('login-form');
+  var errorDiv = document.getElementById('form-error');
+  var submitBtn = document.getElementById('submit-btn');
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    errorDiv.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in…';
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    try {
+      var res = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+      });
+      var data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+      window.location.href = data.redirect || '/dashboard';
+      // If there's a ?return= parameter (e.g. from OAuth authorize flow),
+      // redirect there instead of the default dashboard.
+      var returnParam = new URLSearchParams(window.location.search).get('return');
+      if (returnParam) window.location.href = returnParam;
+    } catch(err) {
+      errorDiv.textContent = err.message;
+      errorDiv.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Log In';
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

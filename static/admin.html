@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Senzii</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #16a34a;
+      --accent-hover: #15803d;
+      --danger: #dc2626;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header h1 span {
+      color: var(--accent);
+    }
+    header h1 svg {
+      flex-shrink: 0;
+    }
+    .logout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all .15s;
+    }
+    .logout-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    main {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .metric-card .label {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .metric-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .metric-card .value.accent { color: var(--accent); }
+    .metric-card .sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .refresh-info {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+    /* Traffic section */
+    .traffic-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .traffic-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .traffic-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .traffic-range {
+      display: flex;
+      gap: 6px;
+    }
+    .traffic-range button {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all .15s;
+    }
+    .traffic-range button.active,
+    .traffic-range button:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .traffic-body {
+      padding: 20px;
+    }
+    .traffic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .traffic-col h3 {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .traffic-col table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .traffic-col th {
+      text-align: left;
+      font-weight: 500;
+      color: var(--text-muted);
+      padding: 4px 8px 4px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .traffic-col td {
+      padding: 4px 8px 4px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .traffic-col td:last-child,
+    .traffic-col th:last-child {
+      text-align: right;
+      padding-right: 0;
+    }
+    .traffic-sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 60px;
+      padding: 0;
+    }
+    .traffic-sparkline .bar {
+      flex: 1;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+      min-height: 2px;
+      position: relative;
+      opacity: 0.7;
+      transition: opacity .15s;
+    }
+    .traffic-sparkline .bar:hover { opacity: 1; }
+    .traffic-sparkline .bar .tip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .traffic-sparkline .bar:hover .tip { display: block; }
+    .traffic-empty {
+      color: var(--text-muted);
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+    }
+    @media (max-width: 768px) {
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .traffic-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .metrics-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+      <svg width="24" height="24" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="200" height="200" rx="40" fill="#16a34a"/>
+        <circle cx="72" cy="100" r="34" fill="none" stroke="#fff" stroke-width="10"/>
+        <circle cx="128" cy="100" r="34" fill="none" stroke="#fff" stroke-width="10"/>
+        <circle cx="100" cy="100" r="8" fill="#fff"/>
+      </svg>
+      Senzii <span>Admin</span>
+    </h1>
+    <a href="/auth/logout" class="logout-btn">Sign out</a>
+  </header>
+  <main>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="label">CPU Usage</div>
+        <div class="value accent" id="cpu-value">—</div>
+        <div class="sub" id="cpu-sub">Loading...</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Memory Used</div>
+        <div class="value" id="mem-value">—</div>
+        <div class="sub" id="mem-sub">Loading...</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Requests / min</div>
+        <div class="value" id="rpm-value">—</div>
+        <div class="sub">Estimated from Prometheus</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Total Requests</div>
+        <div class="value" id="total-value">—</div>
+        <div class="sub">Since server start</div>
+      </div>
+    </div>
+
+    <div class="traffic-section">
+      <div class="traffic-header">
+        <h2>Traffic Analytics</h2>
+        <div class="traffic-range">
+          <button data-days="7" onclick="loadTraffic(7, this)">7d</button>
+          <button data-days="30" class="active" onclick="loadTraffic(30, this)">30d</button>
+          <button data-days="90" onclick="loadTraffic(90, this)">90d</button>
+        </div>
+      </div>
+      <div class="traffic-body" id="traffic-body">
+        <div class="traffic-empty">Loading traffic data…</div>
+      </div>
+    </div>
+
+    <div class="refresh-info">Metrics auto-refresh every 5 seconds &middot; Prometheus endpoint: <code>/admin/metrics</code></div>
+  </main>
+
+  <script>
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
+      return (bytes / 1073741824).toFixed(2) + ' GB';
+    }
+
+    function parsePrometheus(text) {
+      const lines = text.split('\n');
+      const metrics = {};
+      for (const line of lines) {
+        if (line.startsWith('#') || !line.trim()) continue;
+        const match = line.match(/^(\w+)(?:\{([^}]*)\})?\s+([\d.eE+-]+)$/);
+        if (match) {
+          const [, name, labels, value] = match;
+          metrics[name] = metrics[name] || {};
+          const labelKey = labels || '';
+          metrics[name][labelKey] = parseFloat(value);
+        }
+      }
+      return metrics;
+    }
+
+    async function fetchMetrics() {
+      try {
+        const resp = await fetch('/admin/metrics');
+        if (!resp.ok) return;
+        const text = await resp.text();
+        const m = parsePrometheus(text);
+
+        // CPU
+        if (m['senzii_cpu_usage_percent']) {
+          const cpu = m['senzii_cpu_usage_percent'][''];
+          document.getElementById('cpu-value').textContent = cpu.toFixed(1) + '%';
+          document.getElementById('cpu-sub').textContent = 'Global CPU utilization';
+        }
+
+        // Memory
+        if (m['senzii_memory_used_bytes'] && m['senzii_memory_total_bytes']) {
+          const used = m['senzii_memory_used_bytes'][''];
+          const total = m['senzii_memory_total_bytes'][''];
+          document.getElementById('mem-value').textContent = formatBytes(used);
+          const pct = ((used / total) * 100).toFixed(1);
+          document.getElementById('mem-sub').textContent = pct + '% of ' + formatBytes(total);
+        }
+
+        // Total requests (sum across all labels)
+        if (m['senzii_http_requests_total']) {
+          let total = 0;
+          for (const v of Object.values(m['senzii_http_requests_total'])) total += v;
+          document.getElementById('total-value').textContent = Math.round(total).toLocaleString();
+        }
+
+      } catch (e) {
+        console.error('Failed to fetch metrics:', e);
+      }
+    }
+
+    // Poll every 5 seconds
+    fetchMetrics();
+    setInterval(fetchMetrics, 5000);
+
+    // ── Traffic Analytics ──────────────────────────────────────────────────
+    let trafficDays = 30;
+
+    async function loadTraffic(days, btnEl) {
+      trafficDays = days;
+      // Update active button
+      document.querySelectorAll('.traffic-range button').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const body = document.getElementById('traffic-body');
+      body.innerHTML = '<div class="traffic-empty">Loading…</div>';
+
+      try {
+        const res = await fetch('/api/admin/page-views?days=' + days);
+        if (!res.ok) {
+          body.innerHTML = '<div class="traffic-empty">No traffic data yet. Visit your landing page to start collecting.</div>';
+          return;
+        }
+        const data = await res.json();
+        renderTraffic(data, days);
+      } catch (e) {
+        body.innerHTML = '<div class="traffic-empty">Failed to load traffic data</div>';
+      }
+    }
+
+    function renderTraffic(data, days) {
+      const body = document.getElementById('traffic-body');
+      if (!data.total_views && !data.recent_daily?.length) {
+        body.innerHTML = '<div class="traffic-empty">No traffic data yet. Visit your landing page to start collecting.</div>';
+        return;
+      }
+
+      // Sparkline
+      const daily = (data.recent_daily || []).slice().reverse(); // oldest first
+      const maxViews = Math.max(...daily.map(d => d.views), 1);
+      const sparklineHtml = daily.length ? `
+        <div class="traffic-sparkline">
+          ${daily.map(d => {
+            const h = Math.max(4, (d.views / maxViews) * 56);
+            const label = d.date.slice(5); // MM-DD
+            return `<div class="bar" style="height:${h}px"><span class="tip">${label}: ${d.views} views, ${d.visitors} visitors</span></div>`;
+          }).join('')}
+        </div>` : '';
+
+      // Format referrer
+      function fmtRef(ref) {
+        if (!ref) return '<span style="color:var(--text-muted)">Direct / None</span>';
+        try {
+          const u = new URL(ref);
+          return esc(u.hostname);
+        } catch { return esc(ref.slice(0, 40)); }
+      }
+
+      const referrerRows = (data.top_referrers || []).map(r =>
+        `<tr><td>${fmtRef(r.referrer)}</td><td>${r.count.toLocaleString()}</td></tr>`
+      ).join('');
+
+      const pageRows = (data.top_pages || []).map(p =>
+        `<tr><td>${esc(p.page)}</td><td>${p.count.toLocaleString()}</td></tr>`
+      ).join('');
+
+      const sectionRows = (data.section_views || []).map(s =>
+        `<tr><td>${esc(s.section || '—')}</td><td>${s.count.toLocaleString()}</td></tr>`
+      ).join('');
+
+      const utmRows = (data.utm_summary || []).map(u =>
+        `<tr><td>${esc(u.utm_source || '—')}</td><td>${esc(u.utm_medium || '—')}</td><td>${esc(u.utm_campaign || '—')}</td><td>${u.count.toLocaleString()}</td></tr>`
+      ).join('');
+
+      body.innerHTML = `
+        <div style="display:flex;gap:24px;margin-bottom:20px;flex-wrap:wrap">
+          <div class="metric-card" style="flex:1;min-width:140px">
+            <div class="label">Total Views</div>
+            <div class="value accent">${(data.total_views || 0).toLocaleString()}</div>
+            <div class="sub">Over ${days} days</div>
+          </div>
+          <div class="metric-card" style="flex:1;min-width:140px">
+            <div class="label">Unique Visitors</div>
+            <div class="value">${(data.unique_visitors || 0).toLocaleString()}</div>
+            <div class="sub">Daily-rotated SHA-256 hash</div>
+          </div>
+          <div class="metric-card" style="flex:1;min-width:140px">
+            <div class="label">Active Days</div>
+            <div class="value">${data.unique_days || 0}</div>
+            <div class="sub">Days with traffic</div>
+          </div>
+        </div>
+
+        ${sparklineHtml ? `<div style="margin-bottom:20px"><h3 style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:8px">Daily Views</h3>${sparklineHtml}</div>` : ''}
+
+        <div class="traffic-grid">
+          <div class="traffic-col">
+            <h3>Top Referrers</h3>
+            ${referrerRows ? `<table><thead><tr><th>Source</th><th>Views</th></tr></thead><tbody>${referrerRows}</tbody></table>` : '<div class="traffic-empty">No referrer data</div>'}
+          </div>
+          <div class="traffic-col">
+            <h3>Section Visibility</h3>
+            ${sectionRows ? `<table><thead><tr><th>Section</th><th>Views</th></tr></thead><tbody>${sectionRows}</tbody></table>` : '<div class="traffic-empty">No section data</div>'}
+          </div>
+        </div>
+
+        <div class="traffic-grid" style="margin-top:20px">
+          <div class="traffic-col">
+            <h3>Top Pages</h3>
+            ${pageRows ? `<table><thead><tr><th>Path</th><th>Views</th></tr></thead><tbody>${pageRows}</tbody></table>` : '<div class="traffic-empty">No page data</div>'}
+          </div>
+          <div class="traffic-col">
+            <h3>UTM Campaigns</h3>
+            ${utmRows ? `<table><thead><tr><th>Source</th><th>Medium</th><th>Campaign</th><th>Views</th></tr></thead><tbody>${utmRows}</tbody></table>` : '<div class="traffic-empty">No UTM data</div>'}
+          </div>
+        </div>
+      `;
+    }
+
+    function esc(s) {
+      if (!s) return '';
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    // Initial load
+    loadTraffic(30, document.querySelector('.traffic-range button[data-days="30"]'));
+  </script>
+
+
+
+</body>
+</html>

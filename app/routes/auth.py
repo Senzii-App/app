@@ -5,7 +5,7 @@ Direct port of src/routes/auth.rs from the Rust/Axum project.
 
 Session-based auth via starlette SessionMiddleware (request.session dict).
 Rate-limited: 10 req/60s per IP (in-memory sliding window).
-Static HTML files are read from ../site/ at runtime (the include_str! equivalent).
+Static HTML files are read from ./static/ at runtime (the include_str! equivalent).
 """
 import asyncio
 import os
@@ -35,7 +35,7 @@ router = APIRouter(prefix="")
 
 def _serve(filename: str) -> HTMLResponse:
     """Read a static HTML file and return it as HTMLResponse."""
-    return HTMLResponse(open(f"../site/{filename}").read())
+    return HTMLResponse(open(f"./static/{filename}").read())
 
 
 # ── Rate limiter (10 req / 60s per IP) ─────────────────────────────────────────
@@ -379,7 +379,7 @@ async def get_reset_password(token: str | None = Query(default=None)):
             )
 
         # Serve the reset-password HTML page with token and email embedded
-        html = open("../site/reset-password.html").read()
+        html = open("./static/reset-password.html").read()
         html = html.replace("{{TOKEN}}", token)
         html = html.replace("{{EMAIL}}", verified.user_email)
         return HTMLResponse(html)

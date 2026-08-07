@@ -130,14 +130,6 @@ runcmd:
     .venv/bin/pip install --upgrade pip --quiet
     .venv/bin/pip install -r requirements.txt --quiet
 
-  # Clone the site repo (static files)
-  - |
-    git clone --depth 1 https://github.com/Senzii-App/site.git /tmp/senzii-site || echo "Site clone failed"
-    if [ -d /tmp/senzii-site ]; then
-      mkdir -p {tf("app_dir")}/site
-      rsync -a --delete --exclude=.git /tmp/senzii-site/ {tf("app_dir")}/site/
-    fi
-
   # Set ownership
   - chown -R www-data:www-data {tf("app_dir")}
 
@@ -152,9 +144,6 @@ runcmd:
   - |
     sleep 3
     curl -sf http://127.0.0.1:80/health || echo "WARNING: app health check failed"
-
-  # Clean up
-  - rm -rf /tmp/senzii-site
 '''
 
 with open("cloud-init.yaml.tpl", "w") as f:

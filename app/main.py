@@ -137,13 +137,13 @@ app.include_router(client_portal.router, prefix="/client/api")
 
 # ── Static files (fallback) ──────────────────────────────────────────────────
 # check_dir=False: don't crash startup if css/js dirs are missing/empty
-app.mount("/css", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "..", "site", "css"), check_dir=False), name="css")
-app.mount("/js", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "..", "site", "js"), check_dir=False), name="js")
+app.mount("/css", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "static", "css"), check_dir=False), name="css")
+app.mount("/js", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "static", "js"), check_dir=False), name="js")
 # Fallback for any other static file
 @app.get("/{path:path}")
 async def static_fallback(path: str):
     """Serve static files as fallback. Matches the Rust ServeDir fallback."""
-    static_dir = os.path.join(os.path.dirname(__file__), "..", "..", "site")
+    static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
     file_path = os.path.join(static_dir, path)
     if os.path.isfile(file_path):
         return FileResponse(file_path)

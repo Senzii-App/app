@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You — Your Report Is On The Way | Senzii</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="description" content="Thanks for using a Senzii free tool. Your personalized report is on its way to your inbox.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.20fbb461.css">
+  <style>
+    .ty-hero { padding: 4rem 0 2rem; text-align: center; }
+    .ty-checkmark { width: 72px; height: 72px; margin: 0 auto 1.5rem; }
+    .ty-checkmark circle { fill: var(--accent-dim); stroke: var(--accent); stroke-width: 3; }
+    .ty-checkmark path { stroke: var(--accent); stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .ty-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .ty-hero p { font-size: 1.05rem; color: var(--text-muted); max-width: 560px; margin: 0 auto; line-height: 1.7; }
+    .ty-hero .ty-tool-name { font-weight: 700; color: var(--accent); }
+
+    .ty-container { max-width: 800px; margin: 0 auto; padding: 0 2rem 3rem; }
+
+    /* What happens next steps */
+    .ty-next-steps { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; margin-bottom: 2rem; }
+    .ty-next-steps h2 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 1.5rem; }
+    .ty-step { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
+    .ty-step:last-child { margin-bottom: 0; }
+    .ty-step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ty-step-content h3 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+    .ty-step-content p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* CTA section */
+    .ty-cta { background: linear-gradient(135deg, var(--accent-dim), rgba(22, 163, 74, 0.03)); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 14px; padding: 2.5rem; text-align: center; margin-bottom: 2rem; }
+    .ty-cta h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--text); margin-bottom: 0.5rem; }
+    .ty-cta p { font-size: 0.95rem; color: var(--text-muted); max-width: 480px; margin: 0 auto 1.5rem; line-height: 1.6; }
+    .ty-cta .ty-cta-btn { display: inline-block; padding: 0.85rem 2.5rem; background: var(--accent); color: #fff; border-radius: 8px; font-size: 1rem; font-weight: 700; text-decoration: none; font-family: var(--font-body); transition: background 0.15s; }
+    .ty-cta .ty-cta-btn:hover { background: #15803d; }
+
+    /* Other tools grid */
+    .ty-other-tools h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 1.25rem; text-align: center; }
+    .ty-tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .ty-tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: border-color 0.15s; }
+    .ty-tool-card:hover { border-color: var(--accent); }
+    .ty-tool-card.current { opacity: 0.4; pointer-events: none; }
+    .ty-tool-card h3 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+    .ty-tool-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* Social proof / trust */
+    .ty-trust { text-align: center; margin-top: 2rem; }
+    .ty-trust p { font-size: 0.82rem; color: var(--text-dim); }
+
+    @media (max-width: 600px) {
+      .ty-tools-grid { grid-template-columns: 1fr; }
+      .ty-cta { padding: 1.5rem; }
+      .ty-next-steps { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a href="/" class="nav-logo">
+        <svg class="nav-logo-mark" width="28" height="28" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="700" height="700" rx="155" fill="#16a34a"/>
+          <g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none">
+            <path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/>
+            <path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40 -79 -73 -163 -67 -169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/>
+            <path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/>
+          </g>
+        </svg>
+        Senzii
+      </a>
+      <span class="nav-tagline">Intelligent scheduling</span>
+    </div>
+    <a href="/auth/login" class="nav-sign-in">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Sign In
+    </a>
+  </div>
+</nav>
+
+<section class="ty-hero">
+  <div class="section-inner">
+    <svg class="ty-checkmark" viewBox="0 0 52 52">
+      <circle cx="26" cy="26" r="24" />
+      <path d="M14 27 l8 8 l16 -18" />
+    </svg>
+    <h1 id="tyTitle">Thank You!</h1>
+    <p id="tyMessage">Your personalized report is on its way to your inbox. Check your email in a few minutes.</p>
+  </div>
+</section>
+
+<div class="ty-container">
+  <!-- What happens next -->
+  <div class="ty-next-steps">
+    <h2>What happens next</h2>
+    <div class="ty-step">
+      <div class="ty-step-num">1</div>
+      <div class="ty-step-content">
+        <h3>Check your inbox</h3>
+        <p id="step1Desc">We'll send your detailed report within a few minutes. If you don't see it, check your spam folder and mark us as not spam.</p>
+      </div>
+    </div>
+    <div class="ty-step">
+      <div class="ty-step-num">2</div>
+      <div class="ty-step-content">
+        <h3>Review your results</h3>
+        <p id="step2Desc">Your report includes a detailed breakdown of your scheduling challenges and a step-by-step action plan to fix them.</p>
+      </div>
+    </div>
+    <div class="ty-step">
+      <div class="ty-step-num">3</div>
+      <div class="ty-step-content">
+        <h3>Try Senzii free for 14 days</h3>
+        <p>Put your action plan into practice with Senzii's intelligent scheduling. No credit card required — just $5/seat/month after your trial.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary CTA -->
+  <div class="ty-cta">
+    <h2 id="ctaTitle">Ready to fix your scheduling?</h2>
+    <p id="ctaDesc">Senzii automates shift matching by skills, location, and availability — so you stop losing money to no-shows, overtime, and turnover.</p>
+    <a href="/" class="ty-cta-btn">Start your free trial →</a>
+  </div>
+
+  <!-- Other tools -->
+  <div class="ty-other-tools">
+    <h2>Try our other free tools</h2>
+    <div class="ty-tools-grid" id="toolsGrid">
+      <a href="https://senzii.com/cost-calculator" class="ty-tool-card" data-tool="cost-calculator">
+        <h3>💰 Cost Calculator</h3>
+        <p>See how much bad scheduling is costing you — in overtime, no-shows, and turnover.</p>
+      </a>
+      <a href="https://senzii.com/scheduling-quiz" class="ty-tool-card" data-tool="scheduling-quiz">
+        <h3>🎯 Pain Point Quiz</h3>
+        <p>Answer 7 questions to find your biggest scheduling problem and get an action plan.</p>
+      </a>
+      <a href="https://senzii.com/template-generator" class="ty-tool-card" data-tool="template-generator">
+        <h3>📅 Template Generator</h3>
+        <p>Configure your shifts and download a ready-to-use weekly schedule template as CSV.</p>
+      </a>
+      <a href="https://senzii.com/coverage-analyzer" class="ty-tool-card" data-tool="coverage-analyzer">
+        <h3>📊 Coverage Gap Analyzer</h3>
+        <p>Map your shift coverage across the week and instantly see where you’re understaffed.</p>
+      </a>
+</div>
+  </div>
+
+  <!-- Trust -->
+  <div class="ty-trust">
+    <p>🔒 Your email is safe with us. We'll only send your report and occasional scheduling tips. No spam, ever.</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">
+        <svg class="footer-logo-mark" width="20" height="20" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="700" height="700" rx="155" fill="#16a34a"/>
+          <g transform="translate(0,700) scale(0.1,-0.1)" fill="#fff" stroke="none">
+            <path d="M4396 6144 c-248 -60 -417 -310 -378 -561 25 -158 134 -307 275 -376 88 -44 140 -56 232 -57 145 0 271 55 374 165 70 75 105 138 126 227 19 82 19 155 -1 232 -71 274 -348 438 -628 370z"/>
+            <path d="M6056 5093 c-197 -215 -432 -372 -633 -423 -246 -63 -494 -21 -906 154 -234 99 -348 143 -459 176 -446 133 -920 93 -1333 -110 -385 -189 -722 -517 -904 -878 -40 -79 -73 -163 -67 -169 3 -3 27 15 53 40 292 275 670 485 1028 571 193 46 238 51 510 51 246 -1 267 -2 388 -28 148 -32 325 -91 517 -172 506 -214 557 -230 755 -229 150 0 224 15 348 71 134 60 242 136 362 257 128 129 211 247 295 421 60 124 124 303 118 329 -2 10 -28 -12 -72 -61z"/>
+            <path d="M4125 3914 c-190 -29 -359 -81 -530 -164 -207 -100 -365 -218 -545 -406 -131 -137 -229 -266 -429 -567 -284 -427 -423 -599 -697 -867 -409 -399 -866 -721 -1288 -906 l-69 -31 75 -7 c41 -3 129 -2 194 4 686 63 1325 458 2029 1255 217 246 327 352 444 430 445 296 1295 436 1654 273 129 -59 189 -161 173 -295 -14 -118 -104 -309 -230 -483 -89 -125 -169 -215 -360 -408 -94 -94 -168 -172 -164 -172 14 0 174 72 276 124 282 145 510 305 697 491 140 139 202 219 266 348 214 425 -99 838 -744 979 -92 20 -129 22 -382 22 -223 0 -302 -3 -385 -18 -58 -9 -121 -20 -140 -23 -33 -5 -23 8 162 197 109 110 203 210 208 221 10 18 7 19 -57 18 -37 -1 -108 -7 -158 -15z"/>
+          </g>
+        </svg>
+        Senzii
+      </span>
+      <span class="footer-tagline">Intelligent workforce scheduling</span>
+    </div>
+    <div class="footer-links">
+      <a href="/#pricing">Pricing</a>
+      <a href="https://senzii.com/compare">Compare</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/refunds">Refund Policy</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 REPL Made LLC. Built with &hearts;.</div>
+  </div>
+</footer>
+
+<script>
+  // Personalize the thank-you page based on ?tool= query param
+  const params = new URLSearchParams(window.location.search);
+  const tool = params.get('tool') || '';
+
+  const toolConfig = {
+    'cost-calculator': {
+      title: 'Your Cost Report Is On The Way!',
+      message: 'We\'re sending your detailed scheduling cost breakdown, industry benchmarks, and savings plan to your inbox.',
+      step1: 'We\'ll send your full cost report within a few minutes. It includes a line-by-line breakdown of overtime, no-show, turnover, and admin costs.',
+      step2: 'Your report shows exactly where your scheduling dollars are leaking — and gives you a concrete plan to plug the holes.',
+      ctaTitle: 'Stop losing money to bad scheduling',
+      ctaDesc: 'Senzii cuts overtime with smart caps, fills no-show shifts 3x faster with auto-cascade, and reduces turnover with predictable, fair scheduling.',
+    },
+    'pain-point-quiz': {
+      title: 'Your Action Plan Is On The Way!',
+      message: 'We\'re sending your personalized scheduling pain point results and recommended tools to your inbox.',
+      step1: 'We\'ll send your complete quiz results and action plan within a few minutes. Check spam if you don\'t see it soon.',
+      step2: 'Your action plan includes specific steps to fix your biggest scheduling challenge, plus tool recommendations tailored to your situation.',
+      ctaTitle: 'Fix your scheduling pain points',
+      ctaDesc: 'Senzii directly addresses the scheduling challenges you identified — with intelligent auto-matching, automated reminders, and real-time schedule visibility.',
+    },
+    'template-generator': {
+      title: 'Your Template Is Ready!',
+      message: 'Your CSV schedule template has been downloaded. We\'ve also sent a copy to your email for safekeeping.',
+      step1: 'Your CSV template should have downloaded automatically. Check your downloads folder. We\'ve also emailed you a backup copy.',
+      step2: 'Open the CSV in Excel or Google Sheets. Adjust shift names, times, and assignments to fit your team. Re-generate anytime for different configurations.',
+      ctaTitle: 'Ready to automate your scheduling?',
+      ctaDesc: 'Templates are a start — but Senzii auto-generates schedules every week, matching the right staff to the right shifts automatically. No manual editing needed.',
+    },
+    'coverage-analyzer': {
+      title: 'Your Gap Report Is On The Way!',
+      message: 'We\'re sending your weekly coverage gap analysis with understaffed time slots and recommendations to your inbox.',
+      step1: 'We\'ll send your detailed gap report within a few minutes. It highlights every understaffed slot and overstaffing issue.',
+      step2: 'Your report includes a priority-ranked list of coverage gaps, plus recommendations for shift restructuring and staff reallocation.',
+      ctaTitle: 'Never have a coverage gap again',
+      ctaDesc: 'Senzii\'s auto-fill cascade instantly contacts eligible staff when a shift opens — filling gaps 3x faster than phone trees.',
+    },
+    'compliance-checker': {
+      title: 'Your Compliance Report Is On The Way!',
+      message: 'We\'re sending your scheduling compliance assessment results and risk recommendations to your inbox.',
+      step1: 'We\'ll send your detailed compliance report within a few minutes. It includes your score breakdown across all 5 compliance categories.',
+      step2: 'Your report includes personalized recommendations for each compliance gap, plus a priority action plan to reduce your regulatory risk.',
+      ctaTitle: 'Automate your scheduling compliance',
+      ctaDesc: 'Senzii enforces break rules, rest periods, overtime caps, and certification requirements automatically — so you\'re always audit-ready.',
+    },
+    'staffing-calculator': {
+      title: 'Your Staffing Plan Is On The Way!',
+      message: 'We\'re sending your detailed staffing requirements analysis with shift patterns, hiring roadmap, and cost estimates to your inbox.',
+      step1: 'We\'ll send your complete staffing plan within a few minutes. It includes shift patterns, FTE calculations, and a hiring timeline.',
+      step2: 'Your plan includes a breakdown of base staffing, peak demand adjustments, absenteeism buffers, and a recommended shift schedule.',
+      ctaTitle: 'Automate your scheduling',
+      ctaDesc: 'Senzii auto-generates optimal schedules every week — matching the right staff to the right shifts based on skills, availability, and coverage requirements.',
+    },
+    'overtime-calculator': {
+      title: 'Your Overtime Report Is On The Way!',
+      message: 'We\'re sending your detailed overtime cost breakdown with industry benchmarks and savings recommendations to your inbox.',
+      step1: 'We\'ll send your full overtime report within a few minutes. It includes a line-by-line breakdown of weekly, monthly, and annual OT costs.',
+      step2: 'Your report shows how much you could save by reducing overtime to your industry average — plus specific scheduling strategies to get there.',
+      ctaTitle: 'Cut overtime with smarter scheduling',
+      ctaDesc: 'Senzii enforces overtime caps, predicts coverage gaps before they trigger OT, and matches the right staff to every shift — so you stop paying time-and-a-half for preventable gaps.',
+    },
+    'shift-conflict-detector': {
+      title: 'Your Conflict Report Is On The Way!',
+      message: 'We\'re sending your detailed shift conflict analysis with a checklist for fixing every issue found.',
+      step1: 'We\'ll send your full conflict report within a few minutes. It includes a breakdown of every double-booking, rest violation, and overtime issue detected.',
+      step2: 'Your report includes a prioritized fix checklist — starting with the most critical conflicts — plus best practices for preventing them in future schedules.',
+      ctaTitle: 'Eliminate conflicts automatically',
+      ctaDesc: 'Senzii validates every shift assignment in real-time — blocking double-bookings, enforcing rest periods, and alerting you before overtime violations happen.',
+    },
+    'labor-law-lookup': {
+      title: 'Your Labor Law Report Is On The Way!',
+      message: 'We\'re sending your detailed state labor law compliance guide with a printable checklist and links to official state resources.',
+      step1: 'We\'ll send your complete labor law report within a few minutes. It includes a breakdown of every scheduling requirement that applies to your state and industry.',
+      step2: 'Your report includes a printable compliance checklist, links to official state labor department resources, and recommendations for staying compliant as laws change.',
+      ctaTitle: 'Automate your labor law compliance',
+      ctaDesc: 'Senzii enforces state-specific break rules, rest periods, overtime caps, and predictive scheduling requirements automatically — so you\'re always compliant without the manual overhead.',
+    },
+    'workload-balancer': {
+      title: 'Your Workload Balance Report Is On The Way!',
+      message: 'We\'re sending your detailed fairness analysis with equity metrics, per-employee breakdowns, and rebalancing recommendations.',
+      step1: 'We\'ll send your full workload balance report within a few minutes. It includes your fairness score, Gini coefficient, per-employee hour distribution, and flagged imbalances.',
+      step2: 'Your report includes a prioritized rebalancing plan — who should get more shifts, who should get fewer, and a template for a more balanced schedule next week.',
+      ctaTitle: 'Auto-balance every schedule',
+      ctaDesc: 'Senzii distributes shifts automatically based on workload history, skills, and availability — so no one burns out and no one sits idle. Fairness is built in, not bolted on.',
+    },
+    'on-call-rotation': {
+      title: 'Your On-Call Rotation Is On The Way!',
+      message: 'We\'re sending your complete on-call rotation schedule with fairness analysis, burden distribution, and CSV download.',
+      step1: 'We\'ll send your full rotation schedule within a few minutes. It includes a week-by-week on-call assignment, per-person burden breakdown, and fairness score.',
+      step2: 'Your report includes a CSV file you can import into any calendar system, plus recommendations for improving fairness and handling blackout periods.',
+      ctaTitle: 'Automate your on-call rotation',
+      ctaDesc: 'Senzii builds fair on-call rotations automatically — respecting skills, blackout dates, rest periods, and consecutive limits. No more spreadsheets, no more complaints about unfairness.',
+    },
+    'shift-swap-manager': {
+      title: 'Your Shift Swap Report Is On The Way!',
+      message: "We're sending your complete shift swap validation with conflict checks, overtime analysis, and recommendations.",
+      step1: "We'll send your full swap report within a few minutes. It includes all validation checks (double-booking, rest, overtime, consecutive days, fairness) and personalized recommendations.",
+      step2: 'Your report includes a verdict (approve, approve with caution, or deny) plus step-by-step recommendations for handling the swap safely.',
+      ctaTitle: 'Automate your shift swaps',
+      ctaDesc: 'Senzii handles shift swaps automatically — employees request swaps from their phone, Senzii validates against your rules, and you approve with one click. No more manual checking.',
+    },
+    'scheduling-maturity-assessment': {
+      title: 'Your Maturity Assessment Report Is On The Way!',
+      message: "We're sending your complete scheduling maturity score with dimension breakdown, recommendations, and 90-day roadmap.",
+      step1: "We'll send your full assessment report within a few minutes. It includes your overall maturity score, per-dimension scores (process, compliance, fairness, coverage, cost control), and prioritized recommendations.",
+      step2: 'Your report includes a personalized 90-day improvement roadmap with specific actions, tools, and milestones for each phase.',
+      ctaTitle: 'Level up your scheduling',
+      ctaDesc: 'Senzii helps you improve every dimension of scheduling maturity — from automated compliance checking to fairness scoring and real-time overtime alerts. Start a 14-day free trial today.',
+    },
+    'schedule-visualizer': {
+      title: 'Your Coverage Heatmap Is On The Way!',
+      message: "We're sending your complete weekly schedule visualization with coverage gaps, overstaffing alerts, and optimization recommendations.",
+      step1: "We'll send your full coverage heatmap within a few minutes. It includes a color-coded day-by-day view showing understaffed gaps, overstaffed periods, and shift-by-shift coverage ratios.",
+      step2: 'Your report includes specific recommendations for filling coverage gaps and reducing overstaffing, plus a CSV export of your optimized schedule.',
+      ctaTitle: 'Visualize your whole operation',
+      ctaDesc: 'Senzii shows you your entire schedule at a glance — across locations, roles, and shifts. Spot gaps before they happen and optimize staffing in real-time. Start a 14-day free trial today.',
+    },
+    'shift-cost-estimator': {
+      title: 'Your Shift Cost Report Is On The Way!',
+      message: "We're sending your complete shift cost breakdown with optimization insights and personalized recommendations.",
+      step1: "We'll send your detailed shift cost report within a few minutes. It includes a full breakdown of wages, break costs, overtime risk, gap risk, payroll taxes, and productivity loss — with percentage allocation for each cost driver.",
+      step2: 'Your report includes specific cost optimization recommendations based on your inputs, plus benchmarks for your industry and shift type.',
+      ctaTitle: 'Cut your shift costs',
+      ctaDesc: 'Senzii helps you reduce shift costs by 10-20% through better scheduling, gap prevention, and proactive overtime management. Start a 14-day free trial today.',
+    },
+    'team-capacity-planner': {
+      title: 'Your Capacity Report Is On The Way!',
+      message: "We're sending your complete team capacity analysis with gap/surplus breakdown and optimization recommendations.",
+      step1: "We'll send your detailed capacity report within a few minutes. It includes a day-by-day capacity vs demand comparison, cost impact of gaps and surpluses, and industry-specific recommendations.",
+      step2: 'Your report includes actionable steps to rebalance your schedule — whether that means hiring, redistributing shifts, or building a standby pool for call-outs.',
+      ctaTitle: 'Optimize your team capacity',
+      ctaDesc: 'Senzii helps you match capacity to demand automatically — with demand forecasting, gap alerts, and shift optimization. Start a 14-day free trial today.',
+    },
+    'scheduling-scorecard': {
+      title: 'Your Scorecard Results Are On The Way!',
+      message: "We're sending your complete efficiency scorecard with letter grade, dimension scores, and prioritized improvement playbook.",
+      step1: "We'll send your detailed scorecard within a few minutes. It includes your overall grade, 8 dimension breakdowns, and a prioritized action plan for your weakest areas.",
+      step2: 'Your playbook includes specific steps for each dimension — from coverage and fairness to compliance and scalability — so you know exactly what to fix first.',
+      ctaTitle: 'Turn your score into action',
+      ctaDesc: 'Senzii helps you implement every playbook recommendation — from demand forecasting to compliance tracking to automated scheduling. Start a 14-day free trial today.',
+    },
+    'labor-budget-planner': {
+      title: 'Your Budget Analysis Is On The Way!',
+      message: "We're sending your complete labor budget analysis with daily cost breakdowns, overrun alerts, and optimization recommendations.",
+      step1: "We'll send your detailed budget report within a few minutes. It includes a day-by-day cost breakdown, overtime analysis, budget utilization charts, and industry-specific recommendations for staying within budget.",
+      step2: 'Your report includes specific cost-saving opportunities — from trimming overstaffed shifts to reducing overtime to rebalancing your weekly schedule for maximum efficiency.',
+      ctaTitle: 'Stay within budget every week',
+      ctaDesc: 'Senzii automatically calculates labor costs as you build schedules, warns you before you exceed your budget, and suggests cost-saving alternatives. Start a 14-day free trial today.',
+    },
+    'shift-pattern-optimizer': {
+      title: "Your Shift Pattern Comparison Is On The Way!",
+      message: "We're sending your complete shift pattern comparison with cost, coverage, overtime, and satisfaction analysis for each pattern.",
+      step1: "We'll send your detailed comparison report within a few minutes. It includes side-by-side metrics for all 6 patterns, a ranked recommendation, and industry-specific insights to help you choose the best schedule format.",
+      step2: "Your report includes the recommended pattern with a full breakdown — weekly cost, crews needed, overtime exposure, employee satisfaction, and compliance risk — plus actionable next steps for implementation.",
+      ctaTitle: "Build your optimized schedule",
+      ctaDesc: "Senzii supports all common shift patterns out of the box — 5x8, 4x10, 3x12, 2-2-3, DuPont, and custom rotations. Start a 14-day free trial today.",
+    },
+    'turnover-risk-predictor': {
+      title: "Your Turnover Risk Report Is On The Way!",
+      message: "We're sending your complete turnover risk analysis with dimension scores, risk level, and prioritized retention playbook.",
+      step1: "We'll send your detailed turnover risk report within a few minutes. It includes your overall risk score, per-dimension breakdown, and a prioritized action plan with specific steps to reduce scheduling-driven turnover.",
+      step2: "Your report includes targeted recommendations for your highest-risk dimensions — from fixing advance notice to eliminating clopening to making overtime voluntary — with specific, actionable steps.",
+      ctaTitle: "Reduce turnover with better scheduling",
+      ctaDesc: "Senzii gives employees schedule visibility, swap requests, and preference input — all proven to reduce turnover. Start a 14-day free trial today.",
+    },
+    'no-show-impact-calculator': {
+      title: "Your No-Show Impact Report Is On The Way!",
+      message: "We're sending your complete no-show cost analysis with cost breakdown, annual projections, and industry-specific reduction strategies.",
+      step1: "We'll send your detailed no-show impact report within a few minutes. It includes your total annual no-show cost, cost breakdown by category (lost revenue, OT, replacement, quality, churn), and your potential savings from 50% reduction.",
+      step2: "Your report includes a personalized no-show reduction plan with industry-specific strategies — from automated shift confirmations to backup rosters to predictive call-out detection — with a Senzii ROI calculation.",
+      ctaTitle: "Reduce no-shows with automated scheduling",
+      ctaDesc: "Senzii's shift confirmations, backup rosters, and call-out detection can cut no-shows by 40-60%. Just $5/employee/month. Start a 14-day free trial today.",
+    },
+    'labor-cost-benchmarker': {
+      title: "Your Labor Cost Benchmark Report Is On The Way!",
+      message: "We're sending your complete benchmark analysis with industry comparison, letter grade, and prioritized action plan.",
+      step1: "We'll send your detailed benchmark report within a few minutes. It includes your overall scheduling efficiency score, per-metric grades (labor cost ratio, overtime, unfilled shifts, turnover, no-shows), and industry percentile rankings.",
+      step2: "Your report includes a prioritized action plan targeting your weakest metrics first, with specific tool recommendations and industry-specific strategies to improve your grade.",
+      ctaTitle: "Improve your scheduling efficiency",
+      ctaDesc: "Senzii helps you reduce labor costs, control overtime, and fill coverage gaps — all at $5/employee/month. Start a 14-day free trial today.",
+    },
+    'schedule-scenario-planner': {
+      title: "Your Scenario Analysis Report Is On The Way!",
+      message: "We're sending your complete scenario comparison with cost projections, coverage analysis, and optimization recommendations.",
+      step1: "We'll send your detailed scenario report within a few minutes. It includes a side-by-side comparison of all your scenarios with cost, coverage, overtime exposure, and efficiency scores.",
+      step2: "Your report includes a recommendation for the best scenario with specific steps to implement it, plus alternative approaches if your situation changes.",
+      ctaTitle: "Put your best scenario into action",
+      ctaDesc: "Senzii makes it easy to implement any scheduling scenario — custom shift patterns, coverage targets, cost controls — all at $5/employee/month. Start a 14-day free trial today.",
+    },
+    'break-coverage-planner': {
+      title: "Your Break Coverage Plan Is On The Way!",
+      message: "We're sending your complete break schedule with timeline, coverage analysis, and compliance alerts.",
+      step1: "We'll send your detailed break plan within a few minutes. It includes a visual timeline of all employee breaks, a coverage level chart, a break assignment table, and compliance status for each break.",
+      step2: "Your plan includes recommendations for resolving any coverage gaps or late breaks, plus industry-specific tips for managing break coverage in your sector.",
+      ctaTitle: "Automate your break scheduling",
+      ctaDesc: "Senzii automatically generates compliant break schedules that maintain your minimum coverage — all at $5/employee/month. Start a 14-day free trial today.",
+    },
+    'skill-coverage-matrix': {
+      title: "Your Skill Coverage Report Is On The Way!",
+      message: "We're sending your complete skill matrix with gap analysis, risk assessment, and cross-training plan.",
+      step1: "We'll send your detailed skill coverage report within a few minutes. It includes your full skill matrix table, single-point-of-failure analysis, shift-by-shift gap identification, and prioritized cross-training recommendations.",
+      step2: "Your report includes industry-specific guidance for managing skill coverage in your sector, plus a recommended cross-training timeline based on your risk level.",
+      ctaTitle: "Track skills and certifications automatically",
+      ctaDesc: "Senzii tracks employee skills and certifications, matches them to shift requirements, and flags coverage risks before they cause problems — all at $5/employee/month. Start a 14-day free trial today.",
+    },
+    'shift-handover-generator': {
+      title: "Your Shift Handover Report Is On The Way!",
+      message: "We're sending your complete handover report with task summaries, incident logs, equipment status, and safety notes.",
+      step1: "We'll send your detailed handover report within a few minutes. It includes a formatted summary of your shift with staffing data, completed tasks, incidents, equipment status, pending work, and safety notes — ready to print or share.",
+      step2: "Your report includes best practices for conducting effective shift handovers, plus industry-specific tips for improving communication during transitions.",
+      ctaTitle: "Standardize your shift handovers",
+      ctaDesc: "Senzii automates shift handover communication with structured templates, real-time status updates, and incoming shift briefings — all at $5/employee/month. Start a 14-day free trial today.",
+    },
+    'schedule-fairness-auditor': {
+      title: "Your Schedule Fairness Report Is On The Way!",
+      message: "We're sending your complete fairness audit with 6-dimension scores, per-person breakdown, and prioritized recommendations.",
+      step1: "We'll send your detailed fairness report within a few minutes. It includes your composite fairness score, individual dimension scores (shift desirability, weekend burden, hours equity, consecutive days, rotation fairness, rest compliance), a per-person breakdown table, and prioritized action items.",
+      step2: "Your report includes industry-specific guidance for improving scheduling fairness in your sector, plus recommended tools and rotation patterns to address your weakest dimensions.",
+      ctaTitle: "Make fair scheduling automatic",
+      ctaDesc: "Senzii balances shift assignments automatically — rotating nights, weekends, and undesirable shifts equitably across your team. Track fairness metrics over time and prevent burnout before it leads to turnover — all at $5/employee/month. Start a 14-day free trial today.",
+    },
+    'weekly-schedule-generator': {
+      title: "Your Generated Schedule Is On The Way!",
+      message: "We're sending your complete weekly schedule with Gantt chart, gap analysis, fairness score, and cost estimate.",
+      step1: "We'll send your detailed schedule within a few minutes. It includes the visual Gantt chart, per-day coverage analysis, per-employee summary with hours and shift distribution, fairness score with letter grade, and cost estimate.",
+      step2: "Your report includes recommendations for improving coverage, fairness, and cost efficiency — plus industry-specific tips for your sector and links to complementary scheduling tools.",
+      ctaTitle: "Automate your weekly scheduling",
+      ctaDesc: "Senzii auto-generates balanced weekly schedules from your team roster and coverage needs — respecting availability, max hours, rest periods, and labor laws. Drag-and-drop adjustments, one-click publishing, and real-time notifications — all at $5/employee/month. Start a 14-day free trial today.",
+    },
+  };
+
+  const config = toolConfig[tool];
+  if (config) {
+    document.getElementById('tyTitle').textContent = config.title;
+    document.getElementById('tyMessage').textContent = config.message;
+    document.getElementById('step1Desc').textContent = config.step1;
+    document.getElementById('step2Desc').textContent = config.step2;
+    document.getElementById('ctaTitle').textContent = config.ctaTitle;
+    document.getElementById('ctaDesc').textContent = config.ctaDesc;
+
+    // Mark the current tool card as current (dimmed)
+    const currentCard = document.querySelector(`[data-tool="${tool}"]`);
+    if (currentCard) currentCard.classList.add('current');
+  }
+
+  // Send analytics beacon
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon('/api/track', JSON.stringify({ page: '/thank-you', tool: tool, ts: Date.now() }));
+  }
+</script>
+</body>
+</html>

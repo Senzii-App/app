@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Senzii</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.20fbb461.css">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface2: #f1f5f9;
+      --border: #e2e8f0;
+      --accent: #16a34a;
+      --accent-hover: #15803d;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --font-display: 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .welcome-wrap { max-width: 480px; text-align: center; }
+    .welcome-icon { width: 64px; height: 64px; background: rgba(59,130,246,0.15); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 2rem; }
+    .welcome-title { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem; color: var(--text); }
+    .welcome-lede { font-size: 1rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; }
+    .welcome-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: left; margin-bottom: 1.5rem; }
+    .welcome-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+    .welcome-card strong { color: var(--text); }
+    .welcome-note { font-size: 0.78rem; color: var(--text-muted); opacity: 0.7; }
+    .welcome-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--accent); margin-bottom: 2.5rem; }
+  </style>
+</head>
+<body>
+  <div class="welcome-wrap">
+    <div class="welcome-logo">Senzii</div>
+    <div class="welcome-icon">✓</div>
+    <h1 class="welcome-title">You're all set!</h1>
+    <p class="welcome-lede">Your Senzii account has been created. Check your inbox — we've sent you a magic link to set up your password and access your scheduling dashboard.</p>
+    <div class="welcome-card">
+      <p><strong>What's next?</strong><br>
+      Click the link in your email, set your password, and you're in. From there you can add staff, work sites, and start matching your team to shifts.</p>
+    </div>
+    <p class="welcome-note">Magic links expire in 7 days. Didn't get the email? Check your spam folder, or <a href="mailto:support@senzii.com" style="color: var(--accent);">reach out to us</a>.</p>
+  </div>
+
+
+</body>
+</html>

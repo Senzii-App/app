@@ -35,8 +35,12 @@ app/
   routes/          — FastAPI routers (1:1 with Rust routes)
   services/        — Email (Resend), Geocoding (Nominatim)
 mcp_server/       — MCP server (Python MCP SDK)
-site/             — HTML/CSS/JS static site (moved from app/static)
+static/           — App HTML/CSS/JS (login, dashboards, portals, SEO pages)
 ```
+
+The marketing/landing site is a separate repo (`Senzii-App/site`) served from
+Vercel at senzii.com. `app.senzii.com` serves only the app: `GET /` is the
+sign-in page.
 
 ## License
 
