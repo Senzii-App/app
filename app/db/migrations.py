@@ -302,9 +302,15 @@ MIGRATION_SQL = [
     END;
     $$ LANGUAGE plpgsql""",
     "DROP TRIGGER IF EXISTS check_assignment_overlap ON assignments",
-    """CREATE TRIGGER check_assignment_overlap
-    BEFORE INSERT OR UPDATE ON assignments
-    FOR EACH ROW EXECUTE FUNCTION prevent_overlapping_assignments()""",
+    """DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_trigger
+                       WHERE tgname = 'check_assignment_overlap'
+                         AND tgrelid = 'assignments'::regclass) THEN
+            CREATE TRIGGER check_assignment_overlap
+            BEFORE INSERT OR UPDATE ON assignments
+            FOR EACH ROW EXECUTE FUNCTION prevent_overlapping_assignments();
+        END IF;
+    END $$""",
 
     # ── sessions table ──────────────────────────────────────────────────
     """CREATE TABLE IF NOT EXISTS sessions (
@@ -544,12 +550,24 @@ MIGRATION_NAMES = [
 
 
 async def run_migrations(conn: asyncpg.Connection):
-    """Run all migrations in order. Each statement is idempotent."""
-    for sql in MIGRATION_SQL:
-        await conn.execute(sql)
+    """Run all migrations in order. Each statement is idempotent.
 
-    for name in MIGRATION_NAMES:
-        await conn.execute(
-            "INSERT INTO _migrations (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
-            name,
-        )
+    Serialized with a Postgres advisory lock: uvicorn runs with --workers 2,
+    and both workers execute this at startup. Without the lock they race
+    (e.g. one worker's DROP INDEX landing between another's check and CREATE),
+    crashing startup with UndefinedObjectError / DuplicateObjectError.
+    """
+    # Session-scoped advisory lock — released automatically when the
+    # connection closes, so a crashed worker can't wedge future startups.
+    await conn.execute("SELECT pg_advisory_lock(724100)")
+    try:
+        for sql in MIGRATION_SQL:
+            await conn.execute(sql)
+
+        for name in MIGRATION_NAMES:
+            await conn.execute(
+                "INSERT INTO _migrations (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
+                name,
+            )
+    finally:
+        await conn.execute("SELECT pg_advisory_unlock(724100)")
