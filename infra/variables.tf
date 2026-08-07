@@ -53,7 +53,7 @@ variable "resend_api_key" {
 variable "mail_from" {
   description = "From address for outgoing email"
   type        = string
-  default    = "Senzii <noreply@senzii.com>"
+  default     = "Senzii <noreply@senzii.com>"
 }
 
 variable "base_url" {
@@ -85,15 +85,15 @@ variable "mcp_org_id" {
 variable "ssl_cert" {
   description = "PEM-encoded TLS certificate (full chain). Get with: certbot certonly --manual --preferred-challenges dns -d app.senzii.com -d mcp.senzii.com"
   type        = string
-  default    = ""
-  sensitive  = true
+  default     = ""
+  sensitive   = true
 }
 
 variable "ssl_key" {
   description = "PEM-encoded TLS private key"
   type        = string
-  default    = ""
-  sensitive  = true
+  default     = ""
+  sensitive   = true
 }
 
 # ── Infra ─────────────────────────────────────────────────────────────────────

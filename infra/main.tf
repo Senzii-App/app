@@ -2,17 +2,10 @@ locals {
   app_dir = "/opt/senzii"
 }
 
-# ── SSH Key ───────────────────────────────────────────────────────────────────
-resource "linode_sshkey" "deploy" {
-  label   = "senzii-app-deploy"
-  ssh_key = var.ssh_public_key
-}
-
 # ── NodeBalancer ──────────────────────────────────────────────────────────────
 resource "linode_nodebalancer" "main" {
-  label   = "senzii-app-lb"
-  region  = var.region
-  client_transfers = false
+  label  = "senzii-app-lb"
+  region = var.region
 }
 
 # HTTPS config — TLS terminated at NodeBalancer, forwards plain HTTP to backends
@@ -26,7 +19,7 @@ resource "linode_nodebalancer_config" "https" {
   check_attempts  = 3
   check_timeout   = 5
   check_interval  = 10
-  stickiness       = "none"
+  stickiness      = "none"
 
   # TLS cert — upload via Linode API or set as variables here
   ssl_cert = var.ssl_cert
@@ -44,38 +37,38 @@ resource "linode_nodebalancer_config" "http" {
   check_attempts  = 3
   check_timeout   = 5
   check_interval  = 10
-  stickiness       = "none"
+  stickiness      = "none"
 }
 
 # ── Backend Instances ─────────────────────────────────────────────────────────
 resource "linode_instance" "backend" {
-  count       = var.backend_count
-  label       = "senzii-app-${count.index + 1}"
-  region      = var.region
-  type        = var.instance_type
-  image       = "linode/ubuntu24.04"
-  private_ip  = true
-  ssh_keys    = [linode_sshkey.deploy.ssh_key]
-  tags        = ["senzii", "app", "backend"]
-  root_pass   = "SenziiApp2026DeployPass!"
+  count           = var.backend_count
+  label           = "senzii-app-${count.index + 1}"
+  region          = var.region
+  type            = var.instance_type
+  image           = "linode/ubuntu24.04"
+  private_ip      = true
+  authorized_keys = [var.ssh_public_key]
+  tags            = ["senzii", "app", "backend"]
+  root_pass       = "SenziiApp2026DeployPass!"
 
   metadata {
     user_data = base64encode(templatefile("${path.module}/cloud-init.yaml.tpl", {
-      app_dir            = local.app_dir
-      repo_url           = var.repo_url
-      repo_branch        = var.repo_branch
-      database_url       = var.database_url
-      session_secret     = var.session_secret
-      port               = 3000
-      mcp_port           = var.mcp_port
-      domain             = var.domain
-      mcp_domain         = var.mcp_domain
-      base_url           = var.base_url
-      resend_api_key     = var.resend_api_key
-      mail_from          = var.mail_from
-      notify_email       = var.notify_email
+      app_dir        = local.app_dir
+      repo_url       = var.repo_url
+      repo_branch    = var.repo_branch
+      database_url   = var.database_url
+      session_secret = var.session_secret
+      port           = 3000
+      mcp_port       = var.mcp_port
+      domain         = var.domain
+      mcp_domain     = var.mcp_domain
+      base_url       = var.base_url
+      resend_api_key = var.resend_api_key
+      mail_from      = var.mail_from
+      notify_email   = var.notify_email
 
-      mcp_org_id         = var.mcp_org_id
+      mcp_org_id = var.mcp_org_id
     }))
   }
 
@@ -87,29 +80,32 @@ resource "linode_instance" "backend" {
 
 # ── Register backends with NodeBalancer ───────────────────────────────────────
 resource "linode_nodebalancer_node" "https_backend" {
-  count            = var.backend_count
-  nodebalancer_id  = linode_nodebalancer.main.id
-  config_id        = linode_nodebalancer_config.https.id
-  label            = "backend-${count.index + 1}"
-  address          = "${linode_instance.backend[count.index].private_ip_address}:80"
-  mode             = "accept"
-  weight           = 50
+  count           = var.backend_count
+  nodebalancer_id = linode_nodebalancer.main.id
+  config_id       = linode_nodebalancer_config.https.id
+  label           = "backend-${count.index + 1}"
+  address         = "${linode_instance.backend[count.index].private_ip_address}:80"
+  mode            = "accept"
+  weight          = 50
 }
 
 resource "linode_nodebalancer_node" "http_backend" {
-  count            = var.backend_count
-  nodebalancer_id  = linode_nodebalancer.main.id
-  config_id        = linode_nodebalancer_config.http.id
-  label            = "backend-${count.index + 1}"
-  address          = "${linode_instance.backend[count.index].private_ip_address}:80"
-  mode             = "accept"
-  weight           = 50
+  count           = var.backend_count
+  nodebalancer_id = linode_nodebalancer.main.id
+  config_id       = linode_nodebalancer_config.http.id
+  label           = "backend-${count.index + 1}"
+  address         = "${linode_instance.backend[count.index].private_ip_address}:80"
+  mode            = "accept"
+  weight          = 50
 }
 
 # ── Firewall ──────────────────────────────────────────────────────────────────
 resource "linode_firewall" "app" {
   label = "senzii-app-firewall"
   tags  = ["senzii"]
+
+  # Attach all backends
+  linodes = [for b in linode_instance.backend : b.id]
 
   inbound_policy  = "DROP"
   outbound_policy = "ACCEPT"
@@ -131,13 +127,6 @@ resource "linode_firewall" "app" {
     ports    = "80"
     ipv4     = ["192.168.0.0/16"]
   }
-}
-
-# Attach firewall to all backends
-resource "linode_instance_firewall_attachment" "backend" {
-  count         = var.backend_count
-  instance_id   = linode_instance.backend[count.index].id
-  firewall_id   = linode_firewall.app.id
 }
 
 # ── Outputs ───────────────────────────────────────────────────────────────────
