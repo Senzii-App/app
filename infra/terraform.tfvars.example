@@ -22,7 +22,7 @@ notify_email   = "chris@senzii.com"
 
 # ── MCP ─────────────────────────────────────────────────────────────────────────
 mcp_port   = 3001
-mcp_org_id = ""
+mcp_org_id = null  # or set to an integer org ID
 
 # ── TLS certificate (for NodeBalancer TLS termination) ───────────────────────────
 # Get these with certbot using manual DNS verification:

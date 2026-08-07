@@ -76,9 +76,9 @@ variable "mcp_port" {
 }
 
 variable "mcp_org_id" {
-  description = "Default org ID for MCP server"
-  type        = string
-  default     = ""
+  description = "Default org ID for MCP server (integer, or null to omit)"
+  type        = number
+  default     = null
 }
 
 # ── TLS cert (for NodeBalancer TLS termination) ────────────────────────────────
