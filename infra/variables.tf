@@ -46,8 +46,8 @@ variable "session_secret" {
 variable "resend_api_key" {
   description = "Resend API key for email"
   type        = string
-  default    = ""
-  sensitive  = true
+  default     = ""
+  sensitive   = true
 }
 
 variable "mail_from" {
@@ -102,15 +102,16 @@ variable "mcp_org_id" {
   default     = ""
 }
 
-# ── DNS-01 for TLS ────────────────────────────────────────────────────────────
-variable "namecheap_api_user" {
-  description = "Namecheap API username for Caddy DNS-01 challenges"
+# ── TLS cert (for NodeBalancer TLS termination) ────────────────────────────────
+variable "ssl_cert" {
+  description = "PEM-encoded TLS certificate (full chain). Get with: certbot certonly --manual --preferred-challenges dns -d app.senzii.com -d mcp.senzii.com"
   type        = string
-  default     = ""
+  default    = ""
+  sensitive  = true
 }
 
-variable "namecheap_api_key" {
-  description = "Namecheap API key for Caddy DNS-01 challenges"
+variable "ssl_key" {
+  description = "PEM-encoded TLS private key"
   type        = string
   default    = ""
   sensitive  = true

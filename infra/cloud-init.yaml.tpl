@@ -1,6 +1,6 @@
 #cloud-config
 # Senzii App — Python/FastAPI + MCP server on 2 nanodes behind NodeBalancer
-# Caddy handles TLS via DNS-01 challenges (Namecheap API) — no ACME round-robin issue
+# TLS terminated at NodeBalancer — backends serve plain HTTP on :80
 
 # ── Packages ──────────────────────────────────────────────────────────────────
 packages:
@@ -20,7 +20,7 @@ write_files:
   - path: ${app_dir}/.env
     content: |
       DATABASE_URL=${database_url}
-      PORT=3000
+      PORT=80
       SESSION_SECRET=${session_secret}
       RESEND_API_KEY=${resend_api_key}
       MAIL_FROM=${mail_from}
@@ -44,7 +44,7 @@ write_files:
       Group=www-data
       WorkingDirectory=${app_dir}
       EnvironmentFile=${app_dir}/.env
-      ExecStart=${app_dir}/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 3000 --workers 2
+      ExecStart=${app_dir}/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 80 --workers 2
       Restart=always
       RestartSec=5
 
@@ -70,31 +70,6 @@ write_files:
       [Install]
       WantedBy=multi-user.target
 
-  - path: /etc/caddy/Caddyfile
-    content: |
-      ${domain} {
-          tls {
-              dns namecheap
-          }
-          reverse_proxy 127.0.0.1:3000 {
-              header_up X-Real-IP {remote_host}
-              header_up X-Forwarded-Proto {scheme}
-          }
-      }
-
-      ${mcp_domain} {
-          tls {
-              dns namecheap
-          }
-          reverse_proxy 127.0.0.1:${mcp_port}
-      }
-
-  - path: /etc/caddy/env
-    content: |
-      NAMECHEAP_API_USER=${namecheap_api_user}
-      NAMECHEAP_API_KEY=${namecheap_api_key}
-    permissions: '0600'
-
   - path: /usr/local/bin/senzii-deploy
     permissions: '0755'
     content: |
@@ -110,12 +85,8 @@ write_files:
       systemctl restart senzii-app
       systemctl restart senzii-mcp
       sleep 2
-      curl -sf http://127.0.0.1:3000/health || echo "WARNING: health check failed"
+      curl -sf http://127.0.0.1:80/health || echo "WARNING: health check failed"
       echo "Deploy complete."
-
-  - path: /etc/tmpfiles.d/senzii.conf
-    content: |
-      d /run/senzii 0755 www-data www-data -
 
 # ── Run commands ───────────────────────────────────────────────────────────────
 runcmd:
@@ -152,32 +123,17 @@ runcmd:
   # Set ownership
   - chown -R www-data:www-data ${app_dir}
 
-  # ── Install Caddy, then rebuild with Namecheap DNS plugin ────────────────────
-  - |
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list
-    apt-get update -qq
-    apt-get install -y -qq caddy
-
-  # Build Caddy with the Namecheap DNS plugin for DNS-01 challenges
-  - |
-    curl -fsSL https://github.com/caddyserver/xcaddy/releases/latest/download/xcaddy_linux_amd64 -o /usr/local/bin/xcaddy
-    chmod +x /usr/local/bin/xcaddy
-    xcaddy build --output /usr/bin/caddy --with github.com/caddy-dns/namecheap
-    systemctl restart caddy
-
   # Enable and start services
   - |
     systemctl daemon-reload
-    systemctl enable senzii-app senzii-mcp caddy
+    systemctl enable senzii-app senzii-mcp
     systemctl start senzii-app
     systemctl start senzii-mcp
-    systemctl restart caddy
 
   # Wait and verify
   - |
     sleep 3
-    curl -sf http://127.0.0.1:3000/health || echo "WARNING: app health check failed"
+    curl -sf http://127.0.0.1:80/health || echo "WARNING: app health check failed"
 
   # Clean up
   - rm -rf /tmp/senzii-site

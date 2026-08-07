@@ -29,11 +29,16 @@ stripe_price_id        = ""
 mcp_port   = 3001
 mcp_org_id = ""
 
-# ── TLS DNS-01 (Namecheap) ──────────────────────────────────────────────────────
-# Get these from Namecheap > Profile > Tools > API Access.
-# The API key must be whitelisted for your server IP.
-namecheap_api_user = "your-namecheap-username"
-namecheap_api_key  = "your-namecheap-api-key"
+# ── TLS certificate (for NodeBalancer TLS termination) ───────────────────────────
+# Get these with certbot using manual DNS verification:
+#   sudo certbot certonly --manual --preferred-challenges dns -d app.senzii.com -d mcp.senzii.com
+# Then read the files:
+#   ssl_cert = file("/etc/letsencrypt/live/app.senzii.com/fullchain.pem")
+#   ssl_key  = file("/etc/letsencrypt/live/app.senzii.com/privkey.pem")
+#
+# Or paste the PEM contents directly. Renew every 90 days and re-apply.
+ssl_cert = ""
+ssl_key  = ""
 
 # ── Infra ───────────────────────────────────────────────────────────────────────
 backend_count  = 2

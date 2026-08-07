@@ -15,26 +15,32 @@ resource "linode_nodebalancer" "main" {
   client_transfers = false
 }
 
-# HTTPS config — TCP passthrough to Caddy on each backend (DNS-01 certs)
+# HTTPS config — TLS terminated at NodeBalancer, forwards plain HTTP to backends
 resource "linode_nodebalancer_config" "https" {
   nodebalancer_id = linode_nodebalancer.main.id
   port            = 443
-  protocol        = "tcp"
+  protocol        = "https"
   algorithm       = "roundrobin"
-  check           = "connection"
+  check           = "http"
+  check_path      = "/health"
   check_attempts  = 3
   check_timeout   = 5
   check_interval  = 10
   stickiness       = "none"
+
+  # TLS cert — upload via Linode API or set as variables here
+  ssl_cert = var.ssl_cert
+  ssl_key  = var.ssl_key
 }
 
-# HTTP config — TCP passthrough to Caddy (redirects to HTTPS)
+# HTTP config — redirect to HTTPS
 resource "linode_nodebalancer_config" "http" {
   nodebalancer_id = linode_nodebalancer.main.id
   port            = 80
-  protocol        = "tcp"
+  protocol        = "http"
   algorithm       = "roundrobin"
-  check           = "connection"
+  check           = "http"
+  check_path      = "/health"
   check_attempts  = 3
   check_timeout   = 5
   check_interval  = 10
@@ -72,8 +78,6 @@ resource "linode_instance" "backend" {
       stripe_webhook_secret = var.stripe_webhook_secret
       stripe_price_id    = var.stripe_price_id
       mcp_org_id         = var.mcp_org_id
-      namecheap_api_user = var.namecheap_api_user
-      namecheap_api_key  = var.namecheap_api_key
     }))
   }
 
@@ -89,7 +93,7 @@ resource "linode_nodebalancer_node" "https_backend" {
   nodebalancer_id  = linode_nodebalancer.main.id
   config_id        = linode_nodebalancer_config.https.id
   label            = "backend-${count.index + 1}"
-  address          = "${linode_instance.backend[count.index].private_ip_address}:443"
+  address          = "${linode_instance.backend[count.index].private_ip_address}:80"
   mode             = "accept"
   weight           = 50
 }
@@ -121,20 +125,12 @@ resource "linode_firewall" "app" {
     ipv6     = ["::/0"]
   }
 
-  # Allow health checks from NodeBalancer
+  # Allow HTTP from NodeBalancer private range
   inbound {
     label    = "http-nodebalancer"
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "80"
-    ipv4     = ["192.168.0.0/16"]
-  }
-
-  inbound {
-    label    = "https-nodebalancer"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "443"
     ipv4     = ["192.168.0.0/16"]
   }
 }
