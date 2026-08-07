@@ -44,9 +44,6 @@ write_files:
       MAIL_FROM={tf("mail_from")}
       BASE_URL={tf("base_url")}
       NOTIFY_EMAIL={tf("notify_email")}
-      STRIPE_SECRET_KEY={tf("stripe_secret_key")}
-      STRIPE_WEBHOOK_SECRET={tf("stripe_webhook_secret")}
-      STRIPE_PRICE_ID={tf("stripe_price_id")}
       MCP_PORT={tf("mcp_port")}
       ORG_ID={tf("mcp_org_id")}
 

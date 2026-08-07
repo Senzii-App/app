@@ -20,11 +20,6 @@ session_secret = "generate-a-random-50-char-string-here"
 resend_api_key = ""
 notify_email   = "chris@senzii.com"
 
-# ── Stripe (optional — leave empty if not using billing) ────────────────────────
-stripe_secret_key      = ""
-stripe_webhook_secret  = ""
-stripe_price_id        = ""
-
 # ── MCP ─────────────────────────────────────────────────────────────────────────
 mcp_port   = 3001
 mcp_org_id = ""

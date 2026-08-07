@@ -74,9 +74,7 @@ resource "linode_instance" "backend" {
       resend_api_key     = var.resend_api_key
       mail_from          = var.mail_from
       notify_email       = var.notify_email
-      stripe_secret_key  = var.stripe_secret_key
-      stripe_webhook_secret = var.stripe_webhook_secret
-      stripe_price_id    = var.stripe_price_id
+
       mcp_org_id         = var.mcp_org_id
     }))
   }

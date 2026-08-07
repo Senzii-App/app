@@ -26,9 +26,6 @@ write_files:
       MAIL_FROM=${mail_from}
       BASE_URL=${base_url}
       NOTIFY_EMAIL=${notify_email}
-      STRIPE_SECRET_KEY=${stripe_secret_key}
-      STRIPE_WEBHOOK_SECRET=${stripe_webhook_secret}
-      STRIPE_PRICE_ID=${stripe_price_id}
       MCP_PORT=${mcp_port}
       ORG_ID=${mcp_org_id}
 

@@ -68,27 +68,6 @@ variable "notify_email" {
   default     = ""
 }
 
-# ── Stripe ────────────────────────────────────────────────────────────────────
-variable "stripe_secret_key" {
-  description = "Stripe secret key"
-  type        = string
-  default    = ""
-  sensitive  = true
-}
-
-variable "stripe_webhook_secret" {
-  description = "Stripe webhook signing secret"
-  type        = string
-  default    = ""
-  sensitive  = true
-}
-
-variable "stripe_price_id" {
-  description = "Stripe price ID for subscription plan"
-  type        = string
-  default    = ""
-}
-
 # ── MCP ───────────────────────────────────────────────────────────────────────
 variable "mcp_port" {
   description = "Port for the MCP server"
