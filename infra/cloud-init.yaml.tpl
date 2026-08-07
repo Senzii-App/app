@@ -41,6 +41,9 @@ write_files:
       Group=www-data
       WorkingDirectory=${app_dir}
       EnvironmentFile=${app_dir}/.env
+      # Allow binding to privileged port 80 as non-root
+      AmbientCapabilities=CAP_NET_BIND_SERVICE
+      CapabilityBoundingSet=CAP_NET_BIND_SERVICE
       ExecStart=${app_dir}/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 80 --workers 2
       Restart=always
       RestartSec=5

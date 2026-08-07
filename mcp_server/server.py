@@ -671,7 +671,6 @@ def main():
                 from mcp_server.api_keys import verify_api_key
                 result = await verify_api_key(conn, token)
                 if result:
-                    global _state
                     _state = ServerState()
                     _state.org_id = result[1]
                     _state.user_id = result[0]
