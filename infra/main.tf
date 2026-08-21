@@ -19,7 +19,9 @@ resource "linode_nodebalancer_config" "https" {
   check_attempts  = 3
   check_timeout   = 5
   check_interval  = 10
-  stickiness      = "none"
+  # table: source-IP stickiness so MCP sessions (in-memory per instance) stay
+  # pinned to one backend across initialize/tools calls.
+  stickiness      = "table"
 
   # TLS cert — upload via Linode API or set as variables here
   ssl_cert = var.ssl_cert

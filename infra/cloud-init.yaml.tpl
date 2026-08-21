@@ -1,6 +1,8 @@
 #cloud-config
 # Senzii App — Python/FastAPI + MCP server on 2 nanodes behind NodeBalancer
-# TLS terminated at NodeBalancer — backends serve plain HTTP on :80
+# TLS terminated at NodeBalancer — Caddy on each backend routes by Host:
+#   mcp.senzii.com → :3001 (MCP server)
+#   everything else → :3000 (FastAPI app)
 
 # ── Packages ──────────────────────────────────────────────────────────────────
 packages:
@@ -11,6 +13,7 @@ packages:
   - git
   - curl
   - ufw
+  - caddy
 
 package_update: true
 package_upgrade: true
@@ -41,10 +44,8 @@ write_files:
       Group=www-data
       WorkingDirectory=${app_dir}
       EnvironmentFile=${app_dir}/.env
-      # Allow binding to privileged port 80 as non-root
-      AmbientCapabilities=CAP_NET_BIND_SERVICE
-      CapabilityBoundingSet=CAP_NET_BIND_SERVICE
-      ExecStart=${app_dir}/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 80 --workers 2
+      # App listens on 3000; Caddy on :80 routes by Host header.
+      ExecStart=${app_dir}/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 3000 --workers 2
       Restart=always
       RestartSec=5
 
@@ -69,6 +70,26 @@ write_files:
 
       [Install]
       WantedBy=multi-user.target
+
+  # ── Caddy reverse proxy: routes by Host header on :80 ────────────────────────
+  # NodeBalancer terminates TLS on :443; Caddy receives plain HTTP on :80.
+  # mcp.senzii.com → MCP server (:3001); everything else → FastAPI app (:3000).
+  - path: /etc/caddy/Caddyfile
+    content: |
+      # Senzii — backend reverse proxy (NodeBalancer terminates TLS on :443)
+      {
+            admin off
+      }
+
+      :80 {
+            @mcp host mcp.senzii.com
+            handle @mcp {
+                  reverse_proxy 127.0.0.1:3001
+            }
+            handle {
+                  reverse_proxy 127.0.0.1:3000
+            }
+      }
 
   - path: /usr/local/bin/senzii-deploy
     permissions: '0755'

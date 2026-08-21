@@ -1,0 +1,42 @@
+# ── Staging environment tfvars — copy to staging.tfvars and fill in ──────────
+# Staging is accessible only via Tailscale, not publicly exposed.
+#
+# Usage:
+#   cd infra/azure
+#   terraform workspace new staging
+#   terraform workspace select staging
+#   terraform apply -var-file=staging.tfvars
+
+env = "staging"
+
+# ── App ────────────────────────────────────────────────────────────────────────
+domain      = "staging.senzii.com"
+base_url    = "https://staging.senzii.com"
+repo_url    = "https://github.com/Senzii-App/app.git"
+repo_branch = "main"
+
+# REQUIRED — use different secrets than prod!
+session_secret = ""
+
+# REQUIRED — separate Neon database for staging (don't use prod data)
+database_url = ""
+
+# REQUIRED — Tailscale auth key for the staging server to join your tailnet
+# Generate at https://login.tailscale.com/admin/settings/keys
+tailscale_auth_key = ""
+
+# Same SSH key
+ssh_public_key = "ssh-ed25519 AAAA... c@macbook"
+
+# Optional — use staging/empty keys, NOT prod keys
+resend_api_key = ""
+notify_email   = ""
+
+# ── MCP ─────────────────────────────────────────────────────────────────────────
+mcp_port   = 3001
+mcp_org_id = null
+
+# Single backend for staging (no HA, no load balancer)
+azure_region   = "North Central US"
+instance_count = 1
+instance_type  = "Standard_B2ls_v2"

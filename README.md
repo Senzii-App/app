@@ -42,6 +42,16 @@ The marketing/landing site is a separate repo (`Senzii-App/site`) served from
 Vercel at senzii.com. `app.senzii.com` serves only the app: `GET /` is the
 sign-in page.
 
+## Deployment
+
+Two targets, one CLI (see `infra/README.md` for full docs):
+
+```bash
+./infra/deploy.sh azure   <flags...>   # deploy to Azure (VMSS / staging VM)
+./infra/deploy.sh linode  <flags...>   # deploy to Linode backends
+./infra/deploy.sh help                 # list providers & flags
+```
+
 ## License
 
 Open-source. See LICENSE.

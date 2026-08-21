@@ -1,0 +1,7 @@
+# ── Azure Terraform state & secrets ─────────────────────────────────────────
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+staging.tfvars
+*.tfplan

@@ -1,0 +1,49 @@
+# ── Senzii App — Azure Terraform variables ───────────────────────────────────
+# Copy to terraform.tfvars and fill in your values.
+#
+# Prerequisites:
+#   1. Create an Azure account (pay-as-you-go subscription)
+#   2. HIPAA BAA is AUTOMATIC — included in the Microsoft Product Terms
+#   3. Install Azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
+#   4. Authenticate: az login
+#
+# Usage:
+#   cd infra/azure
+#   terraform init
+#   terraform plan
+#   terraform apply
+
+# Environment: "prod" or "staging"
+env = "prod"
+
+# ── App ────────────────────────────────────────────────────────────────────────
+domain     = "app.senzii.com"
+base_url   = "https://app.senzii.com"
+repo_url   = "https://github.com/Senzii-App/app.git"
+repo_branch = "main"
+
+# ── Database (Neon, Supabase, or any external PostgreSQL) ────────────────────────
+database_url = "postgresql://user:***@ep-xxx.us-east-2.aws.neon.tech/senzii?sslmode=require"
+
+# ── Secrets ────────────────────────────────────────────────────────────────────
+# Generate with: python3 -c 'import secrets; print(secrets.token_urlsafe(50))'
+session_secret = "generate-a-random-50-char-string-here"
+
+resend_api_key = ""
+notify_email   = "chris@senzii.com"
+
+# ── MCP ─────────────────────────────────────────────────────────────────────────
+mcp_port   = 3001
+mcp_org_id = null  # or set to an integer org ID
+
+# ── Infra ───────────────────────────────────────────────────────────────────────
+azure_region    = "North Central US"
+instance_count  = 2
+instance_type   = "Standard_B2ls_v2"
+
+# Your SSH public key (for instance access)
+ssh_public_key = "ssh-ed25519 AAAA... your@email"
+
+# Staging only — Tailscale auth key for staging server join
+# Get from https://login.tailscale.com/admin/settings/keys
+tailscale_auth_key = ""

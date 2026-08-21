@@ -17,6 +17,7 @@ Tools exposed (identical to the Rust MCP server):
 - run_sql (admin only, SELECT only)
 """
 import base64
+import contextlib
 import hashlib
 import hmac
 import json
@@ -38,6 +39,8 @@ from mcp.types import (
     Tool,
     ToolAnnotations,
 )
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 
 
 # ── Config ───────────────────────────────────────────────────────────────────
@@ -439,6 +442,30 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                     )
                 return _json_result([dict(r) for r in rows])
 
+            elif name == "create_staffing_request":
+                # Port of mcp_server/src/db/staffing_requests.rs create_staffing_request
+                # asyncpg requires real date/time objects, not strings.
+                from datetime import date, time as dtime
+                shift_date = datetime.strptime(arguments["shift_date"], "%Y-%m-%d").date()
+                start_time = datetime.strptime(arguments["start_time"], "%H:%M").time()
+                end_time = datetime.strptime(arguments["end_time"], "%H:%M").time()
+                skills_json = json.dumps(arguments.get("required_skills", []) or [])
+                min_staff = arguments.get("min_staff") or 1
+                row = await conn.fetchrow(
+                    """INSERT INTO staffing_requests
+                       (organization_id, client_id, site_id, shift_date, start_time, end_time,
+                        required_skills, min_staff, notes, status)
+                       VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8, $9, 'open')
+                       RETURNING id, organization_id, client_id, site_id, shift_date,
+                                 start_time, end_time, required_skills, min_staff, notes, status""",
+                    org_id, arguments["client_id"], arguments["site_id"],
+                    shift_date, start_time, end_time,
+                    skills_json, min_staff, arguments.get("notes"),
+                )
+                await _audit_log(conn, org_id, user_id, "staffing_request.create",
+                                 "staffing_request", row["id"], None, dict(row))
+                return _json_result(dict(row))
+
             elif name == "convert_staffing_request":
                 req_id = arguments["id"]
                 req = await conn.fetchrow(
@@ -648,6 +675,9 @@ def main():
 
     class AuthMiddleware(BaseHTTPMiddleware):
         async def dispatch(self, request, call_next):
+            # Health check bypasses auth so Fly's health checks succeed.
+            if request.url.path == "/health":
+                return await call_next(request)
             auth = request.headers.get("authorization", "")
             token = auth.replace("Bearer ", "") if auth.startswith("Bearer ") else auth
             if not token:
@@ -690,9 +720,28 @@ def main():
     async def asgi_app(scope, receive, send):
         await session_manager.handle_request(scope, receive, send)
 
+    @contextlib.asynccontextmanager
+    async def lifespan(app: Starlette):
+        # SDK 1.28+ requires the session manager to run inside a task group
+        # (StreamableHTTPSessionManager.run()). Without this, every request
+        # 500s with "Task group is not initialized. Make sure to use run()."
+        async with session_manager.run():
+            yield
+
     app = Starlette(
-        routes=[Mount("/mcp", app=asgi_app)],
+        routes=[
+            # Health first so it isn't shadowed by the root mount below.
+            Route("/health", lambda request: JSONResponse({"status": "healthy"})),
+            # Mount at "/" — this MCP process only receives mcp.senzii.com
+            # traffic (Caddy routes it), and a root mount means /mcp matches
+            # directly: no Starlette 307 /mcp -> /mcp/ slash redirect, which
+            # would downgrade to http:// behind the TLS-terminating LB and
+            # break urllib-based clients (e2e_mcp_test.py doesn't follow
+            # POST redirects).
+            Mount("/", app=asgi_app),
+        ],
         middleware=[Middleware(AuthMiddleware)],
+        lifespan=lifespan,
     )
 
     uvicorn.run(app, host="0.0.0.0", port=MCP_PORT)
