@@ -217,7 +217,16 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                        ORDER BY s.id""",
                     org_id,
                 )
-                return _json_result([dict(r) for r in rows])
+                out = []
+                for r in rows:
+                    d = dict(r)
+                    # asyncpg returns JSONB as a string — decode to match Rust contract
+                    try:
+                        d["certifications"] = json.loads(d["certifications"]) if isinstance(d["certifications"], str) else d["certifications"]
+                    except Exception:
+                        d["certifications"] = []
+                    out.append(d)
+                return _json_result(out)
 
             elif name == "get_staff":
                 row = await conn.fetchrow(
@@ -237,7 +246,13 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                 )
                 if row is None:
                     return _error_result("Staff member not found")
-                return _json_result(dict(row))
+                d = dict(row)
+                for key in ("certifications", "availability"):
+                    try:
+                        d[key] = json.loads(d[key]) if isinstance(d[key], str) else d[key]
+                    except Exception:
+                        d[key] = []
+                return _json_result(d)
 
             elif name == "create_staff":
                 # Geocode address if provided
@@ -260,6 +275,7 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                 staff_id = row["id"]
 
                 # Add certifications if provided
+                certs_out = []
                 for cert in arguments.get("certifications", []):
                     cert_row = await conn.fetchrow(
                         "SELECT id FROM organization_certifications WHERE organization_id = $1 AND name = $2",
@@ -276,9 +292,12 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                             "INSERT INTO staff_certifications (staff_id, name, expires_at, cert_id) VALUES ($1, $2, $3, $4)",
                             staff_id, cert["name"], expires_at, cert_row["id"],
                         )
+                        certs_out.append({"name": cert["name"], "expires_at": cert.get("expires_at")})
 
+                result = dict(row)
+                result["certifications"] = certs_out
                 await _audit_log(conn, org_id, user_id, "staff.create", "staff", staff_id, None, dict(row))
-                return _json_result(dict(row))
+                return _json_result(result)
 
             elif name == "add_staff_certification":
                 staff_id = arguments["staff_id"]
@@ -349,7 +368,15 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                            ORDER BY s.start_time""",
                         org_id,
                     )
-                return _json_result([dict(r) for r in rows])
+                out = []
+                for r in rows:
+                    d = dict(r)
+                    try:
+                        d["required_skills"] = json.loads(d["required_skills"]) if isinstance(d["required_skills"], str) else d["required_skills"]
+                    except Exception:
+                        d["required_skills"] = []
+                    out.append(d)
+                return _json_result(out)
 
             elif name == "delete_shift":
                 shift_id = arguments["id"]
@@ -440,7 +467,15 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                            WHERE sr.organization_id = $1 ORDER BY sr.id""",
                         org_id,
                     )
-                return _json_result([dict(r) for r in rows])
+                out = []
+                for r in rows:
+                    d = dict(r)
+                    try:
+                        d["required_skills"] = json.loads(d["required_skills"]) if isinstance(d["required_skills"], str) else d["required_skills"]
+                    except Exception:
+                        d["required_skills"] = []
+                    out.append(d)
+                return _json_result(out)
 
             elif name == "create_staffing_request":
                 # Port of mcp_server/src/db/staffing_requests.rs create_staffing_request
@@ -462,9 +497,15 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                     shift_date, start_time, end_time,
                     skills_json, min_staff, arguments.get("notes"),
                 )
+                result = dict(row)
+                # asyncpg returns JSONB as string — decode to match Rust contract
+                try:
+                    result["required_skills"] = json.loads(result["required_skills"]) if isinstance(result["required_skills"], str) else result["required_skills"]
+                except Exception:
+                    result["required_skills"] = []
                 await _audit_log(conn, org_id, user_id, "staffing_request.create",
                                  "staffing_request", row["id"], None, dict(row))
-                return _json_result(dict(row))
+                return _json_result(result)
 
             elif name == "convert_staffing_request":
                 req_id = arguments["id"]
@@ -485,16 +526,21 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
                          (shift_date::timestamp + end_time),
                          required_skills, min_staff, id
                        FROM staffing_requests WHERE id = $2 AND organization_id = $1
-                       RETURNING *""",
+                       RETURNING id""",
                     org_id, req_id,
                 )
+                shift_id = row["id"]
                 # Mark request as accepted (or keep accepted)
                 await conn.execute(
                     "UPDATE staffing_requests SET status = 'accepted', updated_at = NOW() WHERE id = $1",
                     req_id,
                 )
-                await _audit_log(conn, org_id, user_id, "staffing_request.convert", "staffing_request", req_id, None, dict(row) if row else None)
-                return _json_result(dict(row) if row else {"ok": True})
+                await _audit_log(conn, org_id, user_id, "staffing_request.convert", "staffing_request", req_id, None, {"shift_id": shift_id})
+                # Rust contract: ConvertResult { shift_id, message }
+                return _json_result({
+                    "shift_id": shift_id,
+                    "message": "Staffing request converted to shift",
+                })
 
             elif name == "cancel_staffing_request":
                 req_id = arguments["id"]
@@ -605,42 +651,113 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
 
             elif name == "send_staff_magic_link":
                 staff_id = arguments["id"]
+                # Verify staff exists and belongs to this org (Rust contract)
+                staff_row = await conn.fetchrow(
+                    "SELECT id, email, name FROM staff WHERE id = $1 AND organization_id = $2 AND deleted_at IS NULL",
+                    staff_id, org_id,
+                )
+                if staff_row is None:
+                    return _error_result("Staff member not found")
                 token = str(uuid.uuid4())
-                await conn.execute(
-                    "INSERT INTO magic_tokens (staff_id, token, expires_at) VALUES ($1, $2, NOW() + INTERVAL '7 days')",
+                row = await conn.fetchrow(
+                    "INSERT INTO magic_tokens (staff_id, token, expires_at) VALUES ($1, $2, NOW() + INTERVAL '7 days') RETURNING token, expires_at",
                     staff_id, token,
                 )
-                link = f"{BASE_URL}/staff/login?token={token}"
-                return _json_result({"magic_link": link})
+                link = f"{BASE_URL}/staff/login?token={row['token']}"
+                return _json_result({
+                    "token": row["token"],
+                    "expires_at": row["expires_at"],
+                    "staff_email": staff_row["email"],
+                    "staff_name": staff_row["name"],
+                    "link": link,
+                })
 
             elif name == "send_client_magic_link":
                 client_id = arguments["id"]
-                token = str(uuid.uuid4())
-                await conn.execute(
-                    """INSERT INTO client_magic_tokens (client_id, organization_id, token, expires_at)
-                       VALUES ($1, $2, $3, NOW() + INTERVAL '7 days')""",
-                    client_id, org_id, token,
+                # Verify client exists and belongs to this org (Rust contract)
+                client_row = await conn.fetchrow(
+                    "SELECT id, email, name, company_name FROM clients WHERE id = $1 AND organization_id = $2",
+                    client_id, org_id,
                 )
-                link = f"{BASE_URL}/client/login?token={token}"
-                return _json_result({"magic_link": link})
+                if client_row is None:
+                    return _error_result("Client not found")
+                token = str(uuid.uuid4())
+                row = await conn.fetchrow(
+                    """INSERT INTO client_magic_tokens (client_id, client_email, client_name, company_name, organization_id, token, expires_at)
+                       VALUES ($1, $2, $3, $4, $5, $6, NOW() + INTERVAL '7 days')
+                       RETURNING token, expires_at""",
+                    client_id, client_row["email"], client_row["name"],
+                    client_row.get("company_name"), org_id, token,
+                )
+                link = f"{BASE_URL}/client/login?token={row['token']}"
+                return _json_result({
+                    "token": row["token"],
+                    "expires_at": row["expires_at"],
+                    "client_email": client_row["email"],
+                    "client_name": client_row["name"],
+                    "link": link,
+                })
 
             elif name == "get_org_metrics":
-                open_shifts = await conn.fetchval(
-                    "SELECT COUNT(*) FROM shifts WHERE organization_id = $1 AND deleted_at IS NULL", org_id)
-                pending_requests = await conn.fetchval(
-                    "SELECT COUNT(*) FROM staffing_requests WHERE organization_id = $1 AND status = 'open'", org_id)
-                total_staff = await conn.fetchval(
-                    "SELECT COUNT(*) FROM staff WHERE organization_id = $1 AND deleted_at IS NULL", org_id)
-                unassigned = await conn.fetchval(
-                    """SELECT COUNT(*) FROM shifts s WHERE s.organization_id = $1 AND s.deleted_at IS NULL
-                       AND NOT EXISTS (SELECT 1 FROM assignments a WHERE a.shift_id = s.id AND a.status = 'confirmed')""",
+                # Port of mcp_server/src/db/metrics.rs (Rust contract):
+                # open_shifts, pending_requests, unassigned_staff, recent_confirmed
+                row = await conn.fetchrow(
+                    """WITH
+                    today AS (
+                      SELECT CURRENT_DATE AS d
+                    ),
+                    open_shifts AS (
+                      SELECT COUNT(*) as c
+                      FROM shifts sh
+                      JOIN work_sites ws ON ws.id = sh.site_id
+                      WHERE ws.organization_id = $1
+                        AND sh.start_time >= (SELECT d FROM today)
+                        AND COALESCE(
+                          (SELECT COUNT(*) FROM assignments a
+                           WHERE a.shift_id = sh.id AND a.status = 'confirmed'),
+                          0
+                        ) < COALESCE(sh.min_staff, 1)
+                    ),
+                    pending_requests AS (
+                      SELECT COUNT(*) as c
+                      FROM staffing_requests sr
+                      WHERE sr.organization_id = $1 AND sr.status = 'open'
+                    ),
+                    unassigned_staff AS (
+                      SELECT COUNT(*) as c
+                      FROM staff s
+                      WHERE s.organization_id = $1
+                        AND s.deleted_at IS NULL
+                        AND NOT EXISTS (
+                          SELECT 1 FROM assignments a
+                          JOIN shifts sh ON sh.id = a.shift_id
+                          JOIN work_sites ws ON ws.id = sh.site_id
+                          WHERE a.staff_id = s.id
+                            AND ws.organization_id = $1
+                            AND a.status = 'confirmed'
+                        )
+                    ),
+                    recent_confirmed AS (
+                      SELECT COUNT(*) as c
+                      FROM assignments a
+                      JOIN shifts sh ON sh.id = a.shift_id
+                      JOIN work_sites ws ON ws.id = sh.site_id
+                      WHERE ws.organization_id = $1
+                        AND a.status = 'confirmed'
+                        AND a.confirmed_at >= NOW() - INTERVAL '7 days'
+                    )
+                    SELECT
+                      (SELECT c FROM open_shifts)        AS open_shifts,
+                      (SELECT c FROM pending_requests)   AS pending_requests,
+                      (SELECT c FROM unassigned_staff)    AS unassigned_staff,
+                      (SELECT c FROM recent_confirmed)    AS recent_confirmed""",
                     org_id,
                 )
                 return _json_result({
-                    "open_shifts": open_shifts,
-                    "pending_requests": pending_requests,
-                    "total_staff": total_staff,
-                    "unassigned_shifts": unassigned,
+                    "open_shifts": row["open_shifts"],
+                    "pending_requests": row["pending_requests"],
+                    "unassigned_staff": row["unassigned_staff"],
+                    "recent_confirmed": row["recent_confirmed"],
                 })
 
             elif name == "run_sql":
