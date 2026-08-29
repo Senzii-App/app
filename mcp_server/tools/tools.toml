@@ -1,0 +1,350 @@
+# Senzii MCP tool definitions — mirrors the Rust MCP server's tool list.
+# Single source of truth for tools: `handler` is the dotted path of the
+# function implementing the tool, resolved into TOOL_HANDLERS by the
+# tools package, and the rest is used to build the Tool objects returned
+# by list_tools().
+
+[[tool]]
+name = "list_staff"
+handler = "staff.list_staff"
+description = "List all staff members. Use this to find a staff_id before calling get_staff, set_staff_availability, add_staff_certification, or delete_staff."
+[tool.input_schema]
+type = "object"
+properties = {}
+
+[[tool]]
+name = "get_staff"
+handler = "staff.get_staff"
+description = "Get a single staff member by ID, including their certifications and weekly availability."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+description = "Staff member ID"
+
+[[tool]]
+name = "create_staff"
+handler = "staff.create_staff"
+description = "Create a new staff member with optional certifications. Call list_certifications first to get valid certification names."
+[tool.input_schema]
+type = "object"
+required = ["name", "email", "timezone"]
+[tool.input_schema.properties.name]
+type = "string"
+[tool.input_schema.properties.email]
+type = "string"
+[tool.input_schema.properties.phone]
+type = "string"
+[tool.input_schema.properties.address]
+type = "string"
+[tool.input_schema.properties.latitude]
+type = "number"
+[tool.input_schema.properties.longitude]
+type = "number"
+[tool.input_schema.properties.timezone]
+type = "string"
+[tool.input_schema.properties.certifications]
+type = "array"
+[tool.input_schema.properties.certifications.items]
+type = "object"
+required = ["name"]
+[tool.input_schema.properties.certifications.items.properties.name]
+type = "string"
+[tool.input_schema.properties.certifications.items.properties.expires_at]
+type = "string"
+
+[[tool]]
+name = "add_staff_certification"
+handler = "staff.add_staff_certification"
+description = "Add a certification to an existing staff member. The certification name must already exist at the organization level."
+[tool.input_schema]
+type = "object"
+required = ["staff_id", "certification"]
+[tool.input_schema.properties.staff_id]
+type = "integer"
+[tool.input_schema.properties.certification]
+type = "object"
+required = ["name"]
+[tool.input_schema.properties.certification.properties.name]
+type = "string"
+[tool.input_schema.properties.certification.properties.expires_at]
+type = "string"
+
+[[tool]]
+name = "set_staff_availability"
+handler = "staff.set_staff_availability"
+description = "Set a staff member's weekly availability schedule. This REPLACES all existing availability."
+[tool.input_schema]
+type = "object"
+required = ["staff_id", "windows"]
+[tool.input_schema.properties.staff_id]
+type = "integer"
+[tool.input_schema.properties.windows]
+type = "array"
+[tool.input_schema.properties.windows.items]
+type = "object"
+required = ["day_of_week", "start_time", "end_time"]
+[tool.input_schema.properties.windows.items.properties.day_of_week]
+type = "integer"
+[tool.input_schema.properties.windows.items.properties.start_time]
+type = "string"
+[tool.input_schema.properties.windows.items.properties.end_time]
+type = "string"
+
+[[tool]]
+name = "list_clients"
+handler = "clients.list_clients"
+description = "List all clients. Use this to find a client_id before calling create_staffing_request or send_client_magic_link."
+[tool.input_schema]
+type = "object"
+properties = {}
+
+[[tool]]
+name = "create_client"
+handler = "clients.create_client"
+description = "Create a new client (the company that requests staff)."
+[tool.input_schema]
+type = "object"
+required = ["name", "email"]
+[tool.input_schema.properties.name]
+type = "string"
+[tool.input_schema.properties.email]
+type = "string"
+[tool.input_schema.properties.phone]
+type = "string"
+[tool.input_schema.properties.company_name]
+type = "string"
+
+[[tool]]
+name = "list_shifts"
+handler = "shifts.list_shifts"
+description = "List all shifts, optionally filtered by work site."
+[tool.input_schema]
+type = "object"
+[tool.input_schema.properties.site_id]
+type = "integer"
+
+[[tool]]
+name = "delete_shift"
+handler = "shifts.delete_shift"
+description = "Delete (soft delete) a shift. Blocks if the shift has confirmed assignments."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "find_candidates"
+handler = "shifts.find_candidates"
+description = "Find ranked staff candidates for a shift using the matching engine. Scores each staff member on proximity (30%), skills match (40%), and availability (30%)."
+[tool.input_schema]
+type = "object"
+required = ["shift_id"]
+[tool.input_schema.properties.shift_id]
+type = "integer"
+
+[[tool]]
+name = "list_assignments"
+handler = "assignments.list_assignments"
+description = "List all assignments, optionally filtered by shift."
+[tool.input_schema]
+type = "object"
+[tool.input_schema.properties.shift_id]
+type = "integer"
+
+[[tool]]
+name = "create_assignment"
+handler = "assignments.create_assignment"
+description = "Assign a staff member to a shift. Creates a pending assignment."
+[tool.input_schema]
+type = "object"
+required = ["shift_id", "staff_id"]
+[tool.input_schema.properties.shift_id]
+type = "integer"
+[tool.input_schema.properties.staff_id]
+type = "integer"
+
+[[tool]]
+name = "unassign_assignment"
+handler = "assignments.unassign_assignment"
+description = "Remove (delete) an assignment — unassigns the staff member from the shift."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "list_staffing_requests"
+handler = "staffing_requests.list_staffing_requests"
+description = "List staffing requests, optionally filtered by status: open, filled, or cancelled."
+[tool.input_schema]
+type = "object"
+[tool.input_schema.properties.status]
+type = "string"
+
+[[tool]]
+name = "create_staffing_request"
+handler = "staffing_requests.create_staffing_request"
+description = "Create a new staffing request — a client asks for staff for a specific date/time."
+[tool.input_schema]
+type = "object"
+required = ["client_id", "shift_date", "start_time", "end_time"]
+[tool.input_schema.properties.client_id]
+type = "integer"
+[tool.input_schema.properties.site_id]
+type = "integer"
+[tool.input_schema.properties.shift_date]
+type = "string"
+[tool.input_schema.properties.start_time]
+type = "string"
+[tool.input_schema.properties.end_time]
+type = "string"
+[tool.input_schema.properties.required_skills]
+type = "array"
+items = { type = "string" }
+[tool.input_schema.properties.min_staff]
+type = "integer"
+[tool.input_schema.properties.notes]
+type = "string"
+
+[[tool]]
+name = "convert_staffing_request"
+handler = "staffing_requests.convert_staffing_request"
+description = "Convert an accepted staffing request into a shift on the schedule board."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "cancel_staffing_request"
+handler = "staffing_requests.cancel_staffing_request"
+description = "Cancel a staffing request. If the request was already accepted, the linked shift is deleted and staff are unassigned."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "list_work_sites"
+handler = "work_sites.list_work_sites"
+description = "List all work sites."
+[tool.input_schema]
+type = "object"
+properties = {}
+
+[[tool]]
+name = "create_work_site"
+handler = "work_sites.create_work_site"
+description = "Create a new work site (a location where shifts happen)."
+[tool.input_schema]
+type = "object"
+required = ["name"]
+[tool.input_schema.properties.name]
+type = "string"
+[tool.input_schema.properties.address]
+type = "string"
+[tool.input_schema.properties.latitude]
+type = "number"
+[tool.input_schema.properties.longitude]
+type = "number"
+[tool.input_schema.properties.required_skills]
+type = "array"
+items = { type = "string" }
+[tool.input_schema.properties.timezone]
+type = "string"
+
+[[tool]]
+name = "list_certifications"
+handler = "certifications.list_certifications"
+description = "List all organization-level certifications. Use this to get valid certification names before creating staff with certifications."
+[tool.input_schema]
+type = "object"
+properties = {}
+
+[[tool]]
+name = "create_certification"
+handler = "certifications.create_certification"
+description = "Add a certification to the org if it doesn't already exist. Idempotent."
+[tool.input_schema]
+type = "object"
+required = ["name"]
+[tool.input_schema.properties.name]
+type = "string"
+
+[[tool]]
+name = "update_certification"
+handler = "certifications.update_certification"
+description = "Rename an organization-level certification."
+[tool.input_schema]
+type = "object"
+required = ["id", "name"]
+[tool.input_schema.properties.id]
+type = "integer"
+[tool.input_schema.properties.name]
+type = "string"
+
+[[tool]]
+name = "delete_certification"
+handler = "certifications.delete_certification"
+description = "Delete an organization-level certification. This also removes it from any staff who have it assigned."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "delete_staff"
+handler = "staff.delete_staff"
+description = "Archive (soft delete) a staff member. Blocks if the staff has upcoming confirmed assignments."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "send_staff_magic_link"
+handler = "staff.send_staff_magic_link"
+description = "Generate and return a magic login link for a staff member."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "send_client_magic_link"
+handler = "clients.send_client_magic_link"
+description = "Generate and return a magic login link for a client."
+[tool.input_schema]
+type = "object"
+required = ["id"]
+[tool.input_schema.properties.id]
+type = "integer"
+
+[[tool]]
+name = "get_org_metrics"
+handler = "metrics.get_org_metrics"
+description = "Get dashboard metrics: open shift count, pending request count, unassigned staff count, recent confirmed assignments."
+[tool.input_schema]
+type = "object"
+properties = {}
+
+[[tool]]
+name = "run_sql"
+handler = "admin.run_sql"
+description = "Execute a read-only SELECT query for ad-hoc reporting. Admin only. Do NOT use for data that dedicated tools handle."
+[tool.input_schema]
+type = "object"
+required = ["sql"]
+[tool.input_schema.properties.sql]
+type = "string"
+[tool.annotations]
+readOnlyHint = true

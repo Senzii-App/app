@@ -39,7 +39,7 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route
 
 from mcp_server.config import DATABASE_URL, MCP_PORT, SESSION_SECRET
-from mcp_server.tools import TOOL_HANDLERS
+from mcp_server.tools import TOOL_HANDLERS, load_tools
 from mcp_server.tools.common import _error_result
 
 
@@ -128,37 +128,7 @@ server = Server("senzii")
 @server.list_tools()
 async def list_tools() -> list[Tool]:
     """Return all available tools (same as the Rust MCP server)."""
-    tools = [
-        Tool(name="list_staff", description="List all staff members. Use this to find a staff_id before calling get_staff, set_staff_availability, add_staff_certification, or delete_staff.", inputSchema={"type": "object", "properties": {}}),
-        Tool(name="get_staff", description="Get a single staff member by ID, including their certifications and weekly availability.", inputSchema={"type": "object", "properties": {"id": {"type": "integer", "description": "Staff member ID"}}, "required": ["id"]}),
-        Tool(name="create_staff", description="Create a new staff member with optional certifications. Call list_certifications first to get valid certification names.", inputSchema={"type": "object", "properties": {"name": {"type": "string"}, "email": {"type": "string"}, "phone": {"type": "string"}, "address": {"type": "string"}, "latitude": {"type": "number"}, "longitude": {"type": "number"}, "timezone": {"type": "string"}, "certifications": {"type": "array", "items": {"type": "object", "properties": {"name": {"type": "string"}, "expires_at": {"type": "string"}}, "required": ["name"]}}}, "required": ["name", "email", "timezone"]}),
-        Tool(name="add_staff_certification", description="Add a certification to an existing staff member. The certification name must already exist at the organization level.", inputSchema={"type": "object", "properties": {"staff_id": {"type": "integer"}, "certification": {"type": "object", "properties": {"name": {"type": "string"}, "expires_at": {"type": "string"}}, "required": ["name"]}}, "required": ["staff_id", "certification"]}),
-        Tool(name="set_staff_availability", description="Set a staff member's weekly availability schedule. This REPLACES all existing availability.", inputSchema={"type": "object", "properties": {"staff_id": {"type": "integer"}, "windows": {"type": "array", "items": {"type": "object", "properties": {"day_of_week": {"type": "integer"}, "start_time": {"type": "string"}, "end_time": {"type": "string"}}, "required": ["day_of_week", "start_time", "end_time"]}}}, "required": ["staff_id", "windows"]}),
-        Tool(name="list_clients", description="List all clients. Use this to find a client_id before calling create_staffing_request or send_client_magic_link.", inputSchema={"type": "object", "properties": {}}),
-        Tool(name="create_client", description="Create a new client (the company that requests staff).", inputSchema={"type": "object", "properties": {"name": {"type": "string"}, "email": {"type": "string"}, "phone": {"type": "string"}, "company_name": {"type": "string"}}, "required": ["name", "email"]}),
-        Tool(name="list_shifts", description="List all shifts, optionally filtered by work site.", inputSchema={"type": "object", "properties": {"site_id": {"type": "integer"}}}),
-        Tool(name="delete_shift", description="Delete (soft delete) a shift. Blocks if the shift has confirmed assignments.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="find_candidates", description="Find ranked staff candidates for a shift using the matching engine. Scores each staff member on proximity (30%), skills match (40%), and availability (30%).", inputSchema={"type": "object", "properties": {"shift_id": {"type": "integer"}}, "required": ["shift_id"]}),
-        Tool(name="list_assignments", description="List all assignments, optionally filtered by shift.", inputSchema={"type": "object", "properties": {"shift_id": {"type": "integer"}}}),
-        Tool(name="create_assignment", description="Assign a staff member to a shift. Creates a pending assignment.", inputSchema={"type": "object", "properties": {"shift_id": {"type": "integer"}, "staff_id": {"type": "integer"}}, "required": ["shift_id", "staff_id"]}),
-        Tool(name="unassign_assignment", description="Remove (delete) an assignment — unassigns the staff member from the shift.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="list_staffing_requests", description="List staffing requests, optionally filtered by status: open, filled, or cancelled.", inputSchema={"type": "object", "properties": {"status": {"type": "string"}}}),
-        Tool(name="create_staffing_request", description="Create a new staffing request — a client asks for staff for a specific date/time.", inputSchema={"type": "object", "properties": {"client_id": {"type": "integer"}, "site_id": {"type": "integer"}, "shift_date": {"type": "string"}, "start_time": {"type": "string"}, "end_time": {"type": "string"}, "required_skills": {"type": "array", "items": {"type": "string"}}, "min_staff": {"type": "integer"}, "notes": {"type": "string"}}, "required": ["client_id", "shift_date", "start_time", "end_time"]}),
-        Tool(name="convert_staffing_request", description="Convert an accepted staffing request into a shift on the schedule board.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="cancel_staffing_request", description="Cancel a staffing request. If the request was already accepted, the linked shift is deleted and staff are unassigned.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="list_work_sites", description="List all work sites.", inputSchema={"type": "object", "properties": {}}),
-        Tool(name="create_work_site", description="Create a new work site (a location where shifts happen).", inputSchema={"type": "object", "properties": {"name": {"type": "string"}, "address": {"type": "string"}, "latitude": {"type": "number"}, "longitude": {"type": "number"}, "required_skills": {"type": "array", "items": {"type": "string"}}, "timezone": {"type": "string"}}, "required": ["name"]}),
-        Tool(name="list_certifications", description="List all organization-level certifications. Use this to get valid certification names before creating staff with certifications.", inputSchema={"type": "object", "properties": {}}),
-        Tool(name="create_certification", description="Add a certification to the org if it doesn't already exist. Idempotent.", inputSchema={"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]}),
-        Tool(name="update_certification", description="Rename an organization-level certification.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}, "name": {"type": "string"}}, "required": ["id", "name"]}),
-        Tool(name="delete_certification", description="Delete an organization-level certification. This also removes it from any staff who have it assigned.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="delete_staff", description="Archive (soft delete) a staff member. Blocks if the staff has upcoming confirmed assignments.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="send_staff_magic_link", description="Generate and return a magic login link for a staff member.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="send_client_magic_link", description="Generate and return a magic login link for a client.", inputSchema={"type": "object", "properties": {"id": {"type": "integer"}}, "required": ["id"]}),
-        Tool(name="get_org_metrics", description="Get dashboard metrics: open shift count, pending request count, unassigned staff count, recent confirmed assignments.", inputSchema={"type": "object", "properties": {}}),
-        Tool(name="run_sql", description="Execute a read-only SELECT query for ad-hoc reporting. Admin only. Do NOT use for data that dedicated tools handle.", inputSchema={"type": "object", "properties": {"sql": {"type": "string"}}, "required": ["sql"]}, annotations=ToolAnnotations(readOnlyHint=True)),
-    ]
-    return tools
+    return load_tools()
 
 
 @server.call_tool()
