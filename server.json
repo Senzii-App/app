@@ -1,0 +1,13 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.senzii/scheduling",
+  "description": "Open-source staff scheduling: skills matching, shifts, certifications. Self-hostable, MCP-native.",
+  "title": "Senzii Scheduling",
+  "version": "1.0.1",
+  "websiteUrl": "https://senzii.com",
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/Senzii-App/app",
+    "subfolder": "mcp_server"
+  }
+}
