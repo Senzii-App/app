@@ -18,7 +18,6 @@ Tools exposed (identical to the Rust MCP server):
 """
 import base64
 import contextlib
-import contextvars
 import hashlib
 import hmac
 import json
@@ -30,6 +29,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from mcp.server import Server
+from mcp.server.lowlevel.server import request_ctx
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 from mcp.types import (
     CallToolResult,
@@ -119,16 +119,16 @@ class ServerState:
 
 # Request-scoped identity.
 #
-# This used to be a module global (`_state = ServerState()`) that the auth
-# middleware overwrote on every request. Because the server handles requests
-# concurrently, a global is shared across all in-flight requests: after any
-# `await`, a tool could observe an org_id/role that belongs to a *different*
-# tenant's request that interleaved in the meantime — a cross-tenant
-# confused-deputy affecting every tool.
-#
-# A ContextVar is copied per request (the auth middleware sets it before
-# dispatching downstream), so each request sees only its own identity.
-_state_var: contextvars.ContextVar[ServerState] = contextvars.ContextVar("senzii_state")
+# The identity is carried on request.scope (set by AuthMiddleware after token
+# verification) and read per message via the SDK's request_ctx — the MCP
+# server hands each JSON-RPC message its originating HTTP request, including
+# on the SSE path. An earlier revision used a ContextVar, but in stateful
+# sessions tool handlers run in a task spawned once at session creation, so
+# the ContextVar held the initialize-time identity for the session's whole
+# lifetime (cross-credential use of a session id, and revocation, were not
+# reflected). request_ctx is set per message, so identity follows the
+# credential on every call and revocation takes effect immediately.
+_STATE_SCOPE_KEY = "senzii_identity"
 
 
 # ── Server ────────────────────────────────────────────────────────────────────
@@ -150,10 +150,15 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
         return _error_result(f"Unknown tool: {name}")
 
     try:
-        state = _state_var.get()
+        state = request_ctx.get().request.scope[_STATE_SCOPE_KEY]
     except LookupError:
-        # No identity was bound to this request — refuse rather than fall back
-        # to a default (which would otherwise run as org 0 / admin).
+        # No request context (e.g. tool invoked outside a message handler) —
+        # refuse rather than fall back to a default (which would otherwise
+        # run as org 0 / admin).
+        return _error_result("Unauthenticated: no request identity bound")
+    except (AttributeError, KeyError):
+        # No identity was bound to this request — the auth middleware did not
+        # run (e.g. a path that bypasses it) — refuse rather than fall back.
         return _error_result("Unauthenticated: no request identity bound")
 
     pool = await get_pool()
@@ -196,7 +201,7 @@ def main():
             # Try OAuth JWT first
             claims = verify_oauth_token(token)
             if claims:
-                _state_var.set(ServerState.from_claims(claims))
+                request.scope[_STATE_SCOPE_KEY] = ServerState.from_claims(claims)
                 return await call_next(request)
 
             # Fall back to API key
@@ -209,7 +214,7 @@ def main():
                     state.org_id = result[1]
                     state.user_id = result[0]
                     state.role = "admin"
-                    _state_var.set(state)
+                    request.scope[_STATE_SCOPE_KEY] = state
                     return await call_next(request)
 
             from starlette.responses import Response

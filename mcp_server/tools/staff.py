@@ -110,6 +110,15 @@ async def create_staff(conn: asyncpg.Connection, org_id: int, user_id: int | Non
 async def add_staff_certification(conn: asyncpg.Connection, org_id: int, user_id: int | None, role: str, arguments: dict) -> CallToolResult:
     staff_id = arguments["staff_id"]
     cert_input = arguments["certification"]
+    # The staff member must belong to the caller's org — otherwise a caller
+    # could attach certifications to another organization's staff member
+    # (cross-tenant write).
+    owner = await conn.fetchval(
+        "SELECT organization_id FROM staff WHERE id = $1 AND deleted_at IS NULL",
+        staff_id,
+    )
+    if owner != org_id:
+        return _error_result("Staff member not found")
     cert_row = await conn.fetchrow(
         "SELECT id FROM organization_certifications WHERE organization_id = $1 AND name = $2",
         org_id, cert_input["name"],
@@ -134,6 +143,15 @@ async def add_staff_certification(conn: asyncpg.Connection, org_id: int, user_id
 
 async def set_staff_availability(conn: asyncpg.Connection, org_id: int, user_id: int | None, role: str, arguments: dict) -> CallToolResult:
     staff_id = arguments["staff_id"]
+    # The staff member must belong to the caller's org — otherwise a caller
+    # could overwrite another organization's availability windows
+    # (cross-tenant write via DELETE + INSERT keyed only by staff_id).
+    owner = await conn.fetchval(
+        "SELECT organization_id FROM staff WHERE id = $1 AND deleted_at IS NULL",
+        staff_id,
+    )
+    if owner != org_id:
+        return _error_result("Staff member not found")
     # Delete existing availability
     await conn.execute("DELETE FROM staff_availability WHERE staff_id = $1", staff_id)
     # Insert new windows

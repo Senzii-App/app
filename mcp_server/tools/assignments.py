@@ -26,6 +26,21 @@ async def list_assignments(conn: asyncpg.Connection, org_id: int, user_id: int |
 async def create_assignment(conn: asyncpg.Connection, org_id: int, user_id: int | None, role: str, arguments: dict) -> CallToolResult:
     shift_id = arguments["shift_id"]
     staff_id = arguments["staff_id"]
+    # The shift and staff member must both belong to the caller's org —
+    # otherwise a caller could assign its staff to another org's shift or
+    # attach another org's staff to its own shifts (cross-tenant write).
+    owner = await conn.fetchval(
+        "SELECT organization_id FROM shifts WHERE id = $1 AND deleted_at IS NULL",
+        shift_id,
+    )
+    if owner != org_id:
+        return _error_result("Shift not found")
+    owner = await conn.fetchval(
+        "SELECT organization_id FROM staff WHERE id = $1 AND deleted_at IS NULL",
+        staff_id,
+    )
+    if owner != org_id:
+        return _error_result("Staff member not found")
     # Check overlap
     overlap = await conn.fetch(
         """SELECT a.id FROM assignments a
@@ -46,6 +61,13 @@ async def create_assignment(conn: asyncpg.Connection, org_id: int, user_id: int 
 
 
 async def unassign_assignment(conn: asyncpg.Connection, org_id: int, user_id: int | None, role: str, arguments: dict) -> CallToolResult:
-    await conn.execute("DELETE FROM assignments WHERE id = $1", arguments["id"])
+    # The org filter is the security boundary: without it any tenant could
+    # delete another organization's assignment by guessing its id.
+    deleted = await conn.fetchval(
+        "DELETE FROM assignments WHERE id = $1 AND organization_id = $2 RETURNING id",
+        arguments["id"], org_id,
+    )
+    if deleted is None:
+        return _error_result("Assignment not found")
     await _audit_log(conn, org_id, user_id, "assignment.delete", "assignment", arguments["id"], None, None)
     return _json_result({"ok": True, "message": "Assignment removed"})

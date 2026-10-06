@@ -340,7 +340,7 @@ properties = {}
 [[tool]]
 name = "run_sql"
 handler = "admin.run_sql"
-description = "Execute a read-only SELECT query for ad-hoc reporting. Admin only. Do NOT use for data that dedicated tools handle."
+description = "Execute a read-only SELECT query for ad-hoc reporting. Restricted to platform operators (the 'super' role). Do NOT use for data that dedicated tools handle."
 [tool.input_schema]
 type = "object"
 required = ["sql"]

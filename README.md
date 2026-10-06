@@ -53,7 +53,7 @@ deliberate safety choice for regulated industries, not a limitation.
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env  # set DATABASE_URL; add RESEND_API_KEY only for email features
+cp .env.example .env  # set DATABASE_URL and SESSION_SECRET (generate: python -c "import secrets; print(secrets.token_urlsafe(48))"); add RESEND_API_KEY only for email features
 uvicorn app.main:app --host 0.0.0.0 --port 3000 --reload
 ```
 
