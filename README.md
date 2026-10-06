@@ -23,7 +23,7 @@ database connector.
 | Staffing requests | `list_staffing_requests` `create_staffing_request` `convert_staffing_request` `cancel_staffing_request` |
 | Certifications | `list_certifications` `create_certification` `update_certification` `delete_certification` |
 | Work sites | `list_work_sites` `create_work_site` |
-| Admin | `get_org_metrics` `run_sql` (admin-only, SELECT-only) |
+| Admin | `get_org_metrics` `run_sql` (platform-operator / super-only, SELECT-only) |
 
 Every tool is scoped to the authenticated organization — the org ID is
 injected server-side into every query, so cross-org data access is

@@ -18,6 +18,7 @@ Tools exposed (identical to the Rust MCP server):
 """
 import base64
 import contextlib
+import contextvars
 import hashlib
 import hmac
 import json
@@ -116,8 +117,18 @@ class ServerState:
         return self.role in ("admin", "super")
 
 
-# Global state — overwritten per request
-_state = ServerState()
+# Request-scoped identity.
+#
+# This used to be a module global (`_state = ServerState()`) that the auth
+# middleware overwrote on every request. Because the server handles requests
+# concurrently, a global is shared across all in-flight requests: after any
+# `await`, a tool could observe an org_id/role that belongs to a *different*
+# tenant's request that interleaved in the meantime — a cross-tenant
+# confused-deputy affecting every tool.
+#
+# A ContextVar is copied per request (the auth middleware sets it before
+# dispatching downstream), so each request sees only its own identity.
+_state_var: contextvars.ContextVar[ServerState] = contextvars.ContextVar("senzii_state")
 
 
 # ── Server ────────────────────────────────────────────────────────────────────
@@ -138,10 +149,17 @@ async def call_tool(name: str, arguments: dict) -> CallToolResult:
     if handler is None:
         return _error_result(f"Unknown tool: {name}")
 
+    try:
+        state = _state_var.get()
+    except LookupError:
+        # No identity was bound to this request — refuse rather than fall back
+        # to a default (which would otherwise run as org 0 / admin).
+        return _error_result("Unauthenticated: no request identity bound")
+
     pool = await get_pool()
-    org_id = _state.org_id
-    user_id = _state.user_id
-    role = _state.role
+    org_id = state.org_id
+    user_id = state.user_id
+    role = state.role
 
     async with pool.acquire() as conn:
         try:
@@ -178,8 +196,7 @@ def main():
             # Try OAuth JWT first
             claims = verify_oauth_token(token)
             if claims:
-                global _state
-                _state = ServerState.from_claims(claims)
+                _state_var.set(ServerState.from_claims(claims))
                 return await call_next(request)
 
             # Fall back to API key
@@ -188,10 +205,11 @@ def main():
                 from mcp_server.api_keys import verify_api_key
                 result = await verify_api_key(conn, token)
                 if result:
-                    _state = ServerState()
-                    _state.org_id = result[1]
-                    _state.user_id = result[0]
-                    _state.role = "admin"
+                    state = ServerState()
+                    state.org_id = result[1]
+                    state.user_id = result[0]
+                    state.role = "admin"
+                    _state_var.set(state)
                     return await call_next(request)
 
             from starlette.responses import Response
