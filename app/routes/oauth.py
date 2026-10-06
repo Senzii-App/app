@@ -30,7 +30,6 @@ import base64
 import hashlib
 import hmac
 import json
-import os
 import secrets
 import uuid
 from datetime import datetime, timezone, timedelta
@@ -39,6 +38,7 @@ from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from pydantic import BaseModel
 
+from app.config import SESSION_SECRET
 from app.db.pool import get_pool
 
 router = APIRouter()
@@ -605,7 +605,7 @@ async def _token_from_authorization_code(pool, req: dict) -> Response:
                 )
 
         # Create JWT access token (24-hour lifetime)
-        secret = os.getenv("SESSION_SECRET", "senzii-oauth-secret")
+        secret = SESSION_SECRET
         now = datetime.now(timezone.utc)
         expires_at = now + timedelta(hours=24)
         claims = {
@@ -677,7 +677,7 @@ async def _token_from_refresh_token(pool, req: dict) -> Response:
             )
 
         # Mint new access token (24-hour lifetime)
-        secret = os.getenv("SESSION_SECRET", "senzii-oauth-secret")
+        secret = SESSION_SECRET
         now = datetime.now(timezone.utc)
         expires_at = now + timedelta(hours=24)
         claims = {
